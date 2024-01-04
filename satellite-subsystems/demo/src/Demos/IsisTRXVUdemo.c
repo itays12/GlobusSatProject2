@@ -467,6 +467,19 @@ static Boolean vutc_getTxTelemTest_revD(void)
 
 	return TRUE;
 }
+static Boolean TurnOnTransponderWithDelay(void)
+{
+	unsigned char turn_on_cmd[]={0x38,2};
+	i2c_write(0x61,turn_on_cmd,2);
+
+	int time_in_min = 0;
+	while(UTIL_DbguGetIntegerMinMax(&time_in_min, 1, 20) == 0);
+	vTaskDelay (time_in_min*(60000/portTICK_RATE_MS));
+
+	unsigned char turn_off_cmd[]={0x38,1};
+		i2c_write(0x61,turn_off_cmd,2);
+	return TRUE;
+}
 
 static Boolean selectAndExecuteTRXVUDemoTest(void)
 {
@@ -487,7 +500,9 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 	printf("\t 11) (revD) Get receiver telemetry \n\r");
 	printf("\t 12) (revD) Get transmitter telemetry \n\r");
 	printf("\t 13) vutc_sendInputTest \n\r");
-	printf("\t 14) Return to main menu \n\r");
+	printf("\t 14) TurnOnTransponderWithDelay \n\r");
+	printf("\t 15) Return to main menu \n\r");
+
 
 	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 13) == 0);
 
@@ -532,6 +547,9 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 		offerMoreTests = vutc_sendInputTest();
 		break;
 	case 14:
+		offerMoreTests = TurnOnTransponderWithDelay();
+		break;
+	case 15:
 		offerMoreTests = FALSE;
 		break;
 
