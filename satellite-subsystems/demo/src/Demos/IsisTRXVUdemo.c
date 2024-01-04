@@ -467,6 +467,8 @@ static Boolean vutc_getTxTelemTest_revD(void)
 
 	return TRUE;
 }
+
+
 static Boolean TurnOnTransponderWithDelay(void)
 {
 	unsigned char turn_on_cmd[]={0x38,2};
@@ -485,7 +487,8 @@ static Boolean TurnOnTransponder(void){
 		I2C_write(0x61,turn_on_cmd,2);
 		return TRUE;
 }
-static Boolean TurnOfTransponder(void){
+
+static Boolean TurnOffTransponder(void){
 	unsigned char turn_off_cmd[]={0x38,1};
 		I2C_write(0x61,turn_off_cmd,2);
 		return TRUE;
@@ -510,13 +513,13 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 	printf("\t 11) (revD) Get receiver telemetry \n\r");
 	printf("\t 12) (revD) Get transmitter telemetry \n\r");
 	printf("\t 13) vutc_sendInputTest \n\r");
-	printf("\t 14) TurnOnTransponderWithDelay \n\r");
+	printf("\t 14) TurnOnTransponderWithDelay\n\r");
 	printf("\t 15) TurnOnTransponder \n\r");
 	printf("\t 16) TurnOffTransponder \n\r");
 	printf("\t 17) Return to main menu \n\r");
 
 
-	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 13) == 0);
+	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 17) == 0);
 
 	switch(selection) {
 	case 1:
@@ -562,19 +565,17 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 		offerMoreTests = TurnOnTransponderWithDelay();
 		break;
 	case 15:
-			offerMoreTests = TurnOnTransponder();
-			break;
+		offerMoreTests = TurnOnTransponder();
+		break;
 	case 16:
-			offerMoreTests = TurnOffTransponder();
-			break;
+		offerMoreTests = TurnOffTransponder();
+		break;
 	case 17:
 		offerMoreTests = FALSE;
 		break;
-
 	default:
 		break;
 	}
-
 	return offerMoreTests;
 }
 
