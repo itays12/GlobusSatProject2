@@ -73,7 +73,7 @@ static Boolean vutc_sendDefClSignTest(void)
 	unsigned char txCounter = 0;
 	unsigned char avalFrames = 0;
 	unsigned int timeoutCounter = 0;
-
+gggg
 	while(txCounter < 5 && timeoutCounter < 5)
 	{
 		printf("\r\n Transmission of single buffers with default callsign. AX25 Format. \r\n");
