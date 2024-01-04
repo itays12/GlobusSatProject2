@@ -18,7 +18,7 @@
 #include "Demos/isis_eps_demo.h"
 #include "Demos/tausat2_pdhudemo.h"
 #include <satellite-subsystems/version/version.h>
-gius
+
 #include <at91/utility/exithandler.h>
 #include <at91/commons.h>
 #include <at91/utility/trace.h>
