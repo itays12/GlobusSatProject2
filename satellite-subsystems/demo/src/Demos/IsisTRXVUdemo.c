@@ -94,17 +94,21 @@ static Boolean vutc_sendDefClSignTest(void)
 	return TRUE;
 }
 
-static Boolean vutc_sendInputTest(void)
+
+static Boolean Packets_Lunch_By_User_Input(void)
 {
 	//Buffers and variables definition
-	unsigned char testBuffer1[10]  = { 0 };
 	unsigned char txCounter = 0;
 	unsigned char avalFrames = 0;
 	unsigned int timeoutCounter = 0;
     int i;
     unsigned int temp;
+    int User_Input = -1;
 
-    for(i = 0; i < 10; i++){
+	while(UTIL_DbguGetIntegerMinMax(&User_Input,0, 2000000) == 0);
+	unsigned char testBuffer1[User_Input]  = { 0 };
+
+    for(i = 0; i < User_Input; i++){
     	if(UTIL_DbguGetHexa32(&temp)){
     		testBuffer1[i] = (unsigned char)(temp);
     	}
@@ -118,7 +122,7 @@ static Boolean vutc_sendInputTest(void)
 	while(txCounter < 5 && timeoutCounter < 5)
 	{
 		printf("\r\n Transmission of single buffers with default callsign. AX25 Format. \r\n");
-		print_error(IsisTrxvu_tcSendAX25DefClSign(0, testBuffer1, 10, &avalFrames));
+		print_error(IsisTrxvu_tcSendAX25DefClSign(0, testBuffer1, User_Input, &avalFrames));
 
 		if ((avalFrames != 0)&&(avalFrames != 255))
 		{
@@ -134,7 +138,6 @@ static Boolean vutc_sendInputTest(void)
 
 	return TRUE;
 }
-
 static Boolean vutc_toggleIdleStateTest(void)
 {
 	static Boolean toggle_flag = 0;
@@ -264,6 +267,49 @@ static Boolean vurc_getFrameCmdAndTxTest(void)
 
 	return TRUE;
 }
+
+static Boolean vutc_sendInputTest(void)
+{
+	//Buffers and variables definition
+	unsigned char testBuffer1[10]  = { 0 };
+	unsigned char txCounter = 0;
+	unsigned char avalFrames = 0;
+	unsigned int timeoutCounter = 0;
+    int i;
+    unsigned int temp;
+
+    for(i = 0; i < 10; i++){
+    	if(UTIL_DbguGetHexa32(&temp)){
+    		testBuffer1[i] = (unsigned char)(temp);
+    	}
+    	else
+    	{
+    		printf("/r/n Invalid input. Please enter a valid hexadecimal number.\r\n");
+    		i--;
+    	}
+    }
+
+	while(txCounter < 5 && timeoutCounter < 5)
+	{
+		printf("\r\n Transmission of single buffers with default callsign. AX25 Format. \r\n");
+		print_error(IsisTrxvu_tcSendAX25DefClSign(0, testBuffer1, 10, &avalFrames));
+
+		if ((avalFrames != 0)&&(avalFrames != 255))
+		{
+			printf("\r\n Number of frames in the buffer: %d  \r\n", avalFrames);
+			txCounter++;
+		}
+
+		else
+		{
+			vTaskDelay(100 / portTICK_RATE_MS);
+			timeoutCounter++;
+		}
+	}
+
+	return TRUE;
+}
+
 
 static void vurc_revDInterruptCallback()
 {
@@ -469,6 +515,11 @@ static Boolean vutc_getTxTelemTest_revD(void)
 }
 
 
+
+
+
+
+
 static Boolean TurnOnTransponderWithDelay(void)
 {
 	unsigned char turn_on_cmd[]={0x38,2};
@@ -516,7 +567,8 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 	printf("\t 14) TurnOnTransponderWithDelay\n\r");
 	printf("\t 15) TurnOnTransponder \n\r");
 	printf("\t 16) TurnOffTransponder \n\r");
-	printf("\t 17) Return to main menu \n\r");
+	printf("\t 17) Packets_Lunch_By_User_Input\n\r");
+	printf("\t 18) Return to main menu \n\r");
 
 
 	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 17) == 0);
@@ -571,6 +623,9 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 		offerMoreTests = TurnOffTransponder();
 		break;
 	case 17:
+		offerMoreTests = Packets_Lunch_By_User_Input();
+		break;
+	case 18:
 		offerMoreTests = FALSE;
 		break;
 	default:
