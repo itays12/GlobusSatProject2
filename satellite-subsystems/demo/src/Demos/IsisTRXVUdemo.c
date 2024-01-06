@@ -103,10 +103,11 @@ static Boolean Packets_Lunch_By_User_Input(void)
 	unsigned int timeoutCounter = 0;
     int i;
     unsigned int temp;
-    int User_Input = -1;
+    int User_Input;
+
 
 	while(UTIL_DbguGetIntegerMinMax(&User_Input,0, 2000000) == 0);
-	unsigned char testBuffer1[User_Input]  = { 0 };
+	unsigned char** testBuffer1 = ( int**)malloc(User_Input * sizeof(int));
 
     for(i = 0; i < User_Input; i++){
     	if(UTIL_DbguGetHexa32(&temp)){
