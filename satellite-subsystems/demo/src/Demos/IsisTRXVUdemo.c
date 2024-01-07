@@ -98,15 +98,18 @@ static Boolean vutc_sendDefClSignTest(void)
 static Boolean Packets_Lunch_By_User_Input(void)
 {
 	//Buffers and variables definition
-	unsigned char txCounter = 0;
-	unsigned char avalFrames = 0;
+	unsigned char txCounter = 'a';
+	unsigned char avalFrames = 'a';
 	unsigned int timeoutCounter = 0;
+	unsigned char* testBuffer1;
     int i;
-    unsigned int temp;
-    int User_Input = -1;
+    unsigned int temp=0;
+    int User_Input=0;
 
-	while(UTIL_DbguGetIntegerMinMax(&User_Input,0, 2000000) == 0);
-	unsigned char testBuffer1[User_Input]  = { 0 };
+
+	while(UTIL_DbguGetIntegerMinMax(&User_Input,0, 2000000) == (char)0);
+	testBuffer1 = (unsigned char*)malloc(User_Input * sizeof(unsigned char));
+
     for(i = 0; i < User_Input; i++){
     	if(UTIL_DbguGetHexa32(&temp)){
     		testBuffer1[i] = (unsigned char)(temp);
@@ -134,7 +137,7 @@ static Boolean Packets_Lunch_By_User_Input(void)
 			timeoutCounter++;
 		}
 	}
-
+    free(testBuffer1);
 	return TRUE;
 }
 static Boolean vutc_toggleIdleStateTest(void)
@@ -543,17 +546,6 @@ static Boolean TurnOffTransponder(void){
 		I2C_write(0x61,turn_off_cmd,2);
 		return TRUE;
 }
-static Boolean print_voltage_condition(void){
-	int voltage = temp_function();
-	if (voltage >= 7200)
-		printf("Voltage of the battery is in normal condition\r\n");
-	else if(voltage>=7000)
-		printf("Voltage of the battery is in safe condition\r\n");
-	else
-		printf("Voltage of the battery is in critical condition\r\n");
-	return TRUE;
-
-}
 
 static Boolean selectAndExecuteTRXVUDemoTest(void)
 {
@@ -578,10 +570,10 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 	printf("\t 15) TurnOnTransponder \n\r");
 	printf("\t 16) TurnOffTransponder \n\r");
 	printf("\t 17) Packets_Lunch_By_User_Input\n\r");
-	printf("\t 18) print_voltage_condition\n\r");
-	printf("\t 19) Return to main menu \n\r");
+	printf("\t 18) Return to main menu \n\r");
 
-	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 19) == 0);
+
+	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 18) == 0);
 
 	switch(selection) {
 	case 1:
@@ -636,9 +628,6 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 		offerMoreTests = Packets_Lunch_By_User_Input();
 		break;
 	case 18:
-		offerMoreTests = print_voltage_condition();
-		break;
-	case 19:
 		offerMoreTests = FALSE;
 		break;
 	default:
