@@ -101,16 +101,19 @@ static Boolean Packets_Lunch_By_User_Input(void)
 	unsigned char txCounter = 'a';
 	unsigned char avalFrames = 'a';
 	unsigned int timeoutCounter = 0;
-	unsigned char* testBuffer1;
+	char* testBuffer1 = "0x31\0x32\0x33\0x34\0x35\0x36\0x37\0x38\0x39\0x40";
+
     int i;
     unsigned int temp=0;
     int User_Input=0;
 
 
+	/*printf("Enter the size of the packet : \r\n");
 	while(UTIL_DbguGetIntegerMinMax(&User_Input,0, 2000000) == (char)0);
 	testBuffer1 = (unsigned char*)malloc(User_Input * sizeof(unsigned char));
 
     for(i = 0; i < User_Input; i++){
+    	printf("Enter a number %d : \r",i);
     	if(UTIL_DbguGetHexa32(&temp)){
     		testBuffer1[i] = (unsigned char)(temp);
     	}
@@ -120,7 +123,9 @@ static Boolean Packets_Lunch_By_User_Input(void)
     		i--;
     	}
     }
-
+    */
+    printf("\r\nEnter the number of times to send packet \r\n");
+    while(UTIL_DbguGetIntegerMinMax(&User_Input,0, 2000000) == (char)0);
 	while(txCounter < 5 && timeoutCounter < 5)
 	{
 		printf("\r\n Transmission of single buffers with default callsign. AX25 Format. \r\n");
@@ -528,6 +533,7 @@ static Boolean TurnOnTransponderWithDelay(void)
 	I2C_write(0x61,turn_on_cmd,2);
 
 	int time_in_min = 0;
+	printf("please enter how many min:\r\n");
 	while(UTIL_DbguGetIntegerMinMax(&time_in_min, 1, 20) == 0);
 	vTaskDelay (time_in_min*(60000/portTICK_RATE_MS));
 
