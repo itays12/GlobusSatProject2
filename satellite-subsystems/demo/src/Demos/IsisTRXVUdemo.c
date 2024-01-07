@@ -98,16 +98,17 @@ static Boolean vutc_sendDefClSignTest(void)
 static Boolean Packets_Lunch_By_User_Input(void)
 {
 	//Buffers and variables definition
-	unsigned char txCounter = 0;
-	unsigned char avalFrames = 0;
+	unsigned char txCounter = 'a';
+	unsigned char avalFrames = 'a';
 	unsigned int timeoutCounter = 0;
+	unsigned char* testBuffer1;
     int i;
-    unsigned int temp;
-    int User_Input;
+    unsigned int temp=0;
+    int User_Input=0;
 
 
-	while(UTIL_DbguGetIntegerMinMax(&User_Input,0, 2000000) == 0);
-	unsigned char* testBuffer1 = ( int*)malloc(User_Input * sizeof(int));
+	while(UTIL_DbguGetIntegerMinMax(&User_Input,0, 2000000) == (char)0);
+	testBuffer1 = (unsigned char*)malloc(User_Input * sizeof(unsigned char));
 
     for(i = 0; i < User_Input; i++){
     	if(UTIL_DbguGetHexa32(&temp)){
@@ -136,7 +137,7 @@ static Boolean Packets_Lunch_By_User_Input(void)
 			timeoutCounter++;
 		}
 	}
-
+    free(testBuffer1);
 	return TRUE;
 }
 static Boolean vutc_toggleIdleStateTest(void)
@@ -572,7 +573,7 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 	printf("\t 18) Return to main menu \n\r");
 
 
-	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 17) == 0);
+	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 18) == 0);
 
 	switch(selection) {
 	case 1:
