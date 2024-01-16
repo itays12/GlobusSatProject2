@@ -19,7 +19,7 @@ Boolean GomEPSdemoMain(void);
 
 /***
  * Initializes the subsystem driver on the IOBC.
- * Returns FALSE on failure.
+ *\ Returns FALSE on failure.
  *
  * note:
  * Depends on an initialized I2C driver.
@@ -44,5 +44,5 @@ void GomEPSdemoLoop(void);
  * Use GomEPSdemoMain function instead.
  */
 Boolean GomEPStest(void);
-
+int temp_function(void);
 #endif /* ISISGOMEPSDEMO_H_ */
