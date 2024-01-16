@@ -560,7 +560,6 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 {
 	int selection = 0;
 	Boolean offerMoreTests = TRUE;
-
 	printf( "\n\r Select a test to perform: \n\r");
 	printf("\t 1) Soft Reset TRXVU both microcontrollers \n\r");
 	printf("\t 2) Hard Reset TRXVU both microcontrollers \n\r");
@@ -582,7 +581,7 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 	printf("\t 18) Return to main menu \n\r");
 
 
-	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 18) == 0);
+	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 19) == 0);
 
 	switch(selection) {
 	case 1:
