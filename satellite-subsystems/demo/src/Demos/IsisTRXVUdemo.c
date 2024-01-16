@@ -537,7 +537,7 @@ static Boolean TurnOnTransponder(void){
 		return TRUE;
 }
 
-static Boolean turnOffTransponder(void)
+static Boolean TurnOffTransponder(void)
 {
 
 	unsigned char turn_off_cmd[]={0x38,1};
@@ -545,22 +545,6 @@ static Boolean turnOffTransponder(void)
 		return TRUE;
 }
 
-static Boolean turnOnTransponderWithDelay(void)
-{
-	int time_in_min = 0;
-	while(UTIL_DbguGetIntegerMinMax(&time_in_min, 1, 20) == 0);
-
-	if(!turnOnTransponder() == FALSE){
-		return FALSE;
-	}
-
-	vTaskDelay (time_in_min*(60000/portTICK_RATE_MS));
-
-	if(!turnOffTransponder() == FALSE){
-		return FALSE;
-	}
-	return TRUE;
-}
 
 static Boolean selectAndExecuteTRXVUDemoTest(void)
 {
@@ -582,7 +566,7 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 	printf("\t 12) (revD) Get transmitter telemetry \n\r");
 	printf("\t 13) vutc_sendInputTest \n\r");
 	printf("\t 14) TurnOnTransponderWithDelay\n\r");
-	printf("\t 15) TurnOnTransponder \n\r");
+	printf("\t 15) turnOnTransponder \n\r");
 	printf("\t 16) TurnOffTransponder \n\r");
 	printf("\t 17) Packets_Lunch_By_User_Input\n\r");
 	printf("\t 18) Return to main menu \n\r");
@@ -631,13 +615,13 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 		offerMoreTests = vutc_sendInputTest();
 		break;
 	case 14:
-		offerMoreTests = turnOnTransponderWithDelay();
+		offerMoreTests = TurnOnTransponderWithDelay();
 		break;
 	case 15:
-		offerMoreTests = turnOnTransponder();
+		offerMoreTests = TurnOnTransponder();
 		break;
 	case 16:
-		offerMoreTests = turnOffTransponder();
+		offerMoreTests = TurnOffTransponder();
 		break;
 	case 17:
 		offerMoreTests = packetsLunchByUserInput();
