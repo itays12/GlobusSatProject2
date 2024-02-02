@@ -635,8 +635,7 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 		offerMoreTests = packetsLunchByUserInput();
 		break;
 	case 18:
-		//offerMoreTests = print_voltage_condition();
-		offerMoreTests = FALSE;
+		offerMoreTests = print_voltage_condition();
 		break;
 	case 19:
 		offerMoreTests = FALSE;
