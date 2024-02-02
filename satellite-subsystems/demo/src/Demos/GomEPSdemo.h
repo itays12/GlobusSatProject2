@@ -44,5 +44,6 @@ void GomEPSdemoLoop(void);
  * Use GomEPSdemoMain function instead.
  */
 Boolean GomEPStest(void);
-int temp_function(void);
+
+int get_voltage(void);
 #endif /* ISISGOMEPSDEMO_H_ */

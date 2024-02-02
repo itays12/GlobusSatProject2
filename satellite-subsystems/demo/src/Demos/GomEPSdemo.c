@@ -147,11 +147,14 @@ static Boolean EPS_TelemetryHKvi(void)
 
 	return TRUE;
 }
-/*static int temp_function(void){
+
+int get_voltage(void){
 	gom_eps_hk_t myEpsTelemetry_hk;
-	int voltage = (myEpsTelemetry_hk.fields.vbatt);
+	print_error(GomEpsGetHkData_general(0, &myEpsTelemetry_hk));
+	int voltage = myEpsTelemetry_hk.fields.vbatt;
 	return voltage;
-}*/
+}
+
 static Boolean EPS_TelemetryHKGeneral(void)
 {
 	gom_eps_hk_t myEpsTelemetry_hk;

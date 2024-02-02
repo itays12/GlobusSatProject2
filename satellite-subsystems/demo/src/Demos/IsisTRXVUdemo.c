@@ -34,7 +34,6 @@
 
 #if USING_GOM_EPS == 1
 #include <SatelliteSubsystems/GomEPS.h>
-#include "GomEPSdemo.c"
 #endif
 
 ////General Variables
@@ -546,8 +545,8 @@ static Boolean TurnOffTransponder(void)
 		I2C_write(0x61,turn_off_cmd,2);
 		return TRUE;
 }
-/*static Boolean print_voltage_condition(void){
-	int voltage = temp_function();
+ Boolean print_voltage_condition(void){
+	int voltage = get_voltage();
 	if (voltage >= 7200)
 		printf("Voltage of the battery is in normal condition\r\n");
 	else if(voltage>=7000)
@@ -555,7 +554,7 @@ static Boolean TurnOffTransponder(void)
 	else
 		printf("Voltage of the battery is in critical condition\r\n");
 	return TRUE;
-}*/
+}
 static Boolean selectAndExecuteTRXVUDemoTest(void)
 {
 	int selection = 0;
