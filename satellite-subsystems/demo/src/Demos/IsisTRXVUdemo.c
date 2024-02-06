@@ -546,16 +546,6 @@ static Boolean TurnOffTransponder(void)
 		I2C_write(0x61,turn_off_cmd,2);
 		return TRUE;
 }
-/*static Boolean print_voltage_condition(void){
-	int voltage = temp_function();
-	if (voltage >= 7200)
-		printf("Voltage of the battery is in normal condition\r\n");
-	else if(voltage>=7000)
-		printf("Voltage of the battery is in safe condition\r\n");
-	else
-		printf("Voltage of the battery is in critical condition\r\n");
-	return TRUE;
-}*/
 static Boolean selectAndExecuteTRXVUDemoTest(void)
 {
 	int selection = 0;
@@ -579,6 +569,7 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 	printf("\t 16) TurnOffTransponder \n\r");
 	printf("\t 17) Packets_Lunch_By_User_Input\n\r");
 	printf("\t 18) Return to main menu \n\r");
+
 
 
 	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 19) == 0);
