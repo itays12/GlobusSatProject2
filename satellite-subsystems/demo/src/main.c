@@ -77,8 +77,8 @@ Boolean selectAndExecuteTest()
 	printf("\t 5) MTQv2 test \n\r");
 	printf("\t 6) ISIS EPS Test \n\r");
 	printf("\t 7) TAUSAT2 PDHU test\n\r");
-
-	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 7) == 0);
+	printf("\t 8) gomepsdemo  \n\r");
+	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 8) == 0);
 
 	switch(selection)
 	{
@@ -103,7 +103,9 @@ Boolean selectAndExecuteTest()
 		case 7:
 			offerMoreTests = TAUSAT2PdhuDemoMain();
 			break;
-
+		case 8:
+			offerMoreTests = GomEPStest();
+			break;
 		default:
 			break;
 	}
@@ -138,6 +140,7 @@ void taskMain()
 
 int main()
 {
+
 	unsigned int i;
 	xTaskHandle taskMainHandle;
 

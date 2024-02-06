@@ -150,6 +150,7 @@ static Boolean EPS_TelemetryHKvi(void)
 
 static int temp_function(void){
 	gom_eps_hk_t myEpsTelemetry_hk;
+	print_error(GomEpsGetHkData_general(0, &myEpsTelemetry_hk));
 	int voltage = (myEpsTelemetry_hk.fields.vbatt);
 	return voltage;
 }
@@ -403,9 +404,9 @@ static Boolean selectAndExecuteGomEPSDemoTest(void)
 	printf("\t 8) EPS Enable channel \n\r");
 	printf("\t 9) EPS Disable channel \n\r");
 	printf("\t 10) EPS Reboot \n\r");
-	printf("\t 18) print_voltage_condition \n\r");
+	printf("\t 11) print_voltage_condition \n\r");
 
-	while(UTIL_DbguGetIntegerMinMax(&selection, 0, 10) == 0);
+	while(UTIL_DbguGetIntegerMinMax(&selection, 0, 11) == 0);
 
 	switch(selection) {
 	case 0:
