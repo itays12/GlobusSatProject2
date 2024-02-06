@@ -44,5 +44,4 @@ void GomEPSdemoLoop(void);
  * Use GomEPSdemoMain function instead.
  */
 Boolean GomEPStest(void);
-int temp_function(void);
 #endif /* ISISGOMEPSDEMO_H_ */

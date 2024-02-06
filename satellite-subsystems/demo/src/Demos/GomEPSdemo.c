@@ -147,11 +147,22 @@ static Boolean EPS_TelemetryHKvi(void)
 
 	return TRUE;
 }
-/*static int temp_function(void){
+
+static int temp_function(void){
 	gom_eps_hk_t myEpsTelemetry_hk;
 	int voltage = (myEpsTelemetry_hk.fields.vbatt);
 	return voltage;
-}*/
+}
+static Boolean print_voltage_condition(void){
+	int voltage = temp_function();
+	if (voltage >= 7200)
+		printf("Voltage of the battery is in normal condition\r\n");
+	else if(voltage>=7000)
+		printf("Voltage of the battery is in safe condition\r\n");
+	else
+		printf("Voltage of the battery is in critical condition\r\n");
+	return TRUE;
+}
 static Boolean EPS_TelemetryHKGeneral(void)
 {
 	gom_eps_hk_t myEpsTelemetry_hk;
@@ -392,6 +403,7 @@ static Boolean selectAndExecuteGomEPSDemoTest(void)
 	printf("\t 8) EPS Enable channel \n\r");
 	printf("\t 9) EPS Disable channel \n\r");
 	printf("\t 10) EPS Reboot \n\r");
+	printf("\t 18) print_voltage_condition \n\r");
 
 	while(UTIL_DbguGetIntegerMinMax(&selection, 0, 10) == 0);
 
@@ -428,6 +440,9 @@ static Boolean selectAndExecuteGomEPSDemoTest(void)
         break;
     case 10:
     	offerMoreTests = EPS_Reboot();
+    	break;
+    case 11:
+    	offerMoreTests = print_voltage_condition();
     	break;
 	default:
 		break;
