@@ -106,13 +106,14 @@ static Boolean packetsLunchByUserInput(void)
 		unsigned char* testBuffer1;
 	    int i;
 	    unsigned int temp=0;
-	    int User_Input=0;
+	    int User_Input_packet_length=0;
+	    int User_Input_number_of_packet=0;
 
-        printf("Enter a number of packets \n\r");
-		while(UTIL_DbguGetIntegerMinMax(&User_Input,0, 2000000) == (char)0);
-		testBuffer1 = (unsigned char*)malloc(User_Input * sizeof(unsigned char));
+        printf("Enter the length of the packet \n\r");
+		while(UTIL_DbguGetIntegerMinMax(&User_Input_packet_length,0, 2000000) == (char)0);
+		testBuffer1 = (unsigned char*)malloc(User_Input_packet_length * sizeof(unsigned char));
 
-	    for(i = 0; i < User_Input; i++){
+	    for(i = 0; i < User_Input_packet_length; i++){
 	    	printf("Enter num %d \n\r",i);
 	    	if(UTIL_DbguGetHexa32(&temp)){
 	    		testBuffer1[i] = (unsigned char)(temp);
@@ -123,11 +124,12 @@ static Boolean packetsLunchByUserInput(void)
 	    		i--;
 	    	}
 	    }
-
-		while(txCounter < 5 && timeoutCounter < 5)
+	    printf("Enter the number of the packet \n\r");
+	    while(UTIL_DbguGetIntegerMinMax(&User_Input_number_of_packet,0, 2000000) == (char)0);
+		while(txCounter < User_Input_number_of_packet && timeoutCounter < User_Input_number_of_packet)
 		{
 			printf("\r\n Transmission of single buffers with default callsign. AX25 Format. \r\n");
-			print_error(IsisTrxvu_tcSendAX25DefClSign(0, testBuffer1, User_Input, &avalFrames));
+			print_error(IsisTrxvu_tcSendAX25DefClSign(0, testBuffer1, User_Input_packet_length, &avalFrames));
 
 			if ((avalFrames != 0)&&(avalFrames != 255))
 			{
