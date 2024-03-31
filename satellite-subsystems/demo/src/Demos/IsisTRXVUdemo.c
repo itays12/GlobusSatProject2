@@ -628,10 +628,6 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 	case 17:
 		offerMoreTests = packetsLunchByUserInput();
 		break;
-	case 18:
-		//offerMoreTests = print_voltage_condition();
-		offerMoreTests = FALSE;
-		break;
 	case 19:
 		offerMoreTests = FALSE;
 		break;
@@ -717,8 +713,7 @@ Boolean IsisTRXVUdemoMain(void)
 	}
 }
 
-Boolean TRXVUtest(void)
-{
+Boolean TRXVUtest(void) {
 	IsisTRXVUdemoMain();
 	return TRUE;
 }
