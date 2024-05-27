@@ -8,6 +8,7 @@
 #define EPS_H_
 
 #include "GlobalStandards.h"
+#include <satellite-subsystems/GomEPS.h>
 #include "EPSOperationModes.h"
 #include "SubSystemModules/Communication/SatCommandHandler.h"
 #include <stdint.h>
@@ -35,8 +36,15 @@
 
 #define NUMBER_OF_SOLAR_PANELS			6
 #define NUMBER_OF_THRESHOLD_VOLTAGES 	6 		///< first 3 are charging voltages, last 3 are discharging voltages
-#define DEFAULT_EPS_THRESHOLD_VOLTAGES 	{(voltage_t)6500, (voltage_t)7100, (voltage_t)7300,	 \
-										  (voltage_t)6600, (voltage_t)7200, (voltage_t)7400}
+
+#define FULL_MODE_DOWN_TEND 7.3
+#define FULL_MODE_UP_TEND 7.4
+
+#define CRUISE_MODE_DOWN_TEND 7.1
+#define CRUISE_MODE_UP_TEND 7.2
+
+#define SAFE_MODE_DOWN_TEND 6.5
+#define SAFE_MODE_UP_TEND 6.6
 
 typedef enum __attribute__ ((__packed__)){
 	INDEX_DOWN_SAFE,
@@ -89,6 +97,8 @@ int EPS_Conditioning();
  * @return	0 on success
  * 			Error code according to <hal/errors.h>
  */
+int getFilteredVolt(voltage_t t);
+
 int GetBatteryVoltage(voltage_t *vbat);
 
 /*!
