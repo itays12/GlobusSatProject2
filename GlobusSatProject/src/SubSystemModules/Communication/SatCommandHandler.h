@@ -33,7 +33,6 @@ typedef struct __attribute__ ((__packed__)) sat_packet_t
 	char cmd_subtype;
 	unsigned short length;
 	unsigned char data[MAX_COMMAND_DATA_LENGTH];
-
 }sat_packet_t;
 
 /*!

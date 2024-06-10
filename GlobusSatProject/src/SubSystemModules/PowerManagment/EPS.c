@@ -28,7 +28,7 @@ int EPS_Conditioning()
 		}
 		if(t>=SAFE_MODE_DOWN_TEND)
 		{
-			return EnterCruiseMode();
+			return EnterSafeMode();
 		}
 		else
 		{
@@ -48,7 +48,7 @@ int EPS_Conditioning()
 		}
 		if(t>=SAFE_MODE_UP_TEND)
 		{
-			return EnterCruiseMode();
+			return EnterSafeMode();
 		}
 		else
 		{
