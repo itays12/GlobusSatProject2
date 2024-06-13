@@ -3,6 +3,7 @@
 #include <hal/Drivers/I2C.h>
 #include <hal/Timing/Time.h>
 #include "GlobalStandards.h"
+#include "InitSystem.h"
 
 //default don't argue
 #define SPEED_i2cBusSpeed_Hz 100000
