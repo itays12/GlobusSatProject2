@@ -1,9 +1,7 @@
 #include <satellite-subsystems/IsisTRXUV.h>
 #include <hal/errors.h>
 #include <hal/boolean.h>
-#include <TRXVU.h>
-
-static xTaskHandle watchdogKickTaskHandle = NULL;
+#include "TRXVU.h"
 
 Boolean IsisTRXVUdemoInit(void)
 {
@@ -34,21 +32,6 @@ Boolean IsisTRXVUdemoInit(void)
 		return FALSE;
 	}
 
-	// Start watchdog kick task
-	xTaskCreate( _WatchDogKickTask,(signed char*)"WDT", 2048, NULL, tskIDLE_PRIORITY, &watchdogKickTaskHandle );
 
 	return TRUE;
-}
-
-static void _WatchDogKickTask(void *parameters)
-{
-	(void)parameters;
-	// Kick radio I2C watchdog by requesting uptime every 10 seconds
-	portTickType xLastWakeTime = xTaskGetTickCount ();
-	for(;;)
-	{
-		unsigned int uptime;
-		(void)IsisTrxvu_tcGetUptime(0, &uptime);
-		vTaskDelayUntil(&xLastWakeTime,10000);
-	}
 }

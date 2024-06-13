@@ -32,7 +32,7 @@
 
 void taskMain()
 {
-	InitSubsystems();
+	InitSubsystem();
 
 	while (TRUE) {
 		EPS_Conditioning();

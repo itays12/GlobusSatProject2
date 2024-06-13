@@ -1,8 +1,27 @@
 #include "EPS.h"
 #include <satellite-subsystems/GomEPS.h>
+#include <stdio.h>
+#include "utils.h"
 
 voltage_t last_voltage;
 int voltage_tend;
+
+int EPS_Init(void)
+{
+    unsigned char i2c_address = 0x02;
+    int err;
+
+	err = GomEpsInitialize(&i2c_address, 1);
+	if(err != E_NO_SS_ERR && err != E_IS_INITIALIZED)
+	{
+		// we have a problem. Indicate the error. But we'll gracefully exit to the higher menu instead of
+		// hanging the code
+		logError(err,"GomEpsInitialize() failed");
+		return FALSE;
+	}
+
+	return err;
+}
 
 int EPS_Conditioning()
 {
@@ -61,7 +80,7 @@ int GetBatteryVoltage(voltage_t *vbat)
 {
 	gom_eps_hk_t response;
 	int err = (GomEpsGetHkData_general(0,&response));
-	print_error(err);
+	logError(err, "failed to get battery voltage");
 	*vbat = response.fields.vbatt;
 	return err;
 }

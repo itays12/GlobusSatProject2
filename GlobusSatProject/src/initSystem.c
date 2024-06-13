@@ -22,8 +22,16 @@ int StartFRAM()
 	{
 		//TODO : Telemetry log error
 		// TODO: after file system log crate
-		print_error(flag);
+		//print_error(flag);
 	}
+	return flag;
+}
+
+int StartTime()
+{
+	//Epoch
+	const Time t = UNIX_DATE_JAN_D1_Y2000;
+	int flag = Time_start(&t, 0);
 	return flag;
 }
 
@@ -46,17 +54,16 @@ int InitSubsystem()
 		return 1;
 	}
 
+	flag = EPS_Init();
+	if(flag != E_NO_SS_ERR){
+		return 1;
+	}
+
 	return 0;
 
 }
 
-int StartTIME()
-{
-	//Epoch
-	const Time t = UNIX_DATE_JAN_D1_Y2000;
-	int flag = Time_start(&t, 0);
-	return flag;
-}
+
 
 int StartI2C()
 {
