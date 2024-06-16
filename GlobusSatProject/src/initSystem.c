@@ -38,7 +38,7 @@ int StartTime()
 	return flag;
 }
 
-int InitSubsystem()
+int InitSubsystems()
 {
 	int flag;
 	flag = StartI2C();
@@ -61,10 +61,6 @@ int InitSubsystem()
 		return 1;
 	}
 	flag = EPS_Init();
-	if(flag != E_NO_SS_ERR){
-		return 1;
-	}
-	flag = IsisTRXVUdemoInit();
 	if(flag != E_NO_SS_ERR){
 		return 1;
 	}

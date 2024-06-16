@@ -3,7 +3,7 @@
 #include <hal/boolean.h>
 #include "TRXVU.h"
 
-int IsisTRXVUdemoInit(void)
+int TRXVUInit(void)
 {
     // Definition of I2C and TRXUV
 	ISIStrxvuI2CAddress myTRXVUAddress[1];
