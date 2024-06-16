@@ -4,6 +4,9 @@
 #include <hal/Timing/Time.h>
 #include "GlobalStandards.h"
 #include "InitSystem.h"
+#include "SubSystemModules/PowerManagment/EPS.h"
+#include "SubSystemModules/Communication/TRXVU.h"
+#include "utils.h"
 
 //default don't argue
 #define SPEED_i2cBusSpeed_Hz 100000
@@ -22,7 +25,7 @@ int StartFRAM()
 	{
 		//TODO : Telemetry log error
 		// TODO: after file system log crate
-		//print_error(flag);
+		logError(flag, "Error starting FRAM");
 	}
 	return flag;
 }
@@ -53,8 +56,15 @@ int InitSubsystem()
 	{
 		return 1;
 	}
-
 	flag = EPS_Init();
+	if(flag != E_NO_SS_ERR){
+		return 1;
+	}
+	flag = EPS_Init();
+	if(flag != E_NO_SS_ERR){
+		return 1;
+	}
+	flag = IsisTRXVUdemoInit();
 	if(flag != E_NO_SS_ERR){
 		return 1;
 	}
@@ -69,13 +79,4 @@ int StartI2C()
 {
 	int flag = I2C_start(SPEED_i2cBusSpeed_Hz,TIMEOUT_i2cBusSpeed_Hz);
 	return flag;
-}
-
-
-//TODO: check if SPI need to be init
-
-int AddToLog(int e, const char* message)
-{
-	print_error(message);
-	return e;
 }

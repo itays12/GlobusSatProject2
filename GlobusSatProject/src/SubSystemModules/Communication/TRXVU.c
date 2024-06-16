@@ -3,7 +3,7 @@
 #include <hal/boolean.h>
 #include "TRXVU.h"
 
-Boolean IsisTRXVUdemoInit(void)
+int IsisTRXVUdemoInit(void)
 {
     // Definition of I2C and TRXUV
 	ISIStrxvuI2CAddress myTRXVUAddress[1];
@@ -29,9 +29,9 @@ Boolean IsisTRXVUdemoInit(void)
 		// we have a problem. Indicate the error. But we'll gracefully exit to the higher menu instead of
 		// hanging the code
 		TRACE_ERROR("\n\r IsisTrxvu_initialize() failed; err=%d! Exiting ... \n\r", rv);
-		return FALSE;
+		return rv;
 	}
 
 
-	return TRUE;
+	return rv;
 }
