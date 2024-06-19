@@ -4,6 +4,7 @@
 #include <hal/boolean.h>
 #include "TRXVU.h"
 #include "SubSystemModules/Housekepping/TelemetryCollector.h"
+#include "SubSystemModules/Maintenance/Maintenance.h"
 #include "SysI2CAddr.h"
 #include "utils.h"
 #include "FRAM_FlightParameters.h"
@@ -43,13 +44,20 @@ int TRXVUInit(void)
 	antsAdress.addressSideB = ANTS_I2C_SIDE_B_ADDR;
 	IsisAntS_initialize(&antsAdress, 1);
 
+	return rv;
+}
 
-	int beacon_interval;
+time_unix prev_time;
+
+int BeaconLogic(Boolean forceTX){
+	time_unix beacon_interval;
 	FRAM_read((unsigned char*)&beacon_interval, BEACON_INTERVAL_TIME_ADDR,BEACON_INTERVAL_TIME_SIZE);
 
-
-
-	return rv;
+	if( CheckExecutionTime( prev_time, beacon_interval)){
+		WOD_Telemetry_t wod;
+		GetCurrentWODTelemetry(&wod);
+	}
+	return 0;
 }
 
 //****Approved by Uri****
@@ -68,7 +76,7 @@ int TRX_Logic(){
 
 int GetNumberOfFramesInBuffer(){
 	unsigned short frame_count = 0;
-	int error =IsisTrxvu_rcGetFrameCount(0, &frame_count);
+	int error = IsisTrxvu_rcGetFrameCount(0, &frame_count);
 	logError(error , "error in get frame count");
 	return frame_count;
 }
