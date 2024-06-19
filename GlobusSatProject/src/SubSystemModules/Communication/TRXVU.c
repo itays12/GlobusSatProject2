@@ -2,7 +2,11 @@
 #include <hal/errors.h>
 #include <hal/boolean.h>
 #include "TRXVU.h"
-#include "SubSystemModules/Housekeeping/TelemetryCollector.h"
+#include "SubSystemModules/Housekepping/TelemetryCollector.h"
+#include "CommandDictionary.h"
+#include "SPL.h"
+
+
 
 //****doesnt really work, only initlizes the module****
 int TRXVUInit(void)
@@ -34,18 +38,21 @@ int TRXVUInit(void)
 		return rv;
 	}
 
-
 	return rv;
 }
 
-//****Approved by Adi****
+//****Approved by Uri****
 int TRX_Logic(){
 	int frame_count=GetNumberOfFramesInBuffer();
-	if (frame_count>0){
+	for(int i = 0; i < frame_count; i++){
 		sat_packet_t cmd;
 		int err = GetOnlineCommand(&cmd);
+		if (logError(err, "Error in trx logic, could not get command") != E_NO_SS_ERR){
+			return err;
+		}
+		ActUponCommand(&cmd);
 	}
-	return 1;
+	return 0;
 }
 
 int GetNumberOfFramesInBuffer(){
@@ -55,8 +62,28 @@ int GetNumberOfFramesInBuffer(){
 	return frame_count;
 }
 
-
-//****code in progess, need someone to go over commands****
+//****TODO: handle errors****
 int ActUponCommand(sat_packet_t *cmd){
+	switch(cmd->cmd_type){
+		case trxvu_cmd_type:
+			trxvu_command_router(cmd);
+			break;
+		case eps_cmd_type:
+			eps_command_router(cmd);
+			break;
+		case telemetry_cmd_type:
+			telemetry_command_router(cmd);
+			break;
+		case filesystem_cmd_type:
+			filesystem_command_router(cmd);
+			break;
+		case managment_cmd_type:
+			managment_command_router(cmd);
+			break;
+		case ack_type:
+			//TODO: handle ack packets
+		case dump_type:
+			//TODO: handle dump packets
+	}
 	return 0;
 }
