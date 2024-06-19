@@ -1,42 +1,49 @@
 #include <satellite-subsystems/IsisTRXUV.h>
+#include <satellite-subsystems/IsisAntS.h>
 #include <hal/errors.h>
 #include <hal/boolean.h>
 #include "TRXVU.h"
 #include "SubSystemModules/Housekepping/TelemetryCollector.h"
 #include "CommandDictionary.h"
 #include "SPL.h"
+#include "SysI2CAddr.h"
+#include "utils.h"
 
 
 
-//****doesnt really work, only initlizes the module****
+//****not sure if it works, will have to check at testing****
 int TRXVUInit(void)
 {
     // Definition of I2C and TRXUV
-	ISIStrxvuI2CAddress myTRXVUAddress[1];
-	ISIStrxvuFrameLengths myTRXVUBuffers[1];
-	ISIStrxvuBitrate myTRXVUBitrates[1];
+	ISIStrxvuI2CAddress TRXVUAddress;
+	ISIStrxvuFrameLengths TRXVUBuffer;
+	ISIStrxvuBitrate TRXVUBitrate;
     int rv;
 
 	//I2C addresses defined
-	myTRXVUAddress[0].addressVu_rc = 0x60;
-	myTRXVUAddress[0].addressVu_tc = 0x61;
+    TRXVUAddress.addressVu_rc = I2C_TRXVU_RC_ADDR;
+	TRXVUAddress.addressVu_tc = I2C_TRXVU_TC_ADDR;
 
 	//Buffer definition
-	myTRXVUBuffers[0].maxAX25frameLengthTX = SIZE_TXFRAME;
-	myTRXVUBuffers[0].maxAX25frameLengthRX = SIZE_RXFRAME;
+	TRXVUBuffer.maxAX25frameLengthTX = SIZE_TXFRAME;
+	TRXVUBuffer.maxAX25frameLengthRX = SIZE_RXFRAME;
 
 	//Bitrate definition
-	myTRXVUBitrates[0] = trxvu_bitrate_1200;
+	TRXVUBitrate = trxvu_bitrate_9600;
 
 	//Initialize the trxvu subsystem
-	rv = IsisTrxvu_initialize(myTRXVUAddress, myTRXVUBuffers, myTRXVUBitrates, 1);
+	rv = IsisTrxvu_initialize(&TRXVUAddress, &TRXVUBuffer, &TRXVUBitrate, 1);
 	if(rv != E_NO_SS_ERR && rv != E_IS_INITIALIZED)
 	{
 		// we have a problem. Indicate the error. But we'll gracefully exit to the higher menu instead of
 		// hanging the code
-		LogError(rv, "failed to initilze trxvu, IsisTrxvu_initialize returned error");
+		logError(rv, "failed to initilze trxvu, IsisTrxvu_initialize returned error");
 		return rv;
 	}
+	ISISantsI2Caddress antsAdress;
+	antsAdress.addressSideA = ANTS_I2C_SIDE_A_ADDR;
+	antsAdress.addressSideB = ANTS_I2C_SIDE_B_ADDR;
+	IsisAntS_initialize(&antsAdress, 1);
 
 	return rv;
 }
@@ -64,26 +71,32 @@ int GetNumberOfFramesInBuffer(){
 
 //****TODO: handle errors****
 int ActUponCommand(sat_packet_t *cmd){
+	int err;
 	switch(cmd->cmd_type){
 		case trxvu_cmd_type:
-			trxvu_command_router(cmd);
+			err = trxvu_command_router(cmd);
 			break;
 		case eps_cmd_type:
-			eps_command_router(cmd);
+			err = eps_command_router(cmd);
 			break;
 		case telemetry_cmd_type:
-			telemetry_command_router(cmd);
+			err = telemetry_command_router(cmd);
 			break;
 		case filesystem_cmd_type:
-			filesystem_command_router(cmd);
+			err = filesystem_command_router(cmd);
 			break;
 		case managment_cmd_type:
-			managment_command_router(cmd);
+			err = managment_command_router(cmd);
 			break;
 		case ack_type:
 			//TODO: handle ack packets
+			break;
 		case dump_type:
 			//TODO: handle dump packets
+			break;
+	}
+	if (logError(err, "failed to run command: ") != E_NO_SS_ERR){
+		return err;
 	}
 	return 0;
 }
