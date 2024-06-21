@@ -8,7 +8,7 @@
 #include "SysI2CAddr.h"
 #include "utils.h"
 #include "FRAM_FlightParameters.h"
-
+#include "AckHandler.h"
 
 //****not sure if it works, will have to check at testing****
 int TRXVUInit(void)
@@ -47,6 +47,13 @@ int TRXVUInit(void)
 	return rv;
 }
 
+int TransmitSplPacket(sat_packet_t *packet, unsigned char *avalFrames){
+	//the total size of the packet is 8 + the length of the SPL data
+	unsigned char length = 8 + packet->length;
+	int err = IsisTrxvu_tcSendAX25DefClSign(ISIS_TRXVU_I2C_BUS_INDEX, (unsigned char*)packet, length, avalFrames);
+	return err;
+}
+
 time_unix prev_time;
 
 int BeaconLogic(Boolean forceTX){
@@ -69,6 +76,7 @@ int TRX_Logic(){
 		if (logError(err, "Error in trx logic, could not get command") != E_NO_SS_ERR){
 			return err;
 		}
+		SendAckPacket(ACK_RECEIVE_COMM, &cmd, NULL, 0);
 		ActUponCommand(&cmd);
 	}
 	return 0;

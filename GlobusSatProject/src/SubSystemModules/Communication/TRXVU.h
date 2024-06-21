@@ -107,7 +107,7 @@ Boolean CheckTransmitionAllowed();
  * @param[out] avalFrames Number of the available slots in the transmission buffer of the VU_TC after the frame has been added. Set NULL to skip available slot count read-back.
  * @return    Error code according to <hal/errors.h>
  */
-int TransmitSplPacket(sat_packet_t *packet, int *avalFrames);
+int TransmitSplPacket(sat_packet_t *packet,unsigned char *avalFrames);
 
 /*!
  * @brief sends an abort message via a freeRTOS queue.
