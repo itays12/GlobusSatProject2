@@ -11,7 +11,7 @@
 #include "AckHandler.h"
 
 //****not sure if it works, will have to check at testing****
-int TRXVUInit(void)
+int TRXVUInit()
 {
     // Definition of I2C and TRXUV
 	ISIStrxvuI2CAddress TRXVUAddress;
@@ -51,11 +51,20 @@ int TransmitSplPacket(sat_packet_t *packet, unsigned char *avalFrames){
 	//the total size of the packet is 8 + the length of the SPL data
 	unsigned char length = 8 + packet->length;
 	int err = IsisTrxvu_tcSendAX25DefClSign(ISIS_TRXVU_I2C_BUS_INDEX, (unsigned char*)packet, length, avalFrames);
+	logError(err, "failed to initilze trxvu, IsisTrxvu_initialize returned error");
 	return err;
 }
 
 time_unix prev_time;
+int AssembleCommand(unsigned char *data, unsigned short data_length, char type, char subtype,unsigned int id, sat_packet_t *cmd){
 
+	cmd->length =data_length ;
+	cmd->cmd_type =type ;
+	cmd->cmd_subtype =subtype ;
+	cmd->ID =id;
+	memcpy(cmd->data, data, data_length);
+	return 0;
+}
 int BeaconLogic(Boolean forceTX){
 	time_unix beacon_interval;
 	FRAM_read((unsigned char*)&beacon_interval, BEACON_INTERVAL_TIME_ADDR,BEACON_INTERVAL_TIME_SIZE);
@@ -63,9 +72,14 @@ int BeaconLogic(Boolean forceTX){
 	if( CheckExecutionTime( prev_time, beacon_interval)){
 		WOD_Telemetry_t wod;
 		GetCurrentWODTelemetry(&wod);
+		sat_packet_t cmd;
+		AssembleCommand( &wod,  sizeof(WOD_Telemetry_t),  0,  0, 0, &cmd);
+		TransmitSplPacket( &cmd, NULL);
+		Time_getUnixEpoch(&prev_time);
+
 	}
 	return 0;
-}
+
 
 //****Approved by Uri****
 int TRX_Logic(){
@@ -78,6 +92,7 @@ int TRX_Logic(){
 		}
 		SendAckPacket(ACK_RECEIVE_COMM, &cmd, NULL, 0);
 		ActUponCommand(&cmd);
+		 BeaconLogic( forceTX);
 	}
 	return 0;
 }
