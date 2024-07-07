@@ -8,6 +8,7 @@
 #include <hal/Drivers/I2C.h>
 #include <hal/Drivers/SPI.h>
 #include <hal/Timing/Time.h>
+#include "hal/errors.h"
 
 #include <at91/utility/trace.h>
 #include <at91/peripherals/cp15/cp15.h>
@@ -33,9 +34,12 @@
 void taskMain()
 {
 	InitSubsystems();
-
-	while (TRUE) {
-		EPS_Conditioning();
+	while (TRUE)
+	{
+		//state = EPS_Conditioning();
+		//logError(TRX_Logic(), "Error in TRX");
+		//logError(Maintenance(),"Error in Maintenance");
+		//logError(Telementry(),"Error in Telementry";
 
 	}
 }
