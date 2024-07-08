@@ -36,14 +36,16 @@ void taskMain()
 	InitSubsystems();
 	while (TRUE)
 	{
-		//state = EPS_Conditioning();
+		//logError(EPS_Conditioning());
 		//logError(TRX_Logic(), "Error in TRX");
 		//logError(Maintenance(),"Error in Maintenance");
 		//logError(Telementry(),"Error in Telementry";
 
+
 	}
 }
 #endif
+
 
 // main operation function. will be called upon software boot.
 int main()
