@@ -9,7 +9,7 @@ Boolean CheckExecutionTime(time_unix prev_time, time_unix period){
 
 	logError(err,"error in CheckExecutionTime Time_g");
 
-	if(prev_time+period>=cur_time)
+	if(cur_time-prev_time>=period)
 		return TRUE;
 	else return FALSE;
 }

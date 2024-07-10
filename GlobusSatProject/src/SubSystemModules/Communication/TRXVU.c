@@ -10,8 +10,9 @@
 #include "FRAM_FlightParameters.h"
 #include "AckHandler.h"
 
+time_unix prev_time;
 //****not sure if it works, will have to check at testing****
-int TRXVUInit()
+int InitTrxvu()
 {
     // Definition of I2C and TRXUV
 	ISIStrxvuI2CAddress TRXVUAddress;
@@ -30,6 +31,7 @@ int TRXVUInit()
 	//Bitrate definition
 	TRXVUBitrate = trxvu_bitrate_9600;
 
+
 	//Initialize the trxvu subsystem
 	rv = IsisTrxvu_initialize(&TRXVUAddress, &TRXVUBuffer, &TRXVUBitrate, 1);
 	if(rv != E_NO_SS_ERR && rv != E_IS_INITIALIZED)
@@ -44,6 +46,8 @@ int TRXVUInit()
 	antsAdress.addressSideB = ANTS_I2C_SIDE_B_ADDR;
 	IsisAntS_initialize(&antsAdress, 1);
 
+	Time_getUnixEpoch(&prev_time);
+
 	return rv;
 }
 
@@ -55,7 +59,6 @@ int TransmitSplPacket(sat_packet_t *packet, unsigned char *avalFrames){
 	return err;
 }
 
-time_unix prev_time;
 int AssembleCommand(unsigned char *data, unsigned short data_length, char type, char subtype,unsigned int id, sat_packet_t *cmd){
 
 	cmd->length =data_length ;
@@ -66,12 +69,12 @@ int AssembleCommand(unsigned char *data, unsigned short data_length, char type, 
 	return 0;
 }
 int BeaconLogic(Boolean forceTX){
-	time_unix beacon_interval;
-	FRAM_read((unsigned char*)&beacon_interval, BEACON_INTERVAL_TIME_ADDR,BEACON_INTERVAL_TIME_SIZE);
+	time_unix beacon_interval = 10;
 
 	if( CheckExecutionTime( prev_time, beacon_interval)){
+		printf("sending beacon %ud\n\r", prev_time);
 		WOD_Telemetry_t wod;
-		GetCurrentWODTelemetry(&wod);
+		//GetCurrentWODTelemetry(&wod);
 		sat_packet_t cmd;
 		AssembleCommand( &wod,  sizeof(WOD_Telemetry_t),  0,  0, 0, &cmd);
 		TransmitSplPacket( &cmd, NULL);
@@ -79,28 +82,24 @@ int BeaconLogic(Boolean forceTX){
 
 	}
 	return 0;
-
+}
 
 //****Approved by Uri****
 int TRX_Logic(){
 	int frame_count=GetNumberOfFramesInBuffer();
 	for(int i = 0; i < frame_count; i++){
 		sat_packet_t cmd;
-		int err = GetOnlineCommand(&cmd);
-		if (logError(err, "Error in trx logic, could not get command") != E_NO_SS_ERR){
-			return err;
-		}
+		int err = 0;
 		SendAckPacket(ACK_RECEIVE_COMM, &cmd, NULL, 0);
 		ActUponCommand(&cmd);
-		 BeaconLogic( forceTX);
 	}
+	 BeaconLogic( FALSE);
 	return 0;
 }
 
 int GetNumberOfFramesInBuffer(){
 	unsigned short frame_count = 0;
-	int error = IsisTrxvu_rcGetFrameCount(0, &frame_count);
+	int error = IsisTrxvu_rcGetFrameCount(ISIS_TRXVU_I2C_BUS_INDEX, &frame_count);
 	logError(error , "error in get frame count");
 	return frame_count;
 }
-

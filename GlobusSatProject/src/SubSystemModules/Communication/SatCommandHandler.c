@@ -7,19 +7,19 @@ int ActUponCommand(sat_packet_t *cmd){
 	int err;
 	switch(cmd->cmd_type){
 		case trxvu_cmd_type:
-			err = trxvu_command_router(cmd);
+			//err = trxvu_command_router(cmd);
 			break;
 		case eps_cmd_type:
-			err = eps_command_router(cmd);
+			//err = eps_command_router(cmd);
 			break;
 		case telemetry_cmd_type:
-			err = telemetry_command_router(cmd);
+			//err = telemetry_command_router(cmd);
 			break;
 		case filesystem_cmd_type:
-			err = filesystem_command_router(cmd);
+			//err = filesystem_command_router(cmd);
 			break;
 		case managment_cmd_type:
-			err = managment_command_router(cmd);
+			//err = managment_command_router(cmd);
 			break;
 		case ack_type:
 			//TODO: handle ack packets

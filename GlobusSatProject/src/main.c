@@ -23,6 +23,7 @@
 #include "SubSystemModules/Maintenance/Maintenance.h"
 #include "InitSystem.h"
 #include "main.h"
+#include "SubSystemModules/Communication/TRXVU.h"
 #include <stdlib.h>
 //#include "SubSystemModules/Communication/CommWatchdog.h"
 
@@ -36,7 +37,7 @@ void taskMain()
 
 	while (TRUE) {
 		EPS_Conditioning();
-
+		TRX_Logic();
 	}
 }
 #endif
