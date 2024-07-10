@@ -42,25 +42,11 @@ int InitSubsystems()
 {
 	int flag;
 	flag = StartI2C();
-	if(flag != E_NO_SS_ERR)
-	{
-		return 1;
-	}
 	flag = StartFRAM();
-	if(flag != E_NO_SS_ERR)
-	{
-		return 1;
-	}
 	flag = StartTime();
-	if(flag != E_NO_SS_ERR)
-	{
-		return 1;
-	}
 	flag = EPS_Init();
-	if(flag != E_NO_SS_ERR){
-		return 1;
-	}
 	flag = EPS_Init();
+	flag = InitTrxvu();
 	if(flag != E_NO_SS_ERR){
 		return 1;
 	}

@@ -24,6 +24,7 @@
 #include "SubSystemModules/Maintenance/Maintenance.h"
 #include "InitSystem.h"
 #include "main.h"
+#include "SubSystemModules/Communication/TRXVU.h"
 #include <stdlib.h>
 //#include "SubSystemModules/Communication/CommWatchdog.h"
 
@@ -40,8 +41,6 @@ void taskMain()
 		//logError(TRX_Logic(), "Error in TRX");
 		//logError(Maintenance(),"Error in Maintenance");
 		//logError(Telementry(),"Error in Telementry";
-
-
 	}
 }
 #endif

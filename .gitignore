@@ -56,3 +56,5 @@ dkms.conf
 
 #annoying settings
 GlobusSatProject\.settings
+hal/demo/.settings/language.settings.xml
+satellite-subsystems/demo/.settings/language.settings.xml
