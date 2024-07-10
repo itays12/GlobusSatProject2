@@ -66,7 +66,14 @@ int AssembleCommand(unsigned char *data, unsigned short data_length, char type, 
 	cmd->cmd_subtype =subtype ;
 	cmd->ID =id;
 	memcpy(cmd->data, data, data_length);
-	return 0;
+
+	if(data==NULL){
+	return null_pointer_error;
+	}
+
+	else{
+		return command_succsess;
+	}
 }
 int BeaconLogic(Boolean forceTX){
 	time_unix beacon_interval = 10;
@@ -83,13 +90,24 @@ int BeaconLogic(Boolean forceTX){
 	}
 	return 0;
 }
+int GetOnlineCommand(sat_packet_t *cmd){
+	ISIStrxvuRxFrame RxFrame;
+	RxFrame.rx_framedata = cmd;
+	int err = IsisTrxvu_rcGetCommandFrame(ISIS_TRXVU_I2C_BUS_INDEX, &RxFrame);
+	if (logError(err, "Error in Get Online Command, could not get command") != E_NO_SS_ERR){
+				return err;
+	}
+}
 
 //****Approved by Uri****
 int TRX_Logic(){
 	int frame_count=GetNumberOfFramesInBuffer();
 	for(int i = 0; i < frame_count; i++){
 		sat_packet_t cmd;
-		int err = 0;
+		int err = GetOnlineCommand(&cmd);
+		if (logError(err, "Error in trx logic, could not get command") != E_NO_SS_ERR){
+			return err;
+		}
 		SendAckPacket(ACK_RECEIVE_COMM, &cmd, NULL, 0);
 		ActUponCommand(&cmd);
 	}
