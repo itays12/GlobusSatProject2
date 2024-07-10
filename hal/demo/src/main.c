@@ -84,7 +84,11 @@ Boolean selectAndExecuteTest() {
 	printf("\t 16) RTT alarm Test \n\r");
 
 	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 16) == 0);
+	while (TRUE)
+	{
 
+
+	}
 	switch(selection) {
 	case 1:
 		offerMoreTests = I2Ctest();
