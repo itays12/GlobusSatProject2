@@ -32,3 +32,18 @@ void WriteTelem(){
      Time_get (&time);
 
 }
+
+void GetCurrentWODTelemetry(WOD_Telemetry_t *wod){
+	gom_eps_hk_t data_out;
+	GomEpsGetHkData_general(0, &data_out);
+	wod->vbat = data_out.fields.vbatt;
+	gom_eps_hkparam_t data_out_param;
+	GomEpsGetHkData_param(0, &data_out_param);
+	wod->bat_temp = data_out_param.fields.tempBattery;
+
+	for(int i = 0; i < 6; i++){
+
+	int IsisSolarPanelv2_getTemperature( IsisSolarPanelv2_Panel_t panel, int32_t* paneltemp, uint8_t *status );
+	}
+
+}
