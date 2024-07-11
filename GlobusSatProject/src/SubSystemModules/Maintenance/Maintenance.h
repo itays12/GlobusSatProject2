@@ -13,15 +13,14 @@
 /**
  * use the EPS to hard reset the MCU
  */
-int HardResetMCU();
+int HardResetMCU();//eps
 
 /*
- * delete onld files from SD card
+ * delete old files from SD card
  * minFreeSpace - the minimum free space in bytes we want to keep in the SD in all times.
  * If free space<minFreeSpace we start deleteing old TLM files
  */
-int DeleteOldFiels(int minFreeSpace);
-
+void DeleteOldFiles(int minFreeSpace);//changed from int to void //in progress
 /*!
  * @brief checks if the period time has passed
  * @param[in] prev_exec_time last sample time (last execution time)
@@ -29,27 +28,26 @@ int DeleteOldFiels(int minFreeSpace);
  * @return	TRUE if difference between now and last execution time is longer than 'period'
  * 			FALSE otherwise
  */
-Boolean CheckExecutionTime(time_unix prev_time, time_unix period);
+Boolean CheckExecutionTime(time_unix prev_time, time_unix period);//done by uri
 
 /*!
  * @brief checks if a time, saved in the FRAM has passed its deadline
  * @return	TRUE if deadline has passed
  * 			FALSE otherwise
  */
-Boolean CheckExecTimeFromFRAM(unsigned int fram_time_addr, time_unix period);
+Boolean CheckExecTimeFromFRAM(unsigned int fram_time_addr, time_unix period);//need adi to answer questions
 
 /*!
  * @brief reads the current UNIX time and writes it into the FRAM for future reference.
  */
-void SaveSatTimeInFRAM(unsigned int time_addr, unsigned int time_size);
+void SaveSatTimeInFRAM(unsigned int time_addr);//done
 
 /*!
  * @brief checks if there is a memory corruption in the filesystem.
  * @return	TRUE if is corrupted.
  * 			FALSE if no corruption(yay!)
  */
-Boolean IsFS_Corrupted();
-
+Boolean IsFS_Corrupted();//done
 /*!
  * @brief resets the ground station communication WDT because communication took place.
  */
