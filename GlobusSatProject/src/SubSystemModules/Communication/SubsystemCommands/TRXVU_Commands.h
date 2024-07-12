@@ -21,11 +21,16 @@ int CMD_SendDumpAbortRequest(sat_packet_t *cmd);
 
 int CMD_ForceDumpAbort(sat_packet_t *cmd);
 
+typedef struct MuteCMD{
+  time_unix mute_time;
+}MuteCMD;
+
 int CMD_MuteTRXVU(sat_packet_t *cmd);
-/**
- * set trxvu idle state
- * cmd data should include 0x01 (On) or 0x00 (Off). if sent ON than also pass the duration (4 bytes int)
- */
+
+typedef struct IdleCMD{
+  time_unix idle_time;
+
+}IdleCMD;
 int CMD_SetIdleState(sat_packet_t *cmd);
 
 int CMD_SetTransponder(sat_packet_t *cmd);

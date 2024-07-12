@@ -1,10 +1,11 @@
 #include "SatCommandHandler.h"
-#include "CommandDictionary.h"
 #include "SPL.h"
+#include <string.h>
+#include "utils.h"
 
 
 int ActUponCommand(sat_packet_t *cmd){
-	int err;
+	int err = 0;
 	switch(cmd->cmd_type){
 		case trxvu_cmd_type:
 			//err = trxvu_command_router(cmd);
@@ -32,4 +33,21 @@ int ActUponCommand(sat_packet_t *cmd){
 		return err;
 	}
 	return 0;
+}
+
+int AssembleCommand(void *data, unsigned short data_length, char type, char subtype,unsigned int id, sat_packet_t *cmd){
+
+	cmd->length =data_length ;
+	cmd->cmd_type =type ;
+	cmd->cmd_subtype =subtype ;
+	cmd->ID =id;
+	memcpy(cmd->data, data, data_length);
+
+	if(data==NULL){
+	return null_pointer_error;
+	}
+
+	else{
+		return command_succsess;
+	}
 }

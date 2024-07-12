@@ -1,6 +1,5 @@
 #include "EPS.h"
 #include <satellite-subsystems/GomEPS.h>
-#include <stdio.h>
 #include "utils.h"
 
 voltage_t last_voltage;

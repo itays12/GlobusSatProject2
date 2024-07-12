@@ -6,33 +6,29 @@
 #include "SubSystemModules/Housekepping/TelemetryCollector.h"
 #include "SubSystemModules/Maintenance/Maintenance.h"
 #include "SysI2CAddr.h"
+#include "satellite-subsystems/IsisTRXVU.h"
 #include "utils.h"
 #include "FRAM_FlightParameters.h"
 #include "AckHandler.h"
+#include <string.h>
 
 time_unix prev_time;
-//****not sure if it works, will have to check at testing****
 int InitTrxvu()
 {
-    // Definition of I2C and TRXUV
 	ISIStrxvuI2CAddress TRXVUAddress;
 	ISIStrxvuFrameLengths TRXVUBuffer;
 	ISIStrxvuBitrate TRXVUBitrate;
-    int rv;
+  int rv;
 
-	//I2C addresses defined
-    TRXVUAddress.addressVu_rc = I2C_TRXVU_RC_ADDR;
+  TRXVUAddress.addressVu_rc = I2C_TRXVU_RC_ADDR;
 	TRXVUAddress.addressVu_tc = I2C_TRXVU_TC_ADDR;
 
-	//Buffer definition
 	TRXVUBuffer.maxAX25frameLengthTX = SIZE_TXFRAME;
 	TRXVUBuffer.maxAX25frameLengthRX = SIZE_RXFRAME;
 
-	//Bitrate definition
 	TRXVUBitrate = trxvu_bitrate_9600;
 
 
-	//Initialize the trxvu subsystem
 	rv = IsisTrxvu_initialize(&TRXVUAddress, &TRXVUBuffer, &TRXVUBitrate, 1);
 	if(rv != E_NO_SS_ERR && rv != E_IS_INITIALIZED)
 	{
@@ -59,29 +55,15 @@ int TransmitSplPacket(sat_packet_t *packet, unsigned char *avalFrames){
 	return err;
 }
 
-int AssembleCommand(unsigned char *data, unsigned short data_length, char type, char subtype,unsigned int id, sat_packet_t *cmd){
 
-	cmd->length =data_length ;
-	cmd->cmd_type =type ;
-	cmd->cmd_subtype =subtype ;
-	cmd->ID =id;
-	memcpy(cmd->data, data, data_length);
 
-	if(data==NULL){
-	return null_pointer_error;
-	}
-
-	else{
-		return command_succsess;
-	}
-}
 int BeaconLogic(Boolean forceTX){
 	time_unix beacon_interval = 10;
 
 	if( CheckExecutionTime( prev_time, beacon_interval)){
-		printf("sending beacon %ud\n\r", prev_time);
+		printf("sending beacon %u\n\r", prev_time);
 		WOD_Telemetry_t wod;
-		//GetCurrentWODTelemetry(&wod);
+		GetCurrentWODTelemetry(&wod);
 		sat_packet_t cmd;
 		AssembleCommand( &wod,  sizeof(WOD_Telemetry_t),  0,  0, 0, &cmd);
 		TransmitSplPacket( &cmd, NULL);
@@ -92,11 +74,12 @@ int BeaconLogic(Boolean forceTX){
 }
 int GetOnlineCommand(sat_packet_t *cmd){
 	ISIStrxvuRxFrame RxFrame;
-	RxFrame.rx_framedata = cmd;
+	RxFrame.rx_framedata = (unsigned char*)cmd;
 	int err = IsisTrxvu_rcGetCommandFrame(ISIS_TRXVU_I2C_BUS_INDEX, &RxFrame);
 	if (logError(err, "Error in Get Online Command, could not get command") != E_NO_SS_ERR){
-				return err;
+			return err;
 	}
+  return 0;
 }
 
 //****Approved by Uri****
@@ -120,4 +103,8 @@ int GetNumberOfFramesInBuffer(){
 	int error = IsisTrxvu_rcGetFrameCount(ISIS_TRXVU_I2C_BUS_INDEX, &frame_count);
 	logError(error , "error in get frame count");
 	return frame_count;
+}
+
+int SetIdleState(ISIStrxvuIdleState state, time_unix duration){
+  return IsisTrxvu_tcSetIdlestate(ISIS_TRXVU_I2C_BUS_INDEX,state);
 }

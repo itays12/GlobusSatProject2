@@ -3,7 +3,6 @@
 #define SATCOMMANDS_H_
 
 #include "GlobalStandards.h"
-#include "SatCommandHandler.h"
 
 #define MAX_COMMAND_DATA_LENGTH 200 ///< maximum AX25 data field available for downlink
 #define IMG_CHUNK_SIZE 50 //190 // leave room for chunk number and more
@@ -54,7 +53,7 @@ int ParseDataToCommand(unsigned char * data, sat_packet_t *cmd);
  * @param[out] cmd pointer to parsed command buffer
  * @return	errors according to CMD_ERR
  */
-int AssembleCommand(unsigned char *data, unsigned short data_length, char type, char subtype,unsigned int id, sat_packet_t *cmd);
+int AssembleCommand(void *data, unsigned short data_length, char type, char subtype,unsigned int id, sat_packet_t *cmd);
 
 /*!
  * @brief returns a command to be executed if there is one in the delayed command buffer

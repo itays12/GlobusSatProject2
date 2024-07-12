@@ -47,7 +47,7 @@
 
 #define UNIX_SECS_FROM_Y1970_TO_Y2000	946681200				///< number of seconds from 1 JAN 1970 to 1 JAN 2000
 
-typedef unsigned long int time_unix; 	///< in seconds
+typedef unsigned int time_unix; 	///< in seconds
 typedef unsigned char byte;
 
 typedef short voltage_t; 	///< in mV
