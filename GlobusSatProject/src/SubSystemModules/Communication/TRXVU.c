@@ -67,7 +67,6 @@ int BeaconLogic(Boolean forceTX){
 		AssembleCommand( &wod,  sizeof(WOD_Telemetry_t),  0,  0, 0, &cmd);
 		TransmitSplPacket( &cmd, NULL);
 		Time_getUnixEpoch(&prev_time);
-
 	}
 	return 0;
 }
@@ -75,17 +74,19 @@ int BeaconLogic(Boolean forceTX){
 
 int GetOnlineCommand(sat_packet_t *cmd){
 	ISIStrxvuRxFrame RxFrame;
-	RxFrame.rx_framedata = (unsigned char*)cmd;
+  unsigned char buffer [SIZE_RXFRAME] = {0};
+	RxFrame.rx_framedata = buffer;
 	int err = IsisTrxvu_rcGetCommandFrame(ISIS_TRXVU_I2C_BUS_INDEX, &RxFrame);
 	if (logError(err, "Error in Get Online Command, could not get command") != E_NO_SS_ERR){
 		return err;
 	}
-  return 0;
+
+  return ParseDataToCommand(buffer, cmd);
 }
 
 //****Approved by Uri****
 int TRX_Logic(){
-	int frame_count=GetNumberOfFramesInBuffer();
+	int frame_count = GetNumberOfFramesInBuffer();
 	if (frame_count > 0) {
 		sat_packet_t cmd;
 		int err = GetOnlineCommand(&cmd);
