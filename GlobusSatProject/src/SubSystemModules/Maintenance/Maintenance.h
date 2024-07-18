@@ -35,7 +35,7 @@ Boolean CheckExecutionTime(time_unix prev_time, time_unix period);//done by uri
  * @return	TRUE if deadline has passed
  * 			FALSE otherwise
  */
-Boolean CheckExecTimeFromFRAM(unsigned int fram_time_addr, time_unix period);//need adi to answer questions
+Boolean CheckExecTimeFromFRAM(unsigned int fram_time_addr, time_unix period);//done by uri
 
 /*!
  * @brief reads the current UNIX time and writes it into the FRAM for future reference.
@@ -62,9 +62,9 @@ void ResetGroundCommWDT();
 Boolean IsGroundCommunicationWDTKick();
 
 
-int SetGsWdtKickTime(time_unix new_gs_wdt_kick_time);
+int SetGsWdtKickTime(time_unix new_gs_wdt_kick_time);//no dscription?
 
-time_unix GetGsWdtKickTime();
+time_unix GetGsWdtKickTime();//no dscription?
 
 /*!
  * @brief 	if a reset has been commanded and executed, SW reset or otherwise, this function will be active.

@@ -14,16 +14,18 @@ Boolean CheckExecutionTime(time_unix prev_time, time_unix period){
 
 	if(cur_time-prev_time>=period)
 		return TRUE;
-	else return FALSE;
+	else
+		return FALSE;
 }
 Boolean CheckExecTimeFromFRAM(unsigned int fram_time_addr, time_unix period){
-//period meaning deadline? how to get from fram time adress to the saved fram time
+	time_unix prev_time = fram_read(fram_time_addr, 4);
+	return (CheckExecutionTime(prev_time, period));
 }
 
 void DeleteOldFiles(int minFreeSpace){
 	FN_SPACE freeSpace;
 	fm_getfreespace(0,&freeSpace);
-	if (freeSpace.free < minFreeSpace){
+	while(freeSpace.free < minFreeSpace){
 		deleteOldestFile();
 	}
 }
