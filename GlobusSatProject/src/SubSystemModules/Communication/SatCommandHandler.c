@@ -1,6 +1,9 @@
 #include "SatCommandHandler.h"
+#include "CommandDictionary.h"
 #include "SPL.h"
+#include <cstddef>
 #include <string.h>
+#include <stddef.h>
 #include "utils.h"
 
 
@@ -8,19 +11,19 @@ int ActUponCommand(sat_packet_t *cmd){
 	int err = 0;
 	switch(cmd->cmd_type){
 		case trxvu_cmd_type:
-			//err = trxvu_command_router(cmd);
+			err = trxvu_command_router(cmd);
 			break;
 		case eps_cmd_type:
-			//err = eps_command_router(cmd);
+			err = eps_command_router(cmd);
 			break;
 		case telemetry_cmd_type:
-			//err = telemetry_command_router(cmd);
+			err = telemetry_command_router(cmd);
 			break;
 		case filesystem_cmd_type:
-			//err = filesystem_command_router(cmd);
+			err = filesystem_command_router(cmd);
 			break;
 		case managment_cmd_type:
-			//err = managment_command_router(cmd);
+			err = managment_command_router(cmd);
 			break;
 		case ack_type:
 			//TODO: handle ack packets
@@ -50,4 +53,20 @@ int AssembleCommand(void *data, unsigned short data_length, char type, char subt
 	else{
 		return command_succsess;
 	}
+}
+
+
+int ParseDataToCommand(unsigned char *data, sat_packet_t *cmd){
+  if (data == NULL || cmd == NULL){
+    return null_pointer_error;
+  }
+
+  unsigned int id = *(data + offsetof(sat_packet_t, ID));
+  char cmd_type = *(data + offsetof(sat_packet_t, cmd_type));
+  char cmd_subtype = *(data + offsetof(sat_packet_t, cmd_subtype));
+  unsigned short len = *(data + offsetof(sat_packet_t, length));
+  
+  AssembleCommand(data + offsetof(sat_packet_t, data), len, cmd_type, cmd_subtype, id, cmd);
+  
+  return command_succsess;
 }

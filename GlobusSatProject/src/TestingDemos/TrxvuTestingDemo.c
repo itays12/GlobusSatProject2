@@ -1,29 +1,9 @@
 #include "TrxvuTestingDemo.h"
 #include "hal/Utility/util.h"
+#include "hal/Timing/Time.h"
+#include "SubSystemModules/Maintenance/Maintenance.h"
+#include "SubSystemModules/Communication/TRXVU.h"
 #include "stdio.h"
-Boolean MainTrxvuTestBench(){
-	int selection = 0;
-		Boolean offerMoreTests = TRUE;
-		printf( "\n\r Select a test to perform: \n\r");
-		printf("\t 1)  Beacon Logic\n\r");
-		printf("\t 2) TRX Logic \n\r");
-		printf("\t 3) Transmit Test\n\r");
-
-
-	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 19) == 0);
-
-		switch(selection) {
-		case 1:
-			offerMoreTests = BeaconLogicTest();
-			break;
-		case 2:
-			offerMoreTests = TRX_LogicTest();
-			break;
-		case 3:
-			offerMoreTests = TransmitTest();
-			break;
-		}
-}
 
 Boolean BeaconLogicTest(){
 	int WaitTime;
@@ -35,6 +15,7 @@ Boolean BeaconLogicTest(){
 	while( CheckExecutionTime( prev_time,  WaitTime)){
 		BeaconLogic(TRUE);
 	}
+  return TRUE;
 }
 Boolean  TRX_LogicTest(){
 	int WaitTime;
@@ -46,7 +27,9 @@ Boolean  TRX_LogicTest(){
 	while( CheckExecutionTime( prev_time,  WaitTime)){
 		 TRX_Logic(TRUE);
 	}
+  return TRUE;
 }
+
 Boolean TransmitTest(){
 	//Buffers and variables definition
 		unsigned char testBuffer1[10]  = { 0 };
@@ -56,13 +39,13 @@ Boolean TransmitTest(){
 
 		sat_packet_t packet;
 		printf( "\n\r enter ID: \n\r");
-			while(UTIL_DbguGetIntegerMinMax(&packet.ID) == 0);
+			while(UTIL_DbguGetHexa32(&packet.ID) == 0);
 
 		printf( "\n\r enter subtype: \n\r");
-			while(UTIL_DbguGetIntegerMinMax(&packet.cmd_subtype) == 0);
+			while(UTIL_DbguGetHexa32(&packet.cmd_subtype) == 0);
 
 		printf( "\n\r enter type: \n\r");
-			while(UTIL_DbguGetIntegerMinMax(&packet.cmd_type) == 0);
+			UTIL_DbguGetHexa32(&packet.cmd_type);
 
 
 	    int i;
@@ -81,7 +64,32 @@ Boolean TransmitTest(){
 
 	    TransmitSplPacket( &packet, &avalFrames);
 
+  return TRUE;
 }
 
 
+
+Boolean MainTrxvuTestBench(){
+	int selection = 0;
+		Boolean offerMoreTests = TRUE;
+		printf( "\n\r Select a test to perform: \n\r");
+		printf("\t 1)  Beacon Logic\n\r");
+		printf("\t 2) TRX Logic \n\r");
+		printf("\t 3) Transmit Test\n\r");
+
+
+	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 19) == 0){};
+
+		switch(selection) {
+		case 1:
+			offerMoreTests = BeaconLogicTest();
+			break;
+		case 2:
+			offerMoreTests = TRX_LogicTest();
+			break;
+		case 3:
+			offerMoreTests = TransmitTest();
+			break;
+		}
+}
 

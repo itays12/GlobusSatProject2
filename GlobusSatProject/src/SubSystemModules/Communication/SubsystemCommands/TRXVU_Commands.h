@@ -15,22 +15,23 @@
 #define ANTENNA_DEPLOYMENT_TIMEOUT 10 //<! in seconds
 
 
+typedef struct IdleCMD{
+  time_unix idle_time;
+
+}IdleCMD;
+
+typedef struct MuteCMD{
+  time_unix mute_time;
+}MuteCMD;
+
 int CMD_StartDump(sat_packet_t *cmd);
 
 int CMD_SendDumpAbortRequest(sat_packet_t *cmd);
 
 int CMD_ForceDumpAbort(sat_packet_t *cmd);
 
-typedef struct MuteCMD{
-  time_unix mute_time;
-}MuteCMD;
-
 int CMD_MuteTRXVU(sat_packet_t *cmd);
 
-typedef struct IdleCMD{
-  time_unix idle_time;
-
-}IdleCMD;
 int CMD_SetIdleState(sat_packet_t *cmd);
 
 int CMD_SetTransponder(sat_packet_t *cmd);
@@ -46,7 +47,6 @@ int CMD_SetBaudRate(sat_packet_t *cmd);
 int CMD_GetBeaconInterval(sat_packet_t *cmd);
 
 int CMD_TrasmitBeacon(sat_packet_t *cmd);
-
 
 int CMD_GetTxUptime(sat_packet_t *cmd);
 
