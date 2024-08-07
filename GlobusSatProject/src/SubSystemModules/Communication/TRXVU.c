@@ -84,7 +84,16 @@ int GetOnlineCommand(sat_packet_t *cmd){
   return ParseDataToCommand(buffer, cmd);
 }
 
+ISIStrxvuIdleState idle_state = trxvu_idle_state_off;
+time_t last_idle_time;
+time_t idle_duration;
+
 int TRX_Logic(){
+	if (idle_state != trxvu_idle_state_off && CheckExecutionTime(last_idle_time, idle_duration)){
+		IsisTrxvu_tcSetIdlestate(ISIS_TRXVU_I2C_BUS_INDEX, trxvu_idle_state_off);
+		idle_state = trxvu_idle_state_off;
+	}
+
 	int frame_count = GetNumberOfFramesInBuffer();
 	if (frame_count > 0) {
 		sat_packet_t cmd;
@@ -106,10 +115,12 @@ int GetNumberOfFramesInBuffer(){
 	return frame_count;
 }
 
-ISIStrxvuIdleState idle_state;
-time_t last_idle_time;
-time_t idle_time;
+
 
 int SetIdle(time_t duration){
-	return IsisTrxvu_tcSetIdlestate(ISIS_TRXVU_I2C_BUS_INDEX, );
+	idle_state = trxvu_idle_state_on;
+	idle_duration = duration;
+
+	Time_getUnixEpoch(&last_idle_time);
+	return IsisTrxvu_tcSetIdlestate(ISIS_TRXVU_I2C_BUS_INDEX, trxvu_idle_state_on);
 }

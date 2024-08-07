@@ -1,15 +1,6 @@
 #include "EPSOperationModes.h"
 #include "SubSystemModules/Communication/TRXVU.h"
 
-
-
-int CheckTrxvuUnmute(){
-	if (is_idle && CheckExecutionTime(last_idle, mute_time)){
-		SetIdleState(ISIStrvu )
-	}
-	return 0;
-}
-
 /*!
  * @brief Executes the necessary procedure in order to initiate the system into Full mode
  * @return	0 on success
