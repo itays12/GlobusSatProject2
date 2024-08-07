@@ -61,10 +61,10 @@ void ResetGroundCommWDT();
  */
 Boolean IsGroundCommunicationWDTKick();
 
-
-int SetGsWdtKickTime(time_unix new_gs_wdt_kick_time);//no dscription?
-
-time_unix GetGsWdtKickTime();//no dscription?
+//set maximum time without communications until reset
+int SetGsWdtKickTime(time_unix new_gs_wdt_kick_time);//might get deleted by program
+//checks if its time to reset
+time_unix GetGsWdtKickTime();//might get deleted by program
 
 /*!
  * @brief 	if a reset has been commanded and executed, SW reset or otherwise, this function will be active.
