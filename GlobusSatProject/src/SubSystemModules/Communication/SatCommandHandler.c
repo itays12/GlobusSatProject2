@@ -1,7 +1,6 @@
 #include "SatCommandHandler.h"
 #include "CommandDictionary.h"
 #include "SPL.h"
-#include <cstddef>
 #include <string.h>
 #include <stddef.h>
 #include "utils.h"
@@ -40,16 +39,15 @@ int ActUponCommand(sat_packet_t *cmd){
 
 int AssembleCommand(void *data, unsigned short data_length, char type, char subtype,unsigned int id, sat_packet_t *cmd){
 
-	cmd->length =data_length ;
-	cmd->cmd_type =type ;
-	cmd->cmd_subtype =subtype ;
-	cmd->ID =id;
+	cmd->length = data_length ;
+	cmd->cmd_type = type ;
+	cmd->cmd_subtype = subtype ;
+	cmd->ID = id;
 	memcpy(cmd->data, data, data_length);
 
 	if(data==NULL){
-	return null_pointer_error;
+		return null_pointer_error;
 	}
-
 	else{
 		return command_succsess;
 	}

@@ -74,7 +74,7 @@ int BeaconLogic(Boolean forceTX){
 
 int GetOnlineCommand(sat_packet_t *cmd){
 	ISIStrxvuRxFrame RxFrame;
-  unsigned char buffer [SIZE_RXFRAME] = {0};
+    unsigned char buffer [SIZE_RXFRAME] = {0};
 	RxFrame.rx_framedata = buffer;
 	int err = IsisTrxvu_rcGetCommandFrame(ISIS_TRXVU_I2C_BUS_INDEX, &RxFrame);
 	if (logError(err, "Error in Get Online Command, could not get command") != E_NO_SS_ERR){
@@ -84,7 +84,6 @@ int GetOnlineCommand(sat_packet_t *cmd){
   return ParseDataToCommand(buffer, cmd);
 }
 
-//****Approved by Uri****
 int TRX_Logic(){
 	int frame_count = GetNumberOfFramesInBuffer();
 	if (frame_count > 0) {
@@ -96,7 +95,7 @@ int TRX_Logic(){
 		SendAckPacket(ACK_RECEIVE_COMM, &cmd, NULL, 0);
 		ActUponCommand(&cmd);
 	}
-	 BeaconLogic( FALSE);
+	 BeaconLogic(FALSE);
 	return 0;
 }
 
@@ -107,6 +106,10 @@ int GetNumberOfFramesInBuffer(){
 	return frame_count;
 }
 
-int SetIdleState(ISIStrxvuIdleState state, time_unix duration){
-  return IsisTrxvu_tcSetIdlestate(ISIS_TRXVU_I2C_BUS_INDEX,state);
+ISIStrxvuIdleState idle_state;
+time_t last_idle_time;
+time_t idle_time;
+
+int SetIdle(time_t duration){
+	return IsisTrxvu_tcSetIdlestate(ISIS_TRXVU_I2C_BUS_INDEX, );
 }

@@ -61,4 +61,21 @@ int StartI2C() {
   return flag;
 }
 
-void WriteDefaultValuesToFRAM() {}
+int DeploySystem(){
+	WriteDefaultValuesToFRAM();
+
+	return 0;
+}
+
+void WriteDefaultValuesToFRAM() {
+	int save_time_eps = DEFAULT_EPS_SAVE_TLM_TIME;	//<! save EPS TLM every 5 seconds
+	FRAM_write(&save_time_eps, EPS_SAVE_TLM_PERIOD_ADDR, sizeof(int));	//<! address where the save tlm period will be
+	int save_time_trx = DEFAULT_TRXVU_SAVE_TLM_TIME;
+	FRAM_write(&save_time_trx, TRXVU_SAVE_TLM_PERIOD_ADDR, sizeof(int));
+	int save_time_ant = DEFAULT_ANT_SAVE_TLM_TIME;
+	FRAM_write(&save_time_ant, ANT_SAVE_TLM_PERIOD_ADDR, sizeof(int));
+	int save_time_solar =  DEFAULT_SOLAR_SAVE_TLM_TIME;
+	FRAM_write(&save_time_solar, SOLAR_SAVE_TLM_PERIOD_ADDR, sizeof(int));
+	int save_time_wod = DEFAULT_WOD_SAVE_TLM_TIME;
+	FRAM_write(&save_time_wod, WOD_SAVE_TLM_PERIOD_ADDR, sizeof(int));
+}

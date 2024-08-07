@@ -130,12 +130,11 @@ int BeaconLogic(Boolean forceTX);
 
 /*
  * @brief set the idle state of the trxvu
- * @param[in] state ON/OFF
  * @param[in] duration for how long will the satellite be in idle state, if state is OFF than this value is ignored
  * @return	0 in successful
  * 			-1 in failure
  */
-int SetIdleState(ISIStrxvuIdleState state, time_unix duration);
+int SetIdle(time_t duration);
 
 /*!
  * @brief	mutes the TRXVU for a specified time frame
