@@ -45,7 +45,48 @@ void TelemetryCollectorLogic() {
     TelemetrySaveTRXVU();
   }
 }
+////////
+TelemetrySaveTRXVU(){
 
+	ISIStrxvuTxTelemetry telemetry_all;
+	 IsisTrxvu_tcGetTelemetryAll(0, &telemetry_all);
+	 WriteTelem(&telemetry_all, sizeof(ISIStrxvuTxTelemetry), END_FILE_NAME_TX	);
+
+	 ISIStrxvuTxTelemetry_revC telemetry_all_revC;
+	 IsisTrxvu_tcGetTelemetryAll_revC(0, &telemetry_all_revC);
+	 WriteTelem(&telemetry_all_revC, sizeof( ISIStrxvuTxTelemetry_revC), END_FILE_NAME_TX);
+
+	 ISIStrxvuTxTelemetry last_telemetry;
+	 IsisTrxvu_tcGetLastTxTelemetry(0, &last_telemetry);
+	 WriteTelem(&last_telemetry, sizeof(  ISIStrxvuTxTelemetry), END_FILE_NAME_TX);
+
+	 ISIStrxvuTxTelemetry_revC last_telemetry_revC;
+	 IsisTrxvu_tcGetLastTxTelemetry_revC(0, &last_telemetry_revC);
+	 WriteTelem(&last_telemetry_revC, sizeof( ISIStrxvuTxTelemetry_revC ), END_FILE_NAME_TX);
+
+	 ISIStrxvuRxTelemetry telemetry_Rx;
+	 IsisTrxvu_rcGetTelemetryAll(0, &telemetry_Rx);
+	 WriteTelem(&telemetry_Rx, sizeof(	 ISIStrxvuRxTelemetry),END_FILE_NAME_RX);
+
+	 ISIStrxvuRxTelemetry_revC telemetry_All_revC_Rx;
+      IsisTrxvu_rcGetTelemetryAll_revC(0, telemetry_All_revC_Rx);
+      WriteTelem(&telemetry_All_revC_Rx, sizeof( ISIStrxvuRxTelemetry_revC),END_FILE_NAME_RX);
+
+}
+////////
+TelemetrySaveANT(){
+
+	ISISantsTelemetry alltelemetry_A;
+	IsisAntS_getAlltelemetry(ANTS_I2C_SIDE_A_ADDR, isisants_sideA, &alltelemetry_A);
+	WriteTelem(&alltelemetry_A, sizeof( ISISantsTelemetry),END_FILE_NAME_ANTENNA);
+
+	ISISantsTelemetry alltelemetry_B;
+	IsisAntS_getAlltelemetry(ANTS_I2C_SIDE_B_ADDR, isisants_sideB, &alltelemetry_B);
+	WriteTelem(&alltelemetry_B, sizeof( ISISantsTelemetry),END_FILE_NAME_ANTENNA);
+
+
+
+}
 int GetCurrentWODTelemetry(WOD_Telemetry_t *wod) {
   gom_eps_hk_t data_out;
   GomEpsGetHkData_general(0, &data_out);
