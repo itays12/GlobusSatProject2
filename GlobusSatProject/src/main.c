@@ -32,9 +32,13 @@
 
 void taskMain() {
   InitSubsystems();
+  unsigned short last_volt = 0;
   while (TRUE) {
     logError(EPS_Conditioning(), "Error in TRX");
     logError(TRX_Logic(), "Error in TRX");
+    gom_eps_hk_t tele;
+    GomEpsGetHkData_general(&tele);
+    printf("%d",    tele.fields.vbatt);
     // logError(Maintenance(),"Error in Maintenance");
     // logError(Telementry(),"Error in Telementry";
   }

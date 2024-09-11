@@ -92,6 +92,8 @@ int SetRSSITransponder(short rssiValue);
  */
 int turnOnTransponder();
 
+void changeBeaconTime(time_t time);
+
 Boolean CheckDumpAbort();
 
 /*!
