@@ -13,7 +13,26 @@
 #include "AckHandler.h"
 #include <string.h>
 
+int mute = 0;
+time_unix timeForFlip;
+time_unix muteTime = 30;
+time_unix unmuteTime = 30;
 time_unix prev_time;
+
+void checkMute(){
+	time_unix cur_time = Time_getUnixEpoch(&timeForFlip);
+	if (cur_time < timeForFlip)
+	{
+		if (mute){
+			timeForFlip = cur_time + unmuteTime;
+			mute = 0;
+		}else{
+			timeForFlip = cur_time + muteTime;
+			mute = 1;
+		}
+	}
+}
+
 int InitTrxvu()
 {
 	ISIStrxvuI2CAddress TRXVUAddress;
@@ -44,6 +63,8 @@ int InitTrxvu()
 	IsisAntS_initialize(&antsAdress, 1);
 
 	Time_getUnixEpoch(&prev_time);
+
+	timeForMute = Time_getUnixEpoch(&timeForMute);
 
 	return rv;
 }
