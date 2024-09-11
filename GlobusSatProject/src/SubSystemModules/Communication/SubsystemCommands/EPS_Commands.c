@@ -1,6 +1,5 @@
 #include "EPS_Commands.h"
 
-
 int CMD_UpdateThresholdVoltages(sat_packet_t *cmd){
   return 0;
 }
@@ -25,25 +24,27 @@ int CMD_GetSmoothingFactor(sat_packet_t *cmd){
   return 0;
 }
 
+// eps modes
 int CMD_EnterCruiseMode(sat_packet_t *cmd){
-  return 0;
+    return EnterCruiseMode();
 }
 
 int CMD_EnterFullMode(sat_packet_t *cmd){
-  return 0;
+    return EnterFullMode();
 }
 
 int CMD_EnterCriticalMode(sat_packet_t *cmd){
-  return 0;
+    return EnterCriticalMode();
 }
 
 int CMD_EnterSafeMode(sat_packet_t *cmd){
-  return 0;
+    return  EnterSafeMode();
 }
 
 int CMD_GetCurrentMode(sat_packet_t *cmd){
-  return 0;
+    return GetSystemState();
 }
+
 
 int CMD_EPS_NOP(sat_packet_t *cmd){
   return 0;
@@ -58,19 +59,19 @@ int CMD_EPS_SetChannels(sat_packet_t *cmd){
 }
 
 int CMD_SetChannels3V3_On(sat_packet_t *cmd){
-  return 0;
+    return GomEpsSetSingleOutput(gom_i2c_address, gomeps_channel_3, gomeps_channel_on, 0);
 }
 
 int CMD_SetChannels3V3_Off(sat_packet_t *cmd){
-  return 0;
+    return GomEpsSetSingleOutput(gom_i2c_address, gomeps_channel_3, gomeps_channel_off, 0);
 }
 
 int CMD_SetChannels5V_On(sat_packet_t *cmd){
-  return 0;
+  return GomEpsSetSingleOutput(gom_i2c_address, gomeps_channel_5, gomeps_channel_on, 0);
 }
 
 int CMD_SetChannels5V_Off(sat_packet_t *cmd){
-  return 0;
+  return GomEpsSetSingleOutput(gom_i2c_address, gomeps_channel_5, gomeps_channel_off, 0);
 }
 
 int CMD_GetEpsParemeter(sat_packet_t *cmd){
@@ -97,14 +98,15 @@ int CMD_SaveConfig(sat_packet_t *cmd){
   return 0;
 }
 
-int CMD_SolarPanelWake(sat_packet_t *cmd){
-  return 0;
+// solar panel
+void CMD_SolarPanelWake(sat_packet_t *cmd){
+    IsisSolarPanelv2_wakeup();
 }
 
-int CMD_SolarPanelSleep(sat_packet_t *cmd){
-  return 0;
+void CMD_SolarPanelSleep(sat_packet_t *cmd){
+    IsisSolarPanelv2_sleep();
 }
 
-int CMD_GetSolarPanelState(sat_packet_t *cmd){
-  return 0;
+IsisSolarPanelv2_State_t CMD_GetSolarPanelState(sat_packet_t *cmd){
+    return IsisSolarPanelv2_getState();
 }
