@@ -19,6 +19,12 @@ time_unix muteTime = 30;
 time_unix unmuteTime = 30;
 time_unix prev_time;
 
+void setMutePeriod(time_t mute_time, time_t unmute_time){
+	muteTime = mute_time;
+	unmuteTime = unmute_time;
+}
+
+
 void checkMute(){
 	time_unix cur_time = Time_getUnixEpoch(&timeForFlip);
 	if (cur_time < timeForFlip)
@@ -64,12 +70,16 @@ int InitTrxvu()
 
 	Time_getUnixEpoch(&prev_time);
 
-	timeForMute = Time_getUnixEpoch(&timeForMute);
+	rv = Time_getUnixEpoch(&timeForFlip);
+
 
 	return rv;
 }
 
 int TransmitSplPacket(sat_packet_t *packet, unsigned char *avalFrames){
+	if (!mute){
+		return 0;
+	}
 	//the total size of the packet is 8 + the length of the SPL data
 	unsigned char length = 8 + packet->length;
 	int err = IsisTrxvu_tcSendAX25DefClSign(ISIS_TRXVU_I2C_BUS_INDEX, (unsigned char*)packet, length, avalFrames);
@@ -81,13 +91,13 @@ int BeaconLogic(Boolean forceTX){
 	time_unix beacon_interval = 10;
 
 	if( CheckExecutionTime( prev_time, beacon_interval)){
-		printf("sending beacon %u\n\r", prev_time);
 		WOD_Telemetry_t wod;
 		GetCurrentWODTelemetry(&wod);
 		sat_packet_t cmd;
 		AssembleCommand( &wod,  sizeof(WOD_Telemetry_t),  0,  0, 0, &cmd);
 		TransmitSplPacket( &cmd, NULL);
 		Time_getUnixEpoch(&prev_time);
+
 	}
 	return 0;
 }

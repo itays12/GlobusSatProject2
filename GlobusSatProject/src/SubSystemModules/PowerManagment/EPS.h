@@ -129,6 +129,8 @@ int GetThresholdVoltages(EpsThreshVolt_t thresh_volts[NUMBER_OF_THRESHOLD_VOLTAG
  */
 int GetAlpha(float *alpha);
 
+int GetBatteryVoltage(voltage_t *vbat);
+
 /*!
  * @brief setting the new voltage smoothing factor (alpha) on the FRAM.
  * @param[in] new_alpha new value for the smoothing factor alpha

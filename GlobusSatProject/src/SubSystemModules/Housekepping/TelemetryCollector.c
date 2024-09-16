@@ -30,7 +30,6 @@ void TelemetrySaveEPS() {
 }
 
 time_unix prev_trx_time;
-time_unix trx_period;
 void TelemetrySaveTRXVU() {
   ISIStrxvuTxTelemetry telemetry;
   IsisTrxvu_tcGetTelemetryAll(0, &telemetry);
@@ -38,15 +37,15 @@ void TelemetrySaveTRXVU() {
 }
 
 void TelemetryCollectorLogic() {
-  FRAM_read((unsigned char *)&trx_period, EPS_SAVE_TLM_PERIOD_ADDR,
-            sizeof(time_unix));
+	time_unix trx_period;
+	FRAM_READ_FIELD(&trx_period, trx_period);
   Time_getUnixEpoch(&prev_trx_time);
   if (CheckExecutionTime(prev_trx_time, trx_period)) {
     TelemetrySaveTRXVU();
   }
 }
 ////////
-TelemetrySaveTRXVU(){
+void TelemetrySaveTRXVU(){
 
 	ISIStrxvuTxTelemetry telemetry_all;
 	 IsisTrxvu_tcGetTelemetryAll(0, &telemetry_all);
@@ -67,24 +66,6 @@ TelemetrySaveTRXVU(){
 	 ISIStrxvuRxTelemetry telemetry_Rx;
 	 IsisTrxvu_rcGetTelemetryAll(0, &telemetry_Rx);
 	 WriteTelem(&telemetry_Rx, sizeof(	 ISIStrxvuRxTelemetry),END_FILE_NAME_RX);
-
-	 ISIStrxvuRxTelemetry_revC telemetry_All_revC_Rx;
-      IsisTrxvu_rcGetTelemetryAll_revC(0, telemetry_All_revC_Rx);
-      WriteTelem(&telemetry_All_revC_Rx, sizeof( ISIStrxvuRxTelemetry_revC),END_FILE_NAME_RX);
-
-}
-////////
-TelemetrySaveANT(){
-
-	ISISantsTelemetry alltelemetry_A;
-	IsisAntS_getAlltelemetry(ANTS_I2C_SIDE_A_ADDR, isisants_sideA, &alltelemetry_A);
-	WriteTelem(&alltelemetry_A, sizeof( ISISantsTelemetry),END_FILE_NAME_ANTENNA);
-
-	ISISantsTelemetry alltelemetry_B;
-	IsisAntS_getAlltelemetry(ANTS_I2C_SIDE_B_ADDR, isisants_sideB, &alltelemetry_B);
-	WriteTelem(&alltelemetry_B, sizeof( ISISantsTelemetry),END_FILE_NAME_ANTENNA);
-
-
 
 }
 int GetCurrentWODTelemetry(WOD_Telemetry_t *wod) {

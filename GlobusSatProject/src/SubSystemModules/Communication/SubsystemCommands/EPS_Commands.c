@@ -59,19 +59,19 @@ int CMD_EPS_SetChannels(sat_packet_t *cmd){
 }
 
 int CMD_SetChannels3V3_On(sat_packet_t *cmd){
-    return GomEpsSetSingleOutput(gom_i2c_address, gomeps_channel_3, gomeps_channel_on, 0);
+    return GomEpsSetSingleOutput(EPS_I2C_BUS_INDEX, gomeps_channel_3, gomeps_channel_on, 0);
 }
 
 int CMD_SetChannels3V3_Off(sat_packet_t *cmd){
-    return GomEpsSetSingleOutput(gom_i2c_address, gomeps_channel_3, gomeps_channel_off, 0);
+    return GomEpsSetSingleOutput(EPS_I2C_BUS_INDEX, gomeps_channel_3, gomeps_channel_off, 0);
 }
 
 int CMD_SetChannels5V_On(sat_packet_t *cmd){
-  return GomEpsSetSingleOutput(gom_i2c_address, gomeps_channel_5, gomeps_channel_on, 0);
+  return GomEpsSetSingleOutput(EPS_I2C_BUS_INDEX, gomeps_channel_5, gomeps_channel_on, 0);
 }
 
 int CMD_SetChannels5V_Off(sat_packet_t *cmd){
-  return GomEpsSetSingleOutput(gom_i2c_address, gomeps_channel_5, gomeps_channel_off, 0);
+  return GomEpsSetSingleOutput(EPS_I2C_BUS_INDEX, gomeps_channel_5, gomeps_channel_off, 0);
 }
 
 int CMD_GetEpsParemeter(sat_packet_t *cmd){

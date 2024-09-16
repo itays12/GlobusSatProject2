@@ -10,7 +10,23 @@
 
 #include <hal/Storage/FRAM.h>
 
+typedef struct FramFlightParams{
+	time_unix trx_period;
+}FramFlightParams;
 
+#define FRAM_OFFSET(field) offsetof(FramFlightParams ,field)
+#define FRAM_SIZE(field) sizeof(((FramFlightParams *)0)->field)
+
+#define FRAM_WRITE_FIELD(data_ptr, field) \
+    FRAM_write((const unsigned char *)(data_ptr), FRAM_OFFSET(field), FRAM_SIZE( field))
+
+#define FRAM_READ_FIELD(data_ptr, field) \
+    FRAM_read((const unsigned char *)(data_ptr), FRAM_OFFSET(field), FRAM_SIZE( field))
+
+
+
+
+/*
 // <Satellite Management>
 #define DEPLOYMENT_TIME_ADDR			0X05		//<! time at which the satellites starts deployment
 #define DEPLOYMENT_TIME_SIZE			4			//<! size of parameter in bytes
@@ -91,4 +107,5 @@
 #define MAX_BEACON_INTERVAL				60			// beacon every 1 minute
 #define MIN_BEACON_INTERVAL				10			// beacon every 10 secinds
 
+*/
 #endif /* FRAM_FLIGHTPARAMETERS_H_ */
