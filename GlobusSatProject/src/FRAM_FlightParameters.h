@@ -10,18 +10,36 @@
 
 #include <hal/Storage/FRAM.h>
 
-typedef struct FramFlightParams{
-	time_unix trx_period;
+struct eps_mode_volts_t {
+    float full_mode_down_tend;
+    float full_mode_up_tend;
+
+    float cruise_mode_down_tend;
+    float cruise_mode_up_tend;
+
+    float safe_mode_down_tend;
+    float safe_mode_up_tend;
+
+    float critical_mode_up_tend;
+    float critical_mode_down_tend;
+}eps_mode_volts;
+
+struct FramFlightParams{
+	Boolean trxMute;
+	unsigned int trxMuteTime;
+
+	unsigned int telePeriod_trx;
+	unsigned int teleSaveTime_trx;
+
+	unsigned int beaconInterval;
+	unsigned int beaconSendTime;
 }FramFlightParams;
 
-#define FRAM_OFFSET(field) offsetof(FramFlightParams ,field)
-#define FRAM_SIZE(field) sizeof(((FramFlightParams *)0)->field)
-
 #define FRAM_WRITE_FIELD(data_ptr, field) \
-    FRAM_write((const unsigned char *)(data_ptr), FRAM_OFFSET(field), FRAM_SIZE( field))
+    FRAM_write((const unsigned char *)(data_ptr), 	offsetof(struct FramFlightParams, field), sizeof(((struct FramFlightParams *)0)->field))
 
 #define FRAM_READ_FIELD(data_ptr, field) \
-    FRAM_read((const unsigned char *)(data_ptr), FRAM_OFFSET(field), FRAM_SIZE( field))
+    FRAM_read((unsigned char *)(data_ptr), offsetof(struct FramFlightParams, field), sizeof(((struct FramFlightParams *)0)->field))
 
 
 

@@ -7,7 +7,11 @@
  * 			errors according to <hal/errors.h>
  */
 int EnterFullMode(){
-	return 0;
+
+    UnMuteTRXVU(); // unmute TRXVU if its muted
+
+    EpsState = 1;
+    return 0;
 }
 
 /*!
@@ -16,8 +20,10 @@ int EnterFullMode(){
  * 			errors according to <hal/errors.h>
  */
 int EnterCruiseMode(){
-	return 0;
+    muteTRXVU(600); // mute for 10 min
 
+    EpsState = 2;
+	return 0;
 }
 
 /*!
@@ -26,8 +32,10 @@ int EnterCruiseMode(){
  * 			errors according to <hal/errors.h>
  */
 int EnterSafeMode(){
-	return 0;
+    muteTRXVU(600); // mute for 10 min
 
+    EpsState = 3;
+    return 0;
 }
 
 /*!
@@ -36,5 +44,20 @@ int EnterSafeMode(){
  * 			errors according to <hal/errors.h>
  */
 int EnterCriticalMode(){
-	return 0;
+    muteTRXVU(600); // mute for 10 min
+
+    EpsState = 4;
+    return 0;
 }
+
+int GetSystemState(){
+    return EpsState;
+}
+
+int SetEPS_Channels(channel_t channel);
+
+channel_t GetSystemChannelState();
+
+Boolean EpsGetLowVoltageFlag();
+
+void EpsSetLowVoltageFlag(Boolean low_volt_flag);

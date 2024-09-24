@@ -13,40 +13,24 @@ void WriteTelem(void *data, int size, const char *ext) {
   printf("writing telem to file: %s", buffer);
 }
 
-void TelemetrySaveEPS() {
-  gom_eps_hkparam_t data;
-  gom_eps_hk_t data1;
-  gom_eps_hk_vi_t data2;
-  gom_eps_hk_out_t data3;
-  gom_eps_hk_wdt_t data4;
-  gom_eps_hk_basic_t data5;
-
-  GomEpsGetHkData_param(0, &data);
-  GomEpsGetHkData_general(0, &data1);
-  GomEpsGetHkData_vi(0, &data2);
-  GomEpsGetHkData_out(0, &data3);
-  GomEpsGetHkData_wdt(0, &data4);
-  GomEpsGetHkData_basic(0, &data5);
-}
-
-time_unix prev_trx_time;
-void TelemetrySaveTRXVU() {
-  ISIStrxvuTxTelemetry telemetry;
-  IsisTrxvu_tcGetTelemetryAll(0, &telemetry);
-  WriteTelem(&telemetry, sizeof(ISIStrxvuTxTelemetry), "trx");
-}
-
 void TelemetryCollectorLogic() {
-	time_unix trx_period;
-	FRAM_READ_FIELD(&trx_period, trx_period);
-  Time_getUnixEpoch(&prev_trx_time);
-  if (CheckExecutionTime(prev_trx_time, trx_period)) {
-    TelemetrySaveTRXVU();
-  }
-}
-////////
-void TelemetrySaveTRXVU(){
 
+	time_unix curTime;
+	Time_getUnixEpoch(&curTime);
+
+	time_unix trxTimer;
+	FRAM_READ_FIELD(&trxTimer, teleSaveTime_trx);
+	if (curTime > trxTimer) {
+		TelemetrySaveTRXVU();
+		time_unix telePeriod_trx;
+		FRAM_READ_FIELD(&telePeriod_trx, telePeriod_trx);
+		trxTimer += telePeriod_trx;
+		FRAM_WRITE_FIELD(&trxTimer, teleSaveTime_trx);
+	}
+}
+
+
+void TelemetrySaveTRXVU(){
 	ISIStrxvuTxTelemetry telemetry_all;
 	 IsisTrxvu_tcGetTelemetryAll(0, &telemetry_all);
 	 WriteTelem(&telemetry_all, sizeof(ISIStrxvuTxTelemetry), END_FILE_NAME_TX	);
@@ -68,6 +52,7 @@ void TelemetrySaveTRXVU(){
 	 WriteTelem(&telemetry_Rx, sizeof(	 ISIStrxvuRxTelemetry),END_FILE_NAME_RX);
 
 }
+
 int GetCurrentWODTelemetry(WOD_Telemetry_t *wod) {
   gom_eps_hk_t data_out;
   GomEpsGetHkData_general(0, &data_out);

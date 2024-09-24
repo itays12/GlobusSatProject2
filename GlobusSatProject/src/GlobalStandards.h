@@ -6,6 +6,8 @@
 #include <at91/utility/exithandler.h>
 #include <hal/errors.h>
 
+#define NUMBER_OF_SOLAR_PANELS 6
+
 #include "FRAM_FlightParameters.h"
 #include "SysI2CAddr.h"
 #include "TestingConfigurations.h"

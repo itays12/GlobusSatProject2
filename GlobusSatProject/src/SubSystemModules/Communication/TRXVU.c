@@ -13,30 +13,51 @@
 #include "AckHandler.h"
 #include <string.h>
 
-int mute = 0;
-time_unix timeForFlip;
-time_unix muteTime = 30;
-time_unix unmuteTime = 30;
-time_unix prev_time;
+void muteTransmission(time_t mute_time){
+	time_unix unmuteTime;
+	logError(Time_getUnixEpoch(&unmuteTime), "muteTransmission");
 
-void setMutePeriod(time_t mute_time, time_t unmute_time){
-	muteTime = mute_time;
-	unmuteTime = unmute_time;
+	unmuteTime += mute_time;
+	FRAM_WRITE_FIELD(&unmuteTime, trxMuteTime);
 }
 
+int getMuteTime(time_unix* mute_time){
+	return FRAM_READ_FIELD(&mute_time, trxMuteTime);
+}
 
-void checkMute(){
-	time_unix cur_time = Time_getUnixEpoch(&timeForFlip);
-	if (cur_time < timeForFlip)
-	{
-		if (mute){
-			timeForFlip = cur_time + unmuteTime;
-			mute = 0;
-		}else{
-			timeForFlip = cur_time + muteTime;
-			mute = 1;
-		}
+int muteTrx(){
+	Boolean mute = TRUE;
+	return FRAM_WRITE_FIELD(&mute, trxMute);
+}
+
+int unmuteTrx(){
+	Boolean mute = FALSE;
+	return FRAM_WRITE_FIELD(&mute, trxMute);
+}
+
+int isMuted(Boolean* isMuted){
+	return FRAM_READ_FIELD(isMuted, trxMute);
+}
+
+Boolean checkTransmissionAllowed(){
+	Boolean mute;
+	logError(isMuted(&mute), "checkTransmissionAllowed");
+	if (mute){
+		return FALSE;
 	}
+	time_unix curTime;
+	time_unix muteTime;
+
+	logError(Time_getUnixEpoch(&curTime), "checkTransmissionAllowed");
+	logError(getMuteTime(&muteTime), "checkTransmissionAllowed");
+
+
+	if (curTime > muteTime){
+		return TRUE;
+	}else{
+		return FALSE;
+	}
+
 }
 
 int InitTrxvu()
@@ -44,9 +65,9 @@ int InitTrxvu()
 	ISIStrxvuI2CAddress TRXVUAddress;
 	ISIStrxvuFrameLengths TRXVUBuffer;
 	ISIStrxvuBitrate TRXVUBitrate;
-  int rv;
+	int rv;
 
-  TRXVUAddress.addressVu_rc = I2C_TRXVU_RC_ADDR;
+	TRXVUAddress.addressVu_rc = I2C_TRXVU_RC_ADDR;
 	TRXVUAddress.addressVu_tc = I2C_TRXVU_TC_ADDR;
 
 	TRXVUBuffer.maxAX25frameLengthTX = SIZE_TXFRAME;
@@ -68,38 +89,47 @@ int InitTrxvu()
 	antsAdress.addressSideB = ANTS_I2C_SIDE_B_ADDR;
 	IsisAntS_initialize(&antsAdress, 1);
 
-	Time_getUnixEpoch(&prev_time);
-
-	rv = Time_getUnixEpoch(&timeForFlip);
-
 
 	return rv;
 }
 
 int TransmitSplPacket(sat_packet_t *packet, unsigned char *avalFrames){
-	if (!mute){
+	if (!checkTransmissionAllowed()){
 		return 0;
 	}
 	//the total size of the packet is 8 + the length of the SPL data
 	unsigned char length = 8 + packet->length;
 	int err = IsisTrxvu_tcSendAX25DefClSign(ISIS_TRXVU_I2C_BUS_INDEX, (unsigned char*)packet, length, avalFrames);
-	logError(err, "failed to initilze trxvu, IsisTrxvu_initialize returned error");
+	logError(err, "TransmitSplPacket");
 	return err;
 }
 
-int BeaconLogic(Boolean forceTX){
-	time_unix beacon_interval = 10;
+int BeaconLogic(){
+	time_unix curTime;
+	Time_getUnixEpoch(&curTime);
 
-	if( CheckExecutionTime( prev_time, beacon_interval)){
+	time_unix beaconSendTime;
+	FRAM_READ_FIELD(&beaconSendTime, beaconSendTime);
+	if(curTime > beaconSendTime){
 		WOD_Telemetry_t wod;
 		GetCurrentWODTelemetry(&wod);
 		sat_packet_t cmd;
 		AssembleCommand( &wod,  sizeof(WOD_Telemetry_t),  0,  0, 0, &cmd);
 		TransmitSplPacket( &cmd, NULL);
-		Time_getUnixEpoch(&prev_time);
+
+		time_unix beaconInterval;
+		FRAM_READ_FIELD(&beaconInterval, beaconInterval);
+
+		beaconSendTime += beaconInterval;
+		FRAM_WRITE_FIELD(&beaconSendTime, beaconSendTime);
+
 
 	}
 	return 0;
+}
+
+void changeBeaconTime(time_t time){
+	FRAM_READ_FIELD(&time, beaconInterval);
 }
 
 
@@ -107,31 +137,17 @@ int GetOnlineCommand(sat_packet_t *cmd){
 	ISIStrxvuRxFrame RxFrame;
     unsigned char buffer [SIZE_RXFRAME] = {0};
 	RxFrame.rx_framedata = buffer;
-	int err = IsisTrxvu_rcGetCommandFrame(ISIS_TRXVU_I2C_BUS_INDEX, &RxFrame);
-	if (logError(err, "Error in Get Online Command, could not get command") != E_NO_SS_ERR){
-		return err;
-	}
+	PROPEGATE_ERROR(IsisTrxvu_rcGetCommandFrame(ISIS_TRXVU_I2C_BUS_INDEX, &RxFrame), "GetOnlineCommand");
 
   return ParseDataToCommand(buffer, cmd);
 }
 
-ISIStrxvuIdleState idle_state = trxvu_idle_state_off;
-time_t last_idle_time;
-time_t idle_duration;
-
 int TRX_Logic(){
-	if (idle_state != trxvu_idle_state_off && CheckExecutionTime(last_idle_time, idle_duration)){
-		IsisTrxvu_tcSetIdlestate(ISIS_TRXVU_I2C_BUS_INDEX, trxvu_idle_state_off);
-		idle_state = trxvu_idle_state_off;
-	}
 
 	int frame_count = GetNumberOfFramesInBuffer();
 	if (frame_count > 0) {
 		sat_packet_t cmd;
-		int err = GetOnlineCommand(&cmd);
-		if (logError(err, "Error in trx logic, could not get command") != E_NO_SS_ERR){
-			return err;
-		}
+		PROPEGATE_ERROR(GetOnlineCommand(&cmd), "TRX_Logic");
 		SendAckPacket(ACK_RECEIVE_COMM, &cmd, NULL, 0);
 		ActUponCommand(&cmd);
 	}
@@ -142,16 +158,6 @@ int TRX_Logic(){
 int GetNumberOfFramesInBuffer(){
 	unsigned short frame_count = 0;
 	int error = IsisTrxvu_rcGetFrameCount(ISIS_TRXVU_I2C_BUS_INDEX, &frame_count);
-	logError(error , "error in get frame count");
+	logError(error , "GetNumberOfFramesInBuffer");
 	return frame_count;
-}
-
-
-
-int SetIdle(time_t duration){
-	idle_state = trxvu_idle_state_on;
-	idle_duration = duration;
-
-	Time_getUnixEpoch(&last_idle_time);
-	return IsisTrxvu_tcSetIdlestate(ISIS_TRXVU_I2C_BUS_INDEX, trxvu_idle_state_on);
 }

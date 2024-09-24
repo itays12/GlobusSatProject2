@@ -8,6 +8,7 @@
 #define EPS_H_
 
 #include "GlobalStandards.h"
+#include "hal/Storage/FRAM.h"
 #include <satellite-subsystems/GomEPS.h>
 #include "EPSOperationModes.h"
 #include "SubSystemModules/Communication/SatCommandHandler.h"
@@ -32,40 +33,28 @@
  	 	 	 |	CRITICAL	|
  	 	 	 |______________|
  */
+
+unsigned char gom_i2c_address = 0x02;
+
+
+//#define NUMBER_OF_SOLAR_PANELS	    6
+//#define NUMBER_OF_THRESHOLD_VOLTAGES 	6
+
 #define DEFAULT_ALPHA_VALUE 0.3
 
-#define NUMBER_OF_SOLAR_PANELS			6
-#define NUMBER_OF_THRESHOLD_VOLTAGES 	6 		///< first 3 are charging voltages, last 3 are discharging voltages
+#define DEFFAULT_FULL_MODE_DOWN_TEND 7.3
+#define DEFFAULT_FULL_MODE_UP_TEND 7.4
 
-#define FULL_MODE_DOWN_TEND 7.3
-#define FULL_MODE_UP_TEND 7.4
+#define DEFFAULT_CRUISE_MODE_DOWN_TEND 7.1
+#define DEFFAULT_CRUISE_MODE_UP_TEND 7.2
 
-#define CRUISE_MODE_DOWN_TEND 7.1
-#define CRUISE_MODE_UP_TEND 7.2
+#define DEFFAULT_SAFE_MODE_DOWN_TEND 6.5
+#define DEFFAULT_SAFE_MODE_UP_TEND 6.6
 
-#define SAFE_MODE_DOWN_TEND 6.5
-#define SAFE_MODE_UP_TEND 6.6
+#define DEFFAULT_CIRTICAL_MODE_DOWN_TEND 5.5
+#define DEFFAULT_CIRTICAL_MODE_UP_TEND 5.6
 
-typedef enum __attribute__ ((__packed__)){
-	INDEX_DOWN_SAFE,
-	INDEX_DOWN_CRUISE,
-	INDEX_DOWN_FULL,
-	INDEX_UP_SAFE,
-	INDEX_UP_CRUISE,
-	INDEX_UP_FULL
-}EpsThresholdsIndex;
 
-typedef union __attribute__ ((__packed__)){
-	voltage_t raw[NUMBER_OF_THRESHOLD_VOLTAGES];
-	struct {
-		voltage_t Vdown_safe;
-		voltage_t Vdown_cruise;
-		voltage_t Vdown_full;
-		voltage_t Vup_safe;
-		voltage_t Vup_cruise;
-		voltage_t Vup_full;
-	}fields;
-}EpsThreshVolt_t;
 typedef union __attribute__ ((__packed__)){
 struct {
 	int16_t H1_MIN;
@@ -91,25 +80,23 @@ int EPS_Init();
  */
 int EPS_Conditioning();
 
-/*!
- * @brief returns the current voltage on the battery
- * @param[out] vbat he current battery voltage
- * @return	0 on success
- * 			Error code according to <hal/errors.h>
- */
-int getFilteredVolt(voltage_t t);
+// saves alpha and eps_mode_volts to the fram
+int EPS_save_settings();
 
-int GetBatteryVoltage(voltage_t *vbat);
+// resets alpha and eps_mode_volts to the default values
+int EPS_reset_settings();
+
+short GetBatteryVoltage(voltage_t *vbat);
 
 /*!
  * @brief setting the new EPS logic threshold voltages on the FRAM.
- * @param[in] thresh_volts an array holding the new threshold values
+ * @param[in] eps_mode_volts_t with the new voltages
  * @return	0 on success
  * 			-1 on failure setting new threshold voltages
  * 			-2 on invalid thresholds
  * 			ERR according to <hal/errors.h>
  */
-int UpdateThresholdVoltages(EpsThreshVolt_t *thresh_volts);
+int UpdateThresholdVoltages(struct eps_mode_volts_t new_eps_mode_volts);
 
 /*!
  * @brief getting the EPS logic threshold  voltages on the FRAM.
@@ -118,7 +105,7 @@ int UpdateThresholdVoltages(EpsThreshVolt_t *thresh_volts);
  * 			-1 on NULL input array
  * 			-2 on FRAM read errors
  */
-int GetThresholdVoltages(EpsThreshVolt_t thresh_volts[NUMBER_OF_THRESHOLD_VOLTAGES]);
+struct eps_mode_volts_t GetThresholdVoltages();
 
 /*!
  * @brief getting the smoothing factor (alpha) from the FRAM.
@@ -127,9 +114,7 @@ int GetThresholdVoltages(EpsThreshVolt_t thresh_volts[NUMBER_OF_THRESHOLD_VOLTAG
  * 			-1 on NULL input array
  * 			-2 on FRAM read errors
  */
-int GetAlpha(float *alpha);
-
-int GetBatteryVoltage(voltage_t *vbat);
+float GetAlpha();
 
 /*!
  * @brief setting the new voltage smoothing factor (alpha) on the FRAM.
@@ -140,7 +125,7 @@ int GetBatteryVoltage(voltage_t *vbat);
  * 			-2 on invalid alpha
  * @see LPF- Low Pass Filter at wikipedia: https://en.wikipedia.org/wiki/Low-pass_filter#Discrete-time_realization
  */
-int UpdateAlpha(sat_packet_t *cmd);
+int UpdateAlpha(float new_alpha);
 
 /*!
  * @brief setting the new voltage smoothing factor (alpha) to be the default value.

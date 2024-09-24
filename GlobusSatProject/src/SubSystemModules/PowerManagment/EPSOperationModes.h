@@ -16,12 +16,13 @@
 #define SYSTEM6 	 0x40	//!< channel state when 'SYSTEM6' is on
 #define SYSTEM7 	 0x80	//!< channel state when 'SYSTEM7' is on
 
-typedef enum{
-	FullMode,
-	CruiseMode,
-	SafeMode,
-	CriticalMode
-}EpsState_t;
+
+// the current mode
+// 1 = FullMode
+// 2 = CruiseMode
+// 3 = SafeMode
+// 4 = CriticalMode
+int EpsState;
 
 /*!
  * @brief Executes the necessary procedure in order to initiate the system into Full mode
@@ -61,10 +62,9 @@ int EnterCriticalMode();
 int SetEPS_Channels(channel_t channel);
 
 /*!
- * returns the current system state according to the EpsState_t enumeration
- * @return system state according to EpsState_t
+ * returns the current system state according to EpsState
  */
-EpsState_t GetSystemState();
+int GetSystemState();
 
 /*
  * Gets the current system channel state

@@ -128,7 +128,7 @@ void FinishDump(sat_packet_t *cmd,unsigned char *buffer, ack_subtype_t acktype,
 /*!
  * @brief transmits beacon according to beacon logic
  */
-int BeaconLogic(Boolean forceTX);
+int BeaconLogic();
 
 /*
  * @brief set the idle state of the trxvu
@@ -144,21 +144,13 @@ int SetIdle(time_t duration);
  * @return	0 in successful
  * 			-1 in failure
  */
-int muteTRXVU(time_unix duration);
+int muteTransmission(time_unix duration);
 
 /*!
  * @brief Cancels TRXVU mute - transmission is now enabled
  */
 void UnMuteTRXVU();
 
-
-
-/*!
- * @brief checks if the Trxvu mute time has terminated
- * @return	TRUE if the termination time has arrived
- * 			FALSE else
- */
-Boolean CheckForMuteEnd();
 
 /*!
  * @brief returns number of online frames are in the TRX frame buffer
