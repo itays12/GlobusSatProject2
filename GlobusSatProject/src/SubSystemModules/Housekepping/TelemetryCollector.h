@@ -32,6 +32,8 @@ typedef struct __attribute__ ((__packed__)) WOD_Telemetry_t
 	unsigned int num_of_cmd_resets;///< counts the number of resets the satellite has gone through due to ground station command [#]
 } WOD_Telemetry_t;
 
+char* getFallenName();
+
 
 typedef struct solar_tlm { int32_t values[ISIS_SOLAR_PANEL_COUNT]; } solar_tlm_t;
 
