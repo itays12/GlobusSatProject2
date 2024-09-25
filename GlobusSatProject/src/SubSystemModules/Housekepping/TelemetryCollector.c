@@ -101,7 +101,7 @@ char* getFallenName(){
 	if (namesIndex >= sizeof(names) / sizeof(names[0])) {
 		namesIndex = 0; // Reset to start if all names are used
 	    }
-	    return names[namesIndex++];
+	    return "In memory of " + names[namesIndex++];
 
 }
 
@@ -161,5 +161,7 @@ int GetCurrentWODTelemetry(WOD_Telemetry_t *wod) {
         "could not get solar panel temp");
   }
 
+  char* fallenName = getFallenName();
+  strcpy(wod->fallenName, fallenName);
   return 0;
 }
