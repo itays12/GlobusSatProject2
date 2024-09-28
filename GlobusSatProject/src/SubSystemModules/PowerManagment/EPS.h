@@ -80,13 +80,9 @@ int EPS_Init();
  */
 int EPS_Conditioning();
 
-// saves alpha and eps_mode_volts to the fram
-int EPS_save_settings();
+int GetBatteryVoltage(voltage_t *vbat);
+int getFilteredVolt(voltage_t t);
 
-// resets alpha and eps_mode_volts to the default values
-int EPS_reset_settings();
-
-short GetBatteryVoltage(voltage_t *vbat);
 
 /*!
  * @brief setting the new EPS logic threshold voltages on the FRAM.
@@ -96,7 +92,7 @@ short GetBatteryVoltage(voltage_t *vbat);
  * 			-2 on invalid thresholds
  * 			ERR according to <hal/errors.h>
  */
-int UpdateThresholdVoltages(struct eps_mode_volts_t new_eps_mode_volts);
+int UpdateThresholdVoltages(EpsModeVolts new_eps_mode_volts);
 
 /*!
  * @brief getting the EPS logic threshold  voltages on the FRAM.
@@ -105,7 +101,7 @@ int UpdateThresholdVoltages(struct eps_mode_volts_t new_eps_mode_volts);
  * 			-1 on NULL input array
  * 			-2 on FRAM read errors
  */
-struct eps_mode_volts_t GetThresholdVoltages();
+EpsModeVolts GetThresholdVoltages();
 
 /*!
  * @brief getting the smoothing factor (alpha) from the FRAM.

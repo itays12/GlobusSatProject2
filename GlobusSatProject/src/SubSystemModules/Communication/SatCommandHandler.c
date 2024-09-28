@@ -31,7 +31,7 @@ int ActUponCommand(sat_packet_t *cmd){
 			//TODO: handle dump packets
 			break;
 	}
-	if (logError(err, "failed to run command: ") != E_NO_SS_ERR){
+	if (logError(err, "ActUponCommand") != E_NO_SS_ERR){
 		return err;
 	}
 	return 0;

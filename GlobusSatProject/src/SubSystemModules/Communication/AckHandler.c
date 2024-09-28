@@ -17,7 +17,7 @@ int SendAckPacket(ack_subtype_t acksubtype, sat_packet_t *cmd, unsigned char *da
 	}
 
 	unsigned char avalFrames = 0;
-	int err = logError(TransmitSplPacket(&packet, &avalFrames), "Failed to log error");
+	int err = logError(TransmitSplPacket(&packet, &avalFrames), "SendAckPacket");
 	if(err != E_NO_SS_ERR){
 		return err;
 	}

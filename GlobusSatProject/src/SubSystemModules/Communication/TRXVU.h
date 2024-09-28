@@ -144,12 +144,17 @@ int SetIdle(time_t duration);
  * @return	0 in successful
  * 			-1 in failure
  */
-int muteTransmission(time_unix duration);
+int mransmission(time_unix duration);
+
+/*!
+ * @brief mutes TRXVU - transmission is now disabled
+ */
+void muteTRXVU();
 
 /*!
  * @brief Cancels TRXVU mute - transmission is now enabled
  */
-void UnMuteTRXVU();
+void unmuteTRXVU();
 
 
 /*!

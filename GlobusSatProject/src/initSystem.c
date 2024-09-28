@@ -69,4 +69,5 @@ int DeploySystem(){
 }
 
 void WriteDefaultValuesToFRAM() {
+	logError(RestoreDefaultThresholdVoltages(), "WriteDefaultValues");
 }
