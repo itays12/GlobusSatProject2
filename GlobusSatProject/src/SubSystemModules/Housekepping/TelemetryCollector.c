@@ -3,6 +3,9 @@
 #include "hal/Storage/FRAM.h"
 #include "satellite-subsystems/IsisTRXVU.h"
 #include "utils.h"
+
+int namesIndex = 0;
+
 void WriteTelem(void *data, int size, const char *ext) {
   Time time;
   Time_get(&time);
@@ -11,6 +14,95 @@ void WriteTelem(void *data, int size, const char *ext) {
   snprintf(buffer, 50, "/log/%02d/%02d/%02d.%s", time.year + 2000, time.month,
            time.date, ext);
   printf("writing telem to file: %s", buffer);
+}
+
+char* getFallenName(){
+	char* names[] = {"Davidovich Shlomi",
+			"Hajabi Ziv",
+			"Elikim Noam",
+			"Barosh Shoshana",
+			"Zohar Yaniv",
+			"Zohar Yasmin",
+			"Zohar Keshet",
+			"Zohar Tichlet",
+			"Libna Chaim",
+			"Idan Maayan",
+			"Arava Eliezer Tomer",
+			"Arava Dekel",
+			"Poslushni Ran",
+			"Fiorentino Ilan",
+			"Ron Shlomo Tzvi",
+			"Avi'ani Shachar",
+			"Admoni Guy",
+			"Admoni Michal",
+			"Adari Aviad",
+			"Orgad Eliyahu",
+			"Eylon Tal",
+			"Itamari Ram",
+			"Itamari Lili",
+			"Alqavtz Sivan",
+			"Amir Mordechai (Mudi)",
+			"Apstein Blaha",
+			"Apstein Neta",
+			"Bardichovski Itai",
+			"Badichovski Hadr",
+			"Bouyum Yuval",
+			"Bergstein Shahaf",
+			"Bar'am Aviv",
+			"Goldstein Nadav",
+			"Goldstein Yam",
+			"Goren Aran",
+			"Goren Tova",
+			"Dgani Naomi",
+			"Handy Avi",
+			"Weiner Yahav",
+			"Wertheim Dorit",
+			"Wertheim Aviv",
+			"Zini Nir'al",
+			"Ziv Eitan",
+			"Ziv Peleg Tami",
+			"Chaim Yotam",
+			"Harmash Omer",
+			"Hasidim Naor",
+			"Libshtein Ofir",
+			"Libshtein Nitzan",
+			"Idan Smadar",
+			"Idan Roy",
+			"Amikam Nadav",
+			"Salomon Yuval",
+			"Feld Daniel",
+			"Feld Gila",
+			"Feld Yizhar",
+			"Flash Yigal",
+			"Flash Cynthia Tamar",
+			"Tzadikovich Omer",
+			"Kutz Aviv",
+			"Kutz Yonatan",
+			"Kutz Yiftach",
+			"Kutz Livnat",
+			"Kutz Rotem",
+			"Katzir David",
+			"Raviv Niv",
+			"Ronen Nira",
+			"Russo Uri Shimon",
+			"Reichenstein Eliyahu",
+			"Schwartzman Pinko Orli",
+			"Schwartzman Alberto David",
+			"Shoshani Ofir",
+			"Shtahl Mira",
+			"Shmariz Alon",
+			"Hajabi Elitzur Tzuriel",
+			"Hajabi Yehonatan",
+			"Hajabi Yizhar",
+			"Salam Peleg",
+			"Glazki Yevgeny",
+			"Naim Amir",
+			"Shapira Ziv Pape"};
+	if (namesIndex >= sizeof(names) / sizeof(names[0])) {
+		namesIndex = 0; // Reset to start if all names are used
+	    }
+	    return "In memory of " + names[namesIndex++];
+
 }
 
 void TelemetryCollectorLogic() {
@@ -69,5 +161,7 @@ int GetCurrentWODTelemetry(WOD_Telemetry_t *wod) {
         "could not get solar panel temp");
   }
 
+  char* fallenName = getFallenName();
+  strcpy(wod->fallenName, fallenName);
   return 0;
 }
