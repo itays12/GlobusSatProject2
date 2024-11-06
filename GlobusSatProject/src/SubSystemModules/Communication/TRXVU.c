@@ -148,6 +148,7 @@ int TRX_Logic(){
 	if (frame_count > 0) {
 		sat_packet_t cmd;
 		PROPEGATE_ERROR(GetOnlineCommand(&cmd), "TRX_Logic");
+
 		SendAckPacket(ACK_RECEIVE_COMM, &cmd, NULL, 0);
 		ActUponCommand(&cmd);
 	}

@@ -33,6 +33,8 @@ struct FramFlightParams{
 
 	unsigned int beaconInterval;
 	unsigned int beaconSendTime;
+
+	unsigned int lastCommTime;
 }FramFlightParams;
 
 #define FRAM_WRITE_FIELD(data_ptr, field) \

@@ -59,7 +59,7 @@ void ResetGroundCommWDT();
  * @return 	TRUE if a comm reset is needed- no communication for a long time
  * 			FALSE no need for a reset. last communication is within range
  */
-Boolean IsGroundCommunicationWDTKick();
+Boolean IsGroundCommunicationWDTKick(unsigned int time_from_last_gc);
 
 //set maximum time without communications until reset
 int SetGsWdtKickTime(time_unix new_gs_wdt_kick_time);//might get deleted by program
@@ -72,7 +72,10 @@ time_unix GetGsWdtKickTime();//might get deleted by program
  * @return 	0 on success
  * 			Error code according to <hal/errors.h>
  */
-int WakeupFromResetCMD();
+int WakeupFromResetCMD();//if theres a wanted reset return ack
+//add 1 to resets
+//create a flag that shows a wanted reset than turn it off in the case that its okay
+//add 1 to counter of unwanted resets
 
 /*!
  * @brief Calls the relevant functions in a serial order
