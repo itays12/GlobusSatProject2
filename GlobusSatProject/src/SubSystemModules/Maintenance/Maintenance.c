@@ -3,14 +3,15 @@
 #include "hal/Timing/Time.h"
 #include "hcc/api_fat.h"
 #include "Maintenance.h"
-#include "hal/Storage/FRAM.h"
 #include "FRAM_FlightParameters.h"
 
 //****Approved by Uri****
 void Maintenance(){
 	DeleteOldFiles(0);//0 - min space - need to be determined
 	IsFS_Corrupted();
-	IsGroundCommunicationWDTKick();
+	if(IsGroundCommunicationWDTKick()){
+		;//needs to reset
+	}
 }
 Boolean CheckExecutionTime(time_unix prev_time, time_unix period){
 	unsigned int cur_time = 0;
@@ -54,27 +55,25 @@ Boolean IsFS_Corrupted(){
 	return FALSE;
 }
 
-void SaveSatTimeInFRAM(unsigned int time_addr){
-	unsigned int cur_time;
-	//int err = Time_getUnixEpoch(&cur_time);
-	FRAM_WRITE_FIELD(&cur_time, time_addr, sizeof(unsigned int));
-}
 void ResetGroundCommWDT(){
 	unsigned int time_from_last_gc;
 	Time_getUnixEpoch(&time_from_last_gc);
 	FRAM_WRITE_FIELD(&time_from_last_gc, lastCommTime);
 		//put in trx logic
 }
+
 Boolean IsGroundCommunicationWDTKick(){
 	unsigned int time_from_last_gc;
 	FRAM_READ_FIELD(&time_from_last_gc, lastCommTime);
 	unsigned int cur_time;
 	int err = Time_getUnixEpoch(&cur_time);
+	unsigned int WDT_kick;
+	FRAM_READ_FIELD(&WDT_kick, WDTkicktime);
+
 	if (err == 0)
-		if(cur_time - time_from_last_gc < 0); //0 - need to be determined //need cur_time
-			return TRUE;//need to be changed into resetting softtware
-	//LAST_COMM_TIME_ADDR
-	//cur_time
+		if(time_from_last_gc + WDT_kick < cur_time)
+			return TRUE;
+	return FALSE;
 }
 
 

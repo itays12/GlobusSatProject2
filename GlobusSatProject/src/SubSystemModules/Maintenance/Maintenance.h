@@ -59,7 +59,7 @@ void ResetGroundCommWDT();
  * @return 	TRUE if a comm reset is needed- no communication for a long time
  * 			FALSE no need for a reset. last communication is within range
  */
-Boolean IsGroundCommunicationWDTKick(unsigned int time_from_last_gc);
+Boolean IsGroundCommunicationWDTKick();
 
 //set maximum time without communications until reset
 int SetGsWdtKickTime(time_unix new_gs_wdt_kick_time);//might get deleted by program

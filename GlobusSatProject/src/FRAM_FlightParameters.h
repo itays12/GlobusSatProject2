@@ -33,6 +33,8 @@ struct FramFlightParams{
 	unsigned int beaconSendTime;
 
 	unsigned int lastCommTime;
+	unsigned int WDTkicktime;
+
 
 	EpsModeVolts epsModes;
 }FramFlightParams;
