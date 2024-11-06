@@ -7,7 +7,7 @@
 
 #define CHANNELS_OFF 0x00 	//!< channel state when all systems are off
 #define CHNNELS_ON	 0XFF	//!< channel
-#define SYSTEM0		 0x01	//!< channel state when 'SYSTEM0' is on
+#define SYSTEM_PAYLOAD		 0x01	//!< channel state when 'SYSTEM0' is on
 #define SYSTEM1		 0x02	//!< channel state when 'SYSTEM1' is on
 #define SYSTEM2 	 0x04	//!< channel state when 'SYSTEM2' is on
 #define SYSTEM3		 0x08	//!< channel state when 'SYSTEM3' is on
@@ -17,12 +17,11 @@
 #define SYSTEM7 	 0x80	//!< channel state when 'SYSTEM7' is on
 
 
-// the current mode
-// 1 = FullMode
-// 2 = CruiseMode
-// 3 = SafeMode
-// 4 = CriticalMode
-int EpsState;
+typedef enum EpsState{
+	FullMode,
+	SafeMode,
+	CriticalMode,
+}EpsState;
 
 /*!
  * @brief Executes the necessary procedure in order to initiate the system into Full mode
@@ -62,19 +61,18 @@ int EnterCriticalMode();
 int SetEPS_Channels(channel_t channel);
 
 /*!
+ * @brief Gets the channel state according to the bitwise 'logic on'
+ * if the 2'nd bit is '1' the second channel will turn on (channel = 0b01000000)
+ * @note please use the defines defined in this header to turn on/off channels
+ * @return	channel_t
+ */
+channel_t GetEPS_Channels();
+
+/*!
  * returns the current system state according to EpsState
  */
-int GetSystemState();
+EpsState GetSystemState();
 
-/*
- * Gets the current system channel state
- * @return current system channel state
- */
-channel_t GetSystemChannelState();
-
-Boolean EpsGetLowVoltageFlag();
-
-void EpsSetLowVoltageFlag(Boolean low_volt_flag);
 
 
 #endif /* EPSOPERATIONMODES_H_ */

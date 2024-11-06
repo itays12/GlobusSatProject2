@@ -1,5 +1,9 @@
 #include "EPSOperationModes.h"
 #include "SubSystemModules/Communication/TRXVU.h"
+#include <satellite-subsystems/GomEPS.h>
+
+EpsState epsState;
+
 
 /*!
  * @brief Executes the necessary procedure in order to initiate the system into Full mode
@@ -8,23 +12,14 @@
  */
 int EnterFullMode(){
 
-    UnMuteTRXVU(); // unmute TRXVU if its muted
-
-    EpsState = 1;
+	if (epsState != FullMode){
+		unmuteTRXVU(); // unmute TRXVU if its muted
+		SetEPS_Channels(CHNNELS_ON);
+	}
+    epsState = FullMode;
     return 0;
 }
 
-/*!
- * @brief Executes the necessary procedure in order to initiate the system into Cruise mode
- * @return	0 on success
- * 			errors according to <hal/errors.h>
- */
-int EnterCruiseMode(){
-    muteTRXVU(600); // mute for 10 min
-
-    EpsState = 2;
-	return 0;
-}
 
 /*!
  * @brief Executes the necessary procedure in order to initiate the system into Safe mode
@@ -32,9 +27,11 @@ int EnterCruiseMode(){
  * 			errors according to <hal/errors.h>
  */
 int EnterSafeMode(){
-    muteTRXVU(600); // mute for 10 min
-
-    EpsState = 3;
+	if (epsState != SafeMode){
+		unmuteTRXVU();
+		SetEPS_Channels(CHNNELS_ON & ~SYSTEM_PAYLOAD);
+	}
+    epsState = SafeMode;
     return 0;
 }
 
@@ -44,20 +41,27 @@ int EnterSafeMode(){
  * 			errors according to <hal/errors.h>
  */
 int EnterCriticalMode(){
-    muteTRXVU(600); // mute for 10 min
+	if (epsState != CriticalMode){
+		muteTRXVU();
+		SetEPS_Channels(CHNNELS_ON & ~SYSTEM_PAYLOAD);
+	}
 
-    EpsState = 4;
+	epsState = CriticalMode;
     return 0;
 }
 
-int GetSystemState(){
-    return EpsState;
+EpsState GetSystemState(){
+    return epsState;
 }
 
-int SetEPS_Channels(channel_t channel);
+int SetEPS_Channels(channel_t channel){
+	gom_eps_channelstates_t channelStates;
+	channelStates.raw = channel;
+	return logError(GomEpsSetOutput(EPS_I2C_BUS_INDEX, channelStates), "setEpsChannels");
+}
 
-channel_t GetSystemChannelState();
-
-Boolean EpsGetLowVoltageFlag();
-
-void EpsSetLowVoltageFlag(Boolean low_volt_flag);
+channel_t GetEPS_Channels(){
+	gom_eps_hkparam_t channelState;
+	logError(GomEpsGetHkData_param(EPS_I2C_BUS_INDEX, &channelState), "GetEPS_Channels");
+	return channelState.fields.channelStatus.raw;
+}

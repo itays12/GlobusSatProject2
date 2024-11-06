@@ -9,20 +9,18 @@
 #define FRAM_FLIGHTPARAMETERS_H_
 
 #include <hal/Storage/FRAM.h>
+#include <stddef.h>
 
-struct eps_mode_volts_t {
+typedef struct EpsModeVolts {
     float full_mode_down_tend;
     float full_mode_up_tend;
-
-    float cruise_mode_down_tend;
-    float cruise_mode_up_tend;
 
     float safe_mode_down_tend;
     float safe_mode_up_tend;
 
     float critical_mode_up_tend;
     float critical_mode_down_tend;
-}eps_mode_volts;
+}EpsModeVolts;
 
 struct FramFlightParams{
 	Boolean trxMute;
@@ -35,10 +33,12 @@ struct FramFlightParams{
 	unsigned int beaconSendTime;
 
 	unsigned int lastCommTime;
+
+	EpsModeVolts epsModes;
 }FramFlightParams;
 
 #define FRAM_WRITE_FIELD(data_ptr, field) \
-    FRAM_write((const unsigned char *)(data_ptr), 	offsetof(struct FramFlightParams, field), sizeof(((struct FramFlightParams *)0)->field))
+    FRAM_write((const unsigned char *)(data_ptr), offsetof(struct FramFlightParams, field), sizeof(((struct FramFlightParams *)0)->field))
 
 #define FRAM_READ_FIELD(data_ptr, field) \
     FRAM_read((unsigned char *)(data_ptr), offsetof(struct FramFlightParams, field), sizeof(((struct FramFlightParams *)0)->field))

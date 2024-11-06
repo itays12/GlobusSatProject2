@@ -13,26 +13,26 @@
 #include "AckHandler.h"
 #include <string.h>
 
-void muteTransmission(time_t mute_time){
+void muteTransmission(time_unix mute_time){
 	time_unix unmuteTime;
 	logError(Time_getUnixEpoch(&unmuteTime), "muteTransmission");
 
 	unmuteTime += mute_time;
-	FRAM_WRITE_FIELD(&unmuteTime, trxMuteTime);
+	logError(FRAM_WRITE_FIELD(&unmuteTime, trxMuteTime), "muteTransmission");
 }
 
-int getMuteTime(time_unix* mute_time){
-	return FRAM_READ_FIELD(&mute_time, trxMuteTime);
+void getMuteTime(time_unix* mute_time){
+	logError(FRAM_READ_FIELD(&mute_time, trxMuteTime), "getMuteTime");
 }
 
-int muteTrx(){
+void muteTRXVU(){
 	Boolean mute = TRUE;
-	return FRAM_WRITE_FIELD(&mute, trxMute);
+	logError(FRAM_WRITE_FIELD(&mute, trxMute), "unmuteTRXVU");
 }
 
-int unmuteTrx(){
+void unmuteTRXVU(){
 	Boolean mute = FALSE;
-	return FRAM_WRITE_FIELD(&mute, trxMute);
+	logError(FRAM_WRITE_FIELD(&mute, trxMute), "unmuteTRXVU");
 }
 
 int isMuted(Boolean* isMuted){
@@ -49,7 +49,7 @@ Boolean checkTransmissionAllowed(){
 	time_unix muteTime;
 
 	logError(Time_getUnixEpoch(&curTime), "checkTransmissionAllowed");
-	logError(getMuteTime(&muteTime), "checkTransmissionAllowed");
+	getMuteTime(&muteTime);
 
 
 	if (curTime > muteTime){
