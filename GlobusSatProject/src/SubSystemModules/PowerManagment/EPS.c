@@ -1,5 +1,5 @@
 #include "EPS.h"
-#include <satellite-subsystems/GomEPS.h>
+#include <satellite-subsystems/imepsv2_piu.h>
 #include "utils.h"
 #include "GlobalStandards.h"
 
@@ -9,7 +9,7 @@ int voltage_tend;
 int EPS_Init(void) {
 	int err;
 
-	err = GomEpsInitialize(&gom_i2c_address, 1);
+	err = IMEPSV2_PIU_Init(&gom_i2c_address, 1);
 	if (err != E_NO_SS_ERR && err != E_IS_INITIALIZED) {
 		logError(err, "GomEpsInitialize() failed");
 		return -1;
@@ -78,14 +78,14 @@ int RestoreDefaultThresholdVoltages(){
 }
 
 int GetBatteryVoltage(voltage_t *vbat) {
-	gom_eps_hk_t response;
-	int err = (GomEpsGetHkData_general(0, &response));
+	imepsv2_piu__gethousekeepingeng__from_t response;
+	int err = imepsv2_piu__gethousekeepingeng(0, &response);
 	if (err != E_NO_SS_ERR && err != E_IS_INITIALIZED) {
-		logError(err, "failed to get battery voltage");
+		logError(err, "Failed to get battery voltage");
 		return err;
 	}
 
-	*vbat = response.fields.vbatt;
+	*vbat = response.fields.volt_brdsup;
 	return 0;
 }
 

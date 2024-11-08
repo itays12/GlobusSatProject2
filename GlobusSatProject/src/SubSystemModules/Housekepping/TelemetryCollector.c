@@ -17,7 +17,8 @@ void WriteTelem(void *data, int size, const char *ext) {
 }
 
 char* getFallenName(){
-	char* names[] = {"Davidovich Shlomi",
+	char* names[] = {
+			"Davidovich Shlomi",
 			"Hajabi Ziv",
 			"Elikim Noam",
 			"Barosh Shoshana",
@@ -101,7 +102,7 @@ char* getFallenName(){
 	if (namesIndex >= sizeof(names) / sizeof(names[0])) {
 		namesIndex = 0; // Reset to start if all names are used
 	    }
-	    return "In memory of " + names[namesIndex++];
+	 return strcat("In memory of ", names[namesIndex++]);
 
 }
 
@@ -163,5 +164,6 @@ int GetCurrentWODTelemetry(WOD_Telemetry_t *wod) {
 
   char* fallenName = getFallenName();
   strcpy(wod->fallenName, fallenName);
+  free(fallenName);
   return 0;
 }

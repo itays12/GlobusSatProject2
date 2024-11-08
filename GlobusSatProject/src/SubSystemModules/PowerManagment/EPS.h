@@ -9,7 +9,6 @@
 
 #include "GlobalStandards.h"
 #include "hal/Storage/FRAM.h"
-#include <satellite-subsystems/GomEPS.h>
 #include "EPSOperationModes.h"
 #include "SubSystemModules/Communication/SatCommandHandler.h"
 #include <stdint.h>
@@ -142,6 +141,5 @@ int RestoreDefaultThresholdVoltages();
 int CMDGetHeaterValues(sat_packet_t *cmd);
 
 int CMDSetHeaterValues(sat_packet_t *cmd);
-
 
 #endif
