@@ -8,6 +8,7 @@
 #ifndef FRAM_FLIGHTPARAMETERS_H_
 #define FRAM_FLIGHTPARAMETERS_H_
 
+#include "hal/boolean.h"
 #include <hal/Storage/FRAM.h>
 #include <stddef.h>
 
@@ -22,7 +23,7 @@ typedef struct EpsModeVolts {
     float critical_mode_down_tend;
 }EpsModeVolts;
 
-struct FramFlightParams{
+typedef struct FramFlightParams{
 	Boolean trxMute;
 	unsigned int trxMuteTime;
 

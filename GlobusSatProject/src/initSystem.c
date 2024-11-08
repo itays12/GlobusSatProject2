@@ -71,6 +71,6 @@ int DeploySystem(){
 void WriteDefaultValuesToFRAM() {
 	logError(RestoreDefaultThresholdVoltages(), "WriteDefaultValues");
 	unsigned int WDT_kick_time;
-	int err = Time_getUnixEpoch(WDT_kick_time);
-	FRAM_WRITE_FIELD(WDT_kick_time,timefromcommandtoreset);
+	int err = Time_getUnixEpoch(&WDT_kick_time);
+	FRAM_WRITE_FIELD(WDT_kick_time, WDTkicktime);
 }

@@ -92,7 +92,7 @@ int SetRSSITransponder(short rssiValue);
  */
 int turnOnTransponder();
 
-void changeBeaconTime(time_t time);
+void changeBeaconTime(time_unix time);
 
 Boolean CheckDumpAbort();
 
@@ -136,7 +136,7 @@ int BeaconLogic();
  * @return	0 in successful
  * 			-1 in failure
  */
-int SetIdle(time_t duration);
+int SetIdle(time_unix duration);
 
 /*!
  * @brief	mutes the TRXVU for a specified time frame

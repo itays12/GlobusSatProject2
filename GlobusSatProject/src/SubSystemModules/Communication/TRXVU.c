@@ -128,7 +128,7 @@ int BeaconLogic(){
 	return 0;
 }
 
-void changeBeaconTime(time_t time){
+void changeBeaconTime(time_unix time){
 	FRAM_READ_FIELD(&time, beaconInterval);
 }
 

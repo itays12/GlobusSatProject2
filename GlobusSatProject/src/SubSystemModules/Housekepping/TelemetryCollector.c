@@ -3,6 +3,8 @@
 #include "hal/Storage/FRAM.h"
 #include "satellite-subsystems/IsisTRXVU.h"
 #include "utils.h"
+#include <string.h>
+#include <stdlib.h>
 
 int namesIndex = 0;
 
@@ -147,21 +149,6 @@ void TelemetrySaveTRXVU(){
 }
 
 int GetCurrentWODTelemetry(WOD_Telemetry_t *wod) {
-  gom_eps_hk_t data_out;
-  GomEpsGetHkData_general(0, &data_out);
-  wod->vbat = data_out.fields.vbatt;
-  gom_eps_hkparam_t eps_param;
-  PROPEGATE_ERROR(GomEpsGetHkData_param(0, &eps_param),
-                  "error getting eps params");
-  wod->bat_temp = eps_param.fields.tempBattery;
-
-  for (int i = 0; i < 6; i++) {
-    uint8_t status;
-    PROPEGATE_ERROR(
-        IsisSolarPanelv2_getTemperature(i, &wod->solar_panels[i], &status),
-        "could not get solar panel temp");
-  }
-
   char* fallenName = getFallenName();
   strcpy(wod->fallenName, fallenName);
   free(fallenName);

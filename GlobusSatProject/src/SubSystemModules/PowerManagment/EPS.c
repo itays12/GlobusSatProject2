@@ -8,8 +8,9 @@ int voltage_tend;
 
 int EPS_Init(void) {
 	int err;
-
-	err = IMEPSV2_PIU_Init(&gom_i2c_address, 1);
+  
+  IMEPSV2_PIU_t imepsv2_piu = {EPS_I2C_ADDR};
+	err = IMEPSV2_PIU_Init(&imepsv2_piu, 1);
 	if (err != E_NO_SS_ERR && err != E_IS_INITIALIZED) {
 		logError(err, "GomEpsInitialize() failed");
 		return -1;
@@ -21,8 +22,9 @@ int EPS_Init(void) {
 int EPS_Conditioning() {
 	int ret = 0;
 	voltage_t t;
-	voltage_tend = getFilteredVolt(t);
+
 	ret = logError(GetBatteryVoltage(&t), "GetBatteryVoltage");
+	voltage_tend = getFilteredVolt(t);
 	last_voltage = t;
 
 	EpsModeVolts epsModes = GetThresholdVoltages();

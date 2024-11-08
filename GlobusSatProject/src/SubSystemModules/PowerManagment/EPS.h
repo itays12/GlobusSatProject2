@@ -33,8 +33,6 @@
  	 	 	 |______________|
  */
 
-unsigned char gom_i2c_address = 0x02;
-
 
 //#define NUMBER_OF_SOLAR_PANELS	    6
 //#define NUMBER_OF_THRESHOLD_VOLTAGES 	6
