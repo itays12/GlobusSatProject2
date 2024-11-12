@@ -64,7 +64,7 @@ int CMD_getDataImage(sat_packet_t *cmd);
 /**
  * write telematry data to file
  */
-int write2File(void* data, tlm_type_t tlmType);
+int writeToFile(void* data, int size ,char* ext);
 
 int deleteTLMFiles(tlm_type_t tlmType, Time date, int numOfDays);
 

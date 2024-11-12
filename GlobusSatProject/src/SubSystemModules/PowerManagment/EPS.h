@@ -8,8 +8,7 @@
 #define EPS_H_
 
 #include "GlobalStandards.h"
-#include "hal/Storage/FRAM.h"
-#include "EPSOperationModes.h"
+
 #include "SubSystemModules/Communication/SatCommandHandler.h"
 #include <stdint.h>
 

@@ -6,9 +6,13 @@
 #include <hal/boolean.h>
 #include <stdio.h>
 
-//****Approved by Uri****
+
+int HardResetMCU(){
+
+}
+
 void Maintenance() {
-  DeleteOldFiles(0); // 0 - min space - need to be determined
+  DeleteOldFiles(0);
   IsFS_Corrupted();
   if (IsGroundCommunicationWDTKick()) {
     ; // needs to reset
@@ -41,7 +45,7 @@ void deleteOldestFile() {
   }
 }
 
-void DeleteOldFiles(int minFreeSpace) {
+void DeleteOldFiles(unsigned long minFreeSpace) {
   FN_SPACE freeSpace;
   fm_getfreespace(0, &freeSpace);
   while (freeSpace.free < minFreeSpace) {

@@ -68,9 +68,15 @@ int DeploySystem(){
 	return 0;
 }
 
-void WriteDefaultValuesToFRAM() {
-	logError(RestoreDefaultThresholdVoltages(), "WriteDefaultValues");
-	unsigned int WDT_kick_time;
-	int err = Time_getUnixEpoch(&WDT_kick_time);
-	FRAM_WRITE_FIELD(WDT_kick_time, WDTkicktime);
+int WriteDefaultValuesToFRAM() {
+	PROPEGATE_ERROR(RestoreDefaultThresholdVoltages(), "WriteDefaultValues");
+	time_unix WDT_kick_time;
+	PROPEGATE_ERROR(Time_getUnixEpoch(&WDT_kick_time), "Time_getUnixEpoch");
+	PROPEGATE_ERROR(FRAM_WRITE_FIELD(WDT_kick_time, WDTkicktime), "WriteWDTkicktime");
+
+
+  time_unix beaconInterval = 60;
+	PROPEGATE_ERROR(FRAM_WRITE_FIELD(beaconInterval, beaconInterval), "WriteWDTkicktime");
+
+
 }

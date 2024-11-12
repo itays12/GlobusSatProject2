@@ -5,7 +5,6 @@
 #include "TRXVU.h"
 #include "SubSystemModules/Communication/SatCommandHandler.h"
 #include "SubSystemModules/Housekepping/TelemetryCollector.h"
-#include "SubSystemModules/Maintenance/Maintenance.h"
 #include "SysI2CAddr.h"
 #include "satellite-subsystems/IsisTRXVU.h"
 #include "utils.h"
@@ -81,7 +80,7 @@ int InitTrxvu()
 	{
 		// we have a problem. Indicate the error. But we'll gracefully exit to the higher menu instead of
 		// hanging the code
-		logError(rv, "failed to initilze trxvu, IsisTrxvu_initialize returned error");
+		logError(rv, "IsisTrxvu_initialize");
 		return rv;
 	}
 	ISISantsI2Caddress antsAdress;
@@ -143,7 +142,6 @@ int GetOnlineCommand(sat_packet_t *cmd){
 }
 
 int TRX_Logic(){
-
 	int frame_count = GetNumberOfFramesInBuffer();
 	if (frame_count > 0) {
 		sat_packet_t cmd;
@@ -152,7 +150,7 @@ int TRX_Logic(){
 		SendAckPacket(ACK_RECEIVE_COMM, &cmd, NULL, 0);
 		ActUponCommand(&cmd);
 	}
-	 BeaconLogic(FALSE);
+	 BeaconLogic();
 	return 0;
 }
 

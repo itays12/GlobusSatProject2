@@ -7,14 +7,9 @@
 
 #define CHANNELS_OFF 0x00 	//!< channel state when all systems are off
 #define CHNNELS_ON	 0XFF	//!< channel
-#define SYSTEM_PAYLOAD		 0x01	//!< channel state when 'SYSTEM0' is on
-#define SYSTEM1		 0x02	//!< channel state when 'SYSTEM1' is on
-#define SYSTEM2 	 0x04	//!< channel state when 'SYSTEM2' is on
-#define SYSTEM3		 0x08	//!< channel state when 'SYSTEM3' is on
-#define SYSTEM4		 0x10	//!< channel state when 'SYSTEM4' is on
-#define SYSTEM5		 0x20	//!< channel state when 'SYSTEM5' is on
-#define SYSTEM6 	 0x40	//!< channel state when 'SYSTEM6' is on
-#define SYSTEM7 	 0x80	//!< channel state when 'SYSTEM7' is on
+
+#define SYSTEM_MCU         0	//!< channel state when MCU is on
+#define SYSTEM_PAYLOAD		 2	//!< channel state when PAYLOAD is on
 
 
 typedef enum EpsState{
@@ -58,7 +53,7 @@ int EnterCriticalMode();
  * @return	0 on success
  * 			errors according to <hal/errors.h>
  */
-int SetEPS_Channels(channel_t channel);
+int turnOnEpsChannel(int channel);
 
 /*!
  * @brief Gets the channel state according to the bitwise 'logic on'
@@ -66,7 +61,7 @@ int SetEPS_Channels(channel_t channel);
  * @note please use the defines defined in this header to turn on/off channels
  * @return	channel_t
  */
-channel_t GetEPS_Channels();
+int turnOffEpsChannel(int channel);
 
 /*!
  * returns the current system state according to EpsState
