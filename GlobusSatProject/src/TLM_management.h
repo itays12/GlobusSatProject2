@@ -29,7 +29,7 @@
 
 typedef enum
 {
-	FS_SUCCSESS,
+	FS_SUCCESS,
 	FS_DUPLICATED,
 	FS_LOCKED,
 	FS_TOO_LONG_NAME,

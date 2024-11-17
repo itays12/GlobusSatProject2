@@ -5,12 +5,17 @@
 #include "utils.h"
 #include <string.h>
 #include <stdlib.h>
-#include <TLM_management.h>
 
 int namesIndex = 0;
 
 void WriteTelem(void *data, int size, const char *ext) {
-  return 
+  Time time;
+  Time_get(&time);
+  char buffer[50];
+
+  snprintf(buffer, 50, "/log/%02d/%02d/%02d.%s", time.year + 2000, time.month,
+           time.date, ext);
+  printf("writing telem to file: %s", buffer);
 }
 
 char* getFallenName(){
