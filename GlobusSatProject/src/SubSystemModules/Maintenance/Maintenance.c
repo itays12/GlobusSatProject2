@@ -1,14 +1,19 @@
 #include "Maintenance.h"
 #include "FRAM_FlightParameters.h"
+#include "SysI2CAddr.h"
 #include "hal/Timing/Time.h"
 #include "hcc/api_fat.h"
+#include "satellite-subsystems/imepsv2_piu.h"
+#include "satellite-subsystems/imepsv2_piu_types.h"
 #include "utils.h"
 #include <hal/boolean.h>
 #include <stdio.h>
 
 
 int HardResetMCU(){
-
+  imepsv2_piu__replyheader_t replay;
+  PROPEGATE_ERROR(imepsv2_piu__reset(EPS_I2C_ADDR, &replay), "RestartMcu");
+  return 0;
 }
 
 void Maintenance() {

@@ -15,8 +15,13 @@ typedef enum __attribute__ ((__packed__)) reset_type_t
 	reset_ant_SideA,
 	reset_ant_SideB,
 	reset_filesystem
-
 }reset_type_t;
+
+typedef struct CMD_GenericI2C_Params{
+  unsigned int adress;
+  int size;
+  unsigned char buffer[100];
+}CMD_GenericI2C_Params;
 
 int CMD_GenericI2C(sat_packet_t *cmd);
 
@@ -50,7 +55,7 @@ int CMD_HardTRXVU_ComponenetReset(sat_packet_t *cmd);
  * 			The function will raise the reset flag and send an ACK before starting the reset.
  * @return 	0 on success
  * 			Error code according to <hal/errors.h>
- */
+ */ 
 int CMD_ResetComponent(sat_packet_t *cmd);
 
 #endif /* MAINTANENCE_COMMANDS_H_ */

@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-int namesIndex = 0;
+unsigned int namesIndex = 0;
 
 void WriteTelem(void *data, int size, const char *ext) {
   Time time;
