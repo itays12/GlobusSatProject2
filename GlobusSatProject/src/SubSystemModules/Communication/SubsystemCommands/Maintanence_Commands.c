@@ -6,4 +6,13 @@ int CMD_GenericI2C(sat_packet_t *cmd){
   I2C_write(params->adress, params->buffer, params->size);
   return 0;
 }
+int CMD_GetSatUptime(){
+unsigned int cur_time;
+PROPEGATE_ERROR(Time_getUnixEpoch(&cur_time), "GetTime");
+  sat_packet_t cmd;
+  PROPEGATE_ERROR(TransmitDataAsSPL_Packet(&cmd, &cur_time, sizeof(unsigned int)), "TransmitSplPacket");
+  return 0;
+
+}
+
 

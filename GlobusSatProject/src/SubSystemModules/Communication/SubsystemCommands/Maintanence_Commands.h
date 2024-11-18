@@ -41,7 +41,7 @@ int CMD_UpdateSatTime(sat_packet_t *cmd);
 
 int CMD_GetSatTime(sat_packet_t *cmd);
 
-int CMD_GetSatUptime(sat_packet_t *cmd);
+int CMD_GetSatUptime();
 
 int CMD_SoftTRXVU_ComponenetReset(sat_packet_t *cmd);
 

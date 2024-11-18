@@ -9,7 +9,8 @@ typedef enum __attribute__ ((__packed__)) spl_command_type_t {
 	filesystem_cmd_type,
 	managment_cmd_type,
 	ack_type,// 5
-	dump_type
+	dump_type,
+	response_type
 }spl_command_type;
 
 
