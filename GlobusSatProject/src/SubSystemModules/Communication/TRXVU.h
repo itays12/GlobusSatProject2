@@ -13,6 +13,7 @@
 #include <hal/Timing/Time.h>
 
 
+
 #define MAX_MUTE_TIME 		(60*60*24) 	///< max mute duration will be 90 minutes = 60 *90 [sec]
 #define MAX_IDLE_TIME 		(2400) 	///< max IDLE duration will be 20 minutes = 120 *20 [sec]
 #define MIN_BEACON_INTRAVL	5 // min of 5 sec between beacons
@@ -125,6 +126,9 @@ void AbortDump(sat_packet_t *cmd);
 void FinishDump(sat_packet_t *cmd,unsigned char *buffer, ack_subtype_t acktype,
 		unsigned char *err, unsigned int size) ;
 
+
+int sendBeacon();
+
 /*!
  * @brief transmits beacon according to beacon logic
  */
@@ -144,7 +148,13 @@ int SetIdle(time_unix duration);
  * @return	0 in successful
  * 			-1 in failure
  */
-int mransmission(time_unix duration);
+void muteTransmission(time_unix mute_time);
+
+
+/*!
+ * @brief Cancels TRXVU timed mute (muteTransmission)- transmission is now enabled
+ */
+void unmuteTransmission();
 
 /*!
  * @brief mutes TRXVU - transmission is now disabled
@@ -155,6 +165,7 @@ void muteTRXVU();
  * @brief Cancels TRXVU mute - transmission is now enabled
  */
 void unmuteTRXVU();
+
 
 
 /*!

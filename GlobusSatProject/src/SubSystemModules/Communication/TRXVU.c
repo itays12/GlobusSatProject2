@@ -20,6 +20,13 @@ void muteTransmission(time_unix mute_time){
 	logError(FRAM_WRITE_FIELD(&unmuteTime, trxMuteTime), "muteTransmission");
 }
 
+void unmuteTransmission(){
+	time_unix currentTime;
+	logError(Time_getUnixEpoch(&currentTime), "muteTransmission");
+
+	logError(FRAM_WRITE_FIELD(&currentTime, trxMuteTime), "muteTransmission");
+}
+
 void getMuteTime(time_unix* mute_time){
 	logError(FRAM_READ_FIELD(&mute_time, trxMuteTime), "getMuteTime");
 }
@@ -32,6 +39,7 @@ void muteTRXVU(){
 void unmuteTRXVU(){
 	Boolean mute = FALSE;
 	logError(FRAM_WRITE_FIELD(&mute, trxMute), "unmuteTRXVU");
+
 }
 
 int isMuted(Boolean* isMuted){
@@ -103,6 +111,15 @@ int TransmitSplPacket(sat_packet_t *packet, unsigned char *avalFrames){
 	return err;
 }
 
+int sendBeacon(){
+	WOD_Telemetry_t wod;
+	PROPEGATE_ERROR(GetCurrentWODTelemetry(&wod), "GetCurrentWODTelemetry");
+	sat_packet_t cmd;
+	PROPEGATE_ERROR(AssembleCommand( &wod,  sizeof(WOD_Telemetry_t),  0,  0, 0, &cmd), "AssembleCommand");
+  PROPEGATE_ERROR(TransmitSplPacket( &cmd, NULL), "TransmitSplPacket");
+  return 0;
+}
+
 int BeaconLogic(){
 	time_unix curTime;
 	Time_getUnixEpoch(&curTime);
@@ -110,12 +127,10 @@ int BeaconLogic(){
 	time_unix beaconSendTime;
 	FRAM_READ_FIELD(&beaconSendTime, beaconSendTime);
 	if(curTime > beaconSendTime){
-		WOD_Telemetry_t wod;
-		GetCurrentWODTelemetry(&wod);
-		sat_packet_t cmd;
-		AssembleCommand( &wod,  sizeof(WOD_Telemetry_t),  0,  0, 0, &cmd);
-		TransmitSplPacket( &cmd, NULL);
-
+    int err = sendBeacon();
+    if (err != E_NO_SS_ERR){
+      return err;
+    }
 		time_unix beaconInterval;
 		FRAM_READ_FIELD(&beaconInterval, beaconInterval);
 
@@ -126,6 +141,7 @@ int BeaconLogic(){
 	}
 	return 0;
 }
+
 
 void changeBeaconTime(time_unix time){
 	FRAM_READ_FIELD(&time, beaconInterval);

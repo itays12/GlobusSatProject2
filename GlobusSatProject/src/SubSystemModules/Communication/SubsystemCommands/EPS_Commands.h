@@ -7,6 +7,10 @@
 #include "SubSystemModules/PowerManagment/EPS.h"
 #include "SubSystemModules/Communication/SatCommandHandler.h"
 
+typedef struct UpdateThresholdVoltages_Params{
+  EpsModeVolts volts;
+}UpdateThresholdVoltages_Params;
+
 int CMD_UpdateThresholdVoltages(sat_packet_t *cmd);
 
 int CMD_GetThresholdVoltages(sat_packet_t *cmd);
