@@ -60,10 +60,10 @@ int CMD_LoadConfig(sat_packet_t *cmd);
 int CMD_SaveConfig(sat_packet_t *cmd);
 
 // solar panel
-void CMD_SolarPanelWake(sat_packet_t *cmd);
+int CMD_SolarPanelWake(sat_packet_t *cmd);
 
-void CMD_SolarPanelSleep(sat_packet_t *cmd);
+int CMD_SolarPanelSleep(sat_packet_t *cmd);
 
-IsisSolarPanelv2_State_t CMD_GetSolarPanelState(sat_packet_t *cmd);
+int CMD_GetSolarPanelState(sat_packet_t *cmd);
 
 #endif /* EPS_COMMANDS_H_ */

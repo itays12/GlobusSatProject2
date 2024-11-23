@@ -94,6 +94,9 @@ typedef enum __attribute__((__packed__)) eps_subtypes_t {
   RESET_EPS_WDT = 0x04,
   GET_THRESHOLD_VOLTAGES = 0x05,
   UPDATE_THRESHOLD_VOLTAGES = 0x06,
+  GET_SOLAR_PANEL_STATE = 0x07,
+  SOLAR_PANEL_SLEEP = 0x08,
+  SOLAR_PANEL_WAKE = 0x09,
 } eps_subtypes_t;
 
 typedef enum __attribute__((__packed__)) telemetry_subtypes_t {

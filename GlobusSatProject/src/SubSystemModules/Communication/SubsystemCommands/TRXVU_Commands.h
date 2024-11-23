@@ -5,6 +5,7 @@
 #include "SubSystemModules/Communication/TRXVU.h"
 #include "SubSystemModules/Communication/AckHandler.h"
 #include "SubSystemModules/Communication/SatCommandHandler.h"
+#include "satellite-subsystems/IsisTRXVU.h"
 
 // wait time for taking semaphores
 #define WAIT_TIME_SEM_DUMP	3
@@ -13,8 +14,6 @@
 
 
 #define ANTENNA_DEPLOYMENT_TIMEOUT 10 //<! in seconds
-
-
 
 int CMD_StartDump(sat_packet_t *cmd);
 
@@ -37,6 +36,10 @@ int CMD_SetRSSITransponder(sat_packet_t *cmd);
 int CMD_UnMuteTRXVU(sat_packet_t *cmd);
 
 int CMD_GetBaudRate(sat_packet_t *cmd);
+
+typedef struct SetBaudRate_Params{
+  ISIStrxvuBitrateStatus bitrate;
+}SetBaudRate_Params;
 
 int CMD_SetBaudRate(sat_packet_t *cmd);
 

@@ -26,13 +26,6 @@ typedef enum EpsState{
 int EnterFullMode();
 
 /*!
- * @brief Executes the necessary procedure in order to initiate the system into Cruise mode
- * @return	0 on success
- * 			errors according to <hal/errors.h>
- */
-int EnterCruiseMode();
-
-/*!
  * @brief Executes the necessary procedure in order to initiate the system into Safe mode
  * @return	0 on success
  * 			errors according to <hal/errors.h>

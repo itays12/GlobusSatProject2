@@ -23,6 +23,15 @@ int eps_command_router(sat_packet_t *cmd){
     case UPDATE_THRESHOLD_VOLTAGES:
       CMD_UpdateThresholdVoltages(cmd);
       break;
+    case GET_SOLAR_PANEL_STATE:
+      CMD_GetSolarPanelState(cmd);
+      break;
+    case SOLAR_PANEL_SLEEP:
+      CMD_SolarPanelSleep(cmd);
+      break;
+    case SOLAR_PANEL_WAKE:
+      CMD_SolarPanelWake(cmd);
+      break;
   }
 	return 0;
 }
