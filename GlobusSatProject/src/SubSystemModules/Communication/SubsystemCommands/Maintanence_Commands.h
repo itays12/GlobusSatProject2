@@ -23,25 +23,25 @@ typedef struct CMD_GenericI2C_Params{
   unsigned char buffer[100];
 }CMD_GenericI2C_Params;
 
-int CMD_GenericI2C(sat_packet_t *cmd);
+int CMD_GenericI2C(sat_packet_t *cmd);//done
 
-int CMD_FRAM_ReadAndTransmitt(sat_packet_t *cmd);
+int CMD_FRAM_ReadAndTransmitt(sat_packet_t *cmd);//X
 
-int CMD_FRAM_WriteAndTransmitt(sat_packet_t *cmd);
+int CMD_FRAM_WriteAndTransmitt(sat_packet_t *cmd);//X
 
-int CMD_FRAM_Start(sat_packet_t *cmd);
+int CMD_FRAM_Start(sat_packet_t *cmd);//X
 
-int CMD_FRAM_Stop(sat_packet_t *cmd);
+int CMD_FRAM_Stop(sat_packet_t *cmd);//X
 
-int CMD_FRAM_GetDeviceID(sat_packet_t *cmd);
+int CMD_FRAM_GetDeviceID(sat_packet_t *cmd);//X
 
-int CMD_FRAM_ReStart(sat_packet_t *cmd);
+int CMD_FRAM_ReStart(sat_packet_t *cmd);//X
 
 int CMD_UpdateSatTime(sat_packet_t *cmd);
 
 int CMD_GetSatTime(sat_packet_t *cmd);
 
-int CMD_GetSatUptime();
+int CMD_GetSatUptime();//done
 
 int CMD_SoftTRXVU_ComponenetReset(sat_packet_t *cmd);
 
