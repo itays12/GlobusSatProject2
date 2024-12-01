@@ -35,7 +35,7 @@ void taskMain() {
   InitSubsystems();
 
   while (TRUE) {
-    logError(EPS_Conditioning(), "Error in TRX");
+    logError(EPS_Conditioning(), "Error in EPS");
     logError(TRX_Logic(), "Error in TRX");
     // logError(Maintenance(),"Error in Maintenance");
     // logError(Telementry(),"Error in Telementry";
@@ -68,4 +68,5 @@ int main() {
 #endif
 
   vTaskStartScheduler();
+  exit(0);
 }

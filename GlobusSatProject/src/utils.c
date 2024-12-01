@@ -7,7 +7,7 @@ int logError(int error ,char* msg)
 	if(error != E_NO_SS_ERR)
 	{
 	    printf("ERROR %d",error);
-	}
+
 	switch (error)
 	{
 		case E_NOT_INITIALIZED:
@@ -71,5 +71,6 @@ int logError(int error ,char* msg)
 			break;
 	};
 	printf("%s\n\r",  msg);
+	}
 	return error;
 }

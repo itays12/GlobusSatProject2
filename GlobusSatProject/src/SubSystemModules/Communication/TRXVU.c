@@ -126,6 +126,7 @@ int BeaconLogic(){
 
 	time_unix beaconSendTime;
 	FRAM_READ_FIELD(&beaconSendTime, beaconSendTime);
+	printf("%d %d \n", beaconSendTime, curTime);
 	if(curTime > beaconSendTime){
     int err = sendBeacon();
     if (err != E_NO_SS_ERR){
@@ -172,7 +173,6 @@ int TRX_Logic(){
 
 int GetNumberOfFramesInBuffer(){
 	unsigned short frame_count = 0;
-	int error = IsisTrxvu_rcGetFrameCount(ISIS_TRXVU_I2C_BUS_INDEX, &frame_count);
-	logError(error , "GetNumberOfFramesInBuffer");
+	PROPEGATE_ERROR(IsisTrxvu_rcGetFrameCount(ISIS_TRXVU_I2C_BUS_INDEX, &frame_count) , "GetNumberOfFramesInBuffer");
 	return frame_count;
 }
