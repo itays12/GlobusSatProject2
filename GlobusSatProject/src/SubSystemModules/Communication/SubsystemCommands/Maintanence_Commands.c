@@ -24,4 +24,32 @@ int CMD_HardTRXVU_ComponenetReset(sat_packet_t *cmd){
 	HardTRXVU_ComponenetReset();
 }
 
+int CMD_ResetComponent(sat_packet_t *cmd){
+	char reset_ = cmd->data[0];
+	switch(reset_){
+	case reset_software:
 
+		break;
+	case reset_hardware:
+
+		break;
+	case reset_eps:
+		resetEps();
+			break;
+	case reset_trxvu_hard:
+
+			break;
+	case reset_trxvu_soft:
+
+			break;
+	case reset_ant_SideA:
+
+			break;
+	case reset_ant_SideB:
+
+			break;
+	case reset_filesystem:
+
+			break;
+	}
+}
