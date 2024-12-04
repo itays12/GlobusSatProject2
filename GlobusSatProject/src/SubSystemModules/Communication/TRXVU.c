@@ -6,11 +6,15 @@
 #include "SubSystemModules/Communication/SatCommandHandler.h"
 #include "SubSystemModules/Housekepping/TelemetryCollector.h"
 #include "SysI2CAddr.h"
+#include "freertos/projdefs.h"
 #include "satellite-subsystems/IsisTRXVU.h"
 #include "utils.h"
 #include "FRAM_FlightParameters.h"
 #include "AckHandler.h"
 #include <string.h>
+
+
+static xSemaphoreHandle xIsTransmitting;
 
 void muteTransmission(time_unix mute_time){
 	time_unix unmuteTime;
@@ -46,12 +50,25 @@ int isMuted(Boolean* isMuted){
 	return FRAM_READ_FIELD(isMuted, trxMute);
 }
 
+Boolean IsTransmitting() {
+	if(pdTRUE == xSemaphoreTake(xIsTransmitting,0)){
+		xSemaphoreGive(xIsTransmitting);
+		return FALSE;
+	}
+	return TRUE;
+}
+
 Boolean checkTransmissionAllowed(){
+  if (IsTransmitting()){
+    logError(-1, "SempahoreLocked");
+    return FALSE;
+  }
 	Boolean mute;
 	logError(isMuted(&mute), "checkTransmissionAllowed");
 	if (mute){
 		return FALSE;
 	}
+
 	time_unix curTime;
 	time_unix muteTime;
 
@@ -100,13 +117,20 @@ int InitTrxvu()
 	return rv;
 }
 
+
 int TransmitSplPacket(sat_packet_t *packet, unsigned char *avalFrames){
+
+	if (xSemaphoreTake(xIsTransmitting,SECONDS_TO_TICKS(1)) != pdTRUE)
+		return E_GET_SEMAPHORE_FAILED;
+
+
 	if (!checkTransmissionAllowed()){
-		return 0;
+		return -1;
 	}
 	//the total size of the packet is 8 + the length of the SPL data
 	unsigned char length = 8 + packet->length;
 	int err = IsisTrxvu_tcSendAX25DefClSign(ISIS_TRXVU_I2C_BUS_INDEX, (unsigned char*)packet, length, avalFrames);
+  xSemaphoreGive(xIsTransmitting);
 	logError(err, "TransmitSplPacket");
 	return err;
 }
