@@ -23,6 +23,11 @@ typedef struct EpsModeVolts {
     float critical_mode_down_tend;
 }EpsModeVolts;
 
+typedef struct FileSystemError{
+  int code;
+  char msg[20];
+}FileSystemError;
+
 typedef struct FramFlightParams{
 	Boolean trxMute;
 	unsigned int trxMuteTime;
@@ -36,8 +41,9 @@ typedef struct FramFlightParams{
 	unsigned int lastCommTime;
 	unsigned int WDTkicktime;
 
-
 	EpsModeVolts epsModes;
+  
+  FileSystemError fsError;
 }FramFlightParams;
 
 #define FRAM_WRITE_FIELD(data_ptr, field) \

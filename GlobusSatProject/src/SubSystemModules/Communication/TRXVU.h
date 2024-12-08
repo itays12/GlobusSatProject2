@@ -9,6 +9,7 @@
 #include "GlobalStandards.h"
 #include "AckHandler.h"
 #include "SatCommandHandler.h"
+#include "SubSystemModules/Housekepping/TelemetryFiles.h"
 #include "utils.h"
 #include <hal/Timing/Time.h>
 
@@ -28,7 +29,7 @@
 typedef struct __attribute__ ((__packed__))
 {
 	sat_packet_t cmd;
-	unsigned char dump_type;
+	tlm_type_t dump_type;
 	time_unix t_start;
 	time_unix t_end; // if passed 0 we use the readTLMFiles function. Otherwise, we use the time range function
 	int resulotion;
@@ -191,6 +192,6 @@ int GetOnlineCommand(sat_packet_t *cmd);
  * @param[in] length number of bytes in 'data' fields.
  * @return errors according to <hal/errors.h>
  */
-int TransmitDataAsSPL_Packet(sat_packet_t *cmd, unsigned char *data, unsigned short length);
+int TransmitDataAsSPL_Packet(sat_packet_t *cmd, void* data, unsigned short length);
 
 #endif

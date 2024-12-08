@@ -4,6 +4,11 @@
 #include "SubSystemModules/Communication/SatCommandHandler.h"
 
 /**
+ * Check the latest filesystem error
+ */
+int CMD_FileSystemError(sat_packet_t *cmd);
+
+/**
  * delete files from SD by passinf tlmtype, frotime, totime
  */
 int CMD_DeleteTLM(sat_packet_t *cmd);

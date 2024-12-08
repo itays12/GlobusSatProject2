@@ -13,7 +13,6 @@
 #include "AckHandler.h"
 #include <string.h>
 
-
 static xSemaphoreHandle xIsTransmitting;
 
 void muteTransmission(time_unix mute_time){
@@ -118,6 +117,12 @@ int InitTrxvu()
 }
 
 
+int TransmitDataAsSPL_Packet(sat_packet_t *cmd, void* data, unsigned short length){
+  memcpy(cmd->data, data, length);
+  cmd->length = length;
+  return TransmitSplPacket(cmd, NULL);
+}
+
 int TransmitSplPacket(sat_packet_t *packet, unsigned char *avalFrames){
 
 	if (xSemaphoreTake(xIsTransmitting,SECONDS_TO_TICKS(1)) != pdTRUE)
@@ -166,6 +171,7 @@ int BeaconLogic(){
 	}
 	return 0;
 }
+
 
 
 void changeBeaconTime(time_unix time){

@@ -36,27 +36,18 @@ int StartTime() {
 }
 
 int InitSubsystems() {
-  int flag = 0;
+  int err = 0;
 
-  if (logError(StartI2C(), "could not start i2c") != E_NO_SS_ERR) {
-    flag = 1;
-  }
-  if (logError(StartFRAM(), "Could not start FRAM") != E_NO_SS_ERR) {
-    flag = 1;
-  }
-  if (logError(StartTime(), "Could not start Time") != E_NO_SS_ERR) {
-    flag = 1;
-  }
-  if (logError(EPS_Init(), "Could not start EPS") != E_NO_SS_ERR) {
-    flag = 1;
-  }
-  if (logError(InitTrxvu(), "Could not start TRXVU") != E_NO_SS_ERR) {
-    flag = 1;
-  }
+  err = logError(StartI2C(), "could not start i2c"); 
+  err = logError(StartFRAM(), "Could not start FRAM"); 
+  err = logError(StartTime(), "Could not start Time") ;
+  err = logError(EPS_Init(), "Could not start EPS") ;
+  err = logError(InitTrxvu(), "Could not start TRXVU"); 
+  
 
   WriteDefaultValuesToFRAM();
 
-  return flag;
+  return err;
 }
 
 int StartI2C() {
