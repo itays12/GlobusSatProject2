@@ -154,3 +154,60 @@ int GetCurrentWODTelemetry(WOD_Telemetry_t *wod) {
   free(fallenName);
   return 0;
 }
+
+void TelemetrySaveSolarPanels(){
+	int32_t array_paneltemp[9];
+	array_paneltemp[0]=ISIS_SOLAR_PANEL_0;
+	array_paneltemp[1]=ISIS_SOLAR_PANEL_1;
+	array_paneltemp[2]=ISIS_SOLAR_PANEL_2;
+	array_paneltemp[3]=ISIS_SOLAR_PANEL_3;
+	array_paneltemp[4]=ISIS_SOLAR_PANEL_4;
+	array_paneltemp[5]=ISIS_SOLAR_PANEL_5;
+	array_paneltemp[6]=ISIS_SOLAR_PANEL_6;
+	array_paneltemp[7]=ISIS_SOLAR_PANEL_7;
+	array_paneltemp[8]=ISIS_SOLAR_PANEL_8;
+	uint8_t status;
+
+	int error;
+	error= logError(IsisSolarPanelv2_getTemperature(ISIS_SOLAR_PANEL_0,&array_paneltemp,&status,"TelemetrySaveSolarPanels"));
+	if(error != 0){
+		return;
+
+	}
+	 WriteTelem(&array_paneltemp, sizeof(array_paneltemp),END_FILENAME_SOLAR_PANELS_TLM);
+
+}
+void TelemetrySaveTRXVU(){
+	unsigned char index=0;
+	ISIStrxvuTxTelemetry telemetry_tc;
+	int error;
+	error=logError(IsisTrxvu_tcGetTelemetryAll(index, &telemetry_tc), "TelemetrySaveTRXVU1");
+	if(error != 0){
+		return;
+	}
+	WriteTelem(&telemetry_tc, sizeof(telemetry_tc),END_FILE_NAME_TX);
+
+
+
+	unsigned char index=0;
+	ISIStrxvuRxTelemetry telemetry_rc;
+	int error1;
+	error = logError(IsisTrxvu_rcGetTelemetryAll(index, &telemetry_rc), "TelemetrySaveTRXVU2");
+	if(error != 0){
+		return;
+	}
+	 WriteTelem(&telemetry_rc, sizeof(telemetry_rc), END_FILE_NAME_RX);
+}
+
+void TelemetrySaveWOD(){
+
+
+
+}
+
+void  InitSavePeriodTimes(){
+
+
+}
+
+
