@@ -1,14 +1,23 @@
 #include "Maintenance.h"
 #include "FRAM_FlightParameters.h"
+#include "SysI2CAddr.h"
 #include "hal/Timing/Time.h"
 #include "hcc/api_fat.h"
+#include "satellite-subsystems/imepsv2_piu.h"
+#include "satellite-subsystems/imepsv2_piu_types.h"
 #include "utils.h"
 #include <hal/boolean.h>
 #include <stdio.h>
 
-//****Approved by Uri****
+
+int HardResetMCU(){
+  imepsv2_piu__replyheader_t replay;
+  PROPEGATE_ERROR(imepsv2_piu__reset(EPS_I2C_ADDR, &replay), "RestartMcu");
+  return 0;
+}
+
 void Maintenance() {
-  DeleteOldFiles(0); // 0 - min space - need to be determined
+  DeleteOldFiles(0);
   IsFS_Corrupted();
   if (IsGroundCommunicationWDTKick()) {
     ; // needs to reset
@@ -41,7 +50,7 @@ void deleteOldestFile() {
   }
 }
 
-void DeleteOldFiles(int minFreeSpace) {
+void DeleteOldFiles(unsigned long minFreeSpace) {
   FN_SPACE freeSpace;
   fm_getfreespace(0, &freeSpace);
   while (freeSpace.free < minFreeSpace) {

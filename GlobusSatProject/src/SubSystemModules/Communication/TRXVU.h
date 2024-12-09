@@ -9,8 +9,10 @@
 #include "GlobalStandards.h"
 #include "AckHandler.h"
 #include "SatCommandHandler.h"
+#include "SubSystemModules/Housekepping/TelemetryFiles.h"
 #include "utils.h"
 #include <hal/Timing/Time.h>
+
 
 
 #define MAX_MUTE_TIME 		(60*60*24) 	///< max mute duration will be 90 minutes = 60 *90 [sec]
@@ -27,7 +29,7 @@
 typedef struct __attribute__ ((__packed__))
 {
 	sat_packet_t cmd;
-	unsigned char dump_type;
+	tlm_type_t dump_type;
 	time_unix t_start;
 	time_unix t_end; // if passed 0 we use the readTLMFiles function. Otherwise, we use the time range function
 	int resulotion;
@@ -125,6 +127,9 @@ void AbortDump(sat_packet_t *cmd);
 void FinishDump(sat_packet_t *cmd,unsigned char *buffer, ack_subtype_t acktype,
 		unsigned char *err, unsigned int size) ;
 
+
+int sendBeacon();
+
 /*!
  * @brief transmits beacon according to beacon logic
  */
@@ -144,7 +149,13 @@ int SetIdle(time_unix duration);
  * @return	0 in successful
  * 			-1 in failure
  */
-int mransmission(time_unix duration);
+void muteTransmission(time_unix mute_time);
+
+
+/*!
+ * @brief Cancels TRXVU timed mute (muteTransmission)- transmission is now enabled
+ */
+void unmuteTransmission();
 
 /*!
  * @brief mutes TRXVU - transmission is now disabled
@@ -155,6 +166,7 @@ void muteTRXVU();
  * @brief Cancels TRXVU mute - transmission is now enabled
  */
 void unmuteTRXVU();
+
 
 
 /*!
@@ -180,6 +192,6 @@ int GetOnlineCommand(sat_packet_t *cmd);
  * @param[in] length number of bytes in 'data' fields.
  * @return errors according to <hal/errors.h>
  */
-int TransmitDataAsSPL_Packet(sat_packet_t *cmd, unsigned char *data, unsigned short length);
+int TransmitDataAsSPL_Packet(sat_packet_t *cmd, void* data, unsigned short length);
 
 #endif

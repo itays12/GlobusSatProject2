@@ -13,14 +13,14 @@
 /**
  * use the EPS to hard reset the MCU
  */
-int HardResetMCU();//eps
+int HardResetMCU();
 
 /*
  * delete old files from SD card
  * minFreeSpace - the minimum free space in bytes we want to keep in the SD in all times.
  * If free space<minFreeSpace we start deleteing old TLM files
  */
-void DeleteOldFiles(int minFreeSpace);//changed from int to void //in progress
+void DeleteOldFiles(unsigned long minFreeSpace);//changed from int to void //in progress
 /*!
  * @brief checks if the period time has passed
  * @param[in] prev_exec_time last sample time (last execution time)

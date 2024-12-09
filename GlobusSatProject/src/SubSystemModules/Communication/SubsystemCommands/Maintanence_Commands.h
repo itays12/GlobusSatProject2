@@ -15,26 +15,31 @@ typedef enum __attribute__ ((__packed__)) reset_type_t
 	reset_ant_SideA,
 	reset_ant_SideB,
 	reset_filesystem
-
 }reset_type_t;
 
-int CMD_GenericI2C(sat_packet_t *cmd);
+typedef struct CMD_GenericI2C_Params{
+  unsigned int adress;
+  int size;
+  unsigned char buffer[100];
+}CMD_GenericI2C_Params;
 
-int CMD_FRAM_ReadAndTransmitt(sat_packet_t *cmd);
+int CMD_GenericI2C(sat_packet_t *cmd);//done
 
-int CMD_FRAM_WriteAndTransmitt(sat_packet_t *cmd);
+int CMD_FRAM_ReadAndTransmitt(sat_packet_t *cmd);//X
 
-int CMD_FRAM_Start(sat_packet_t *cmd);
+int CMD_FRAM_WriteAndTransmitt(sat_packet_t *cmd);//X
 
-int CMD_FRAM_Stop(sat_packet_t *cmd);
+int CMD_FRAM_Start(sat_packet_t *cmd);//X
 
-int CMD_FRAM_GetDeviceID(sat_packet_t *cmd);
+int CMD_FRAM_Stop(sat_packet_t *cmd);//X
 
-int CMD_FRAM_ReStart(sat_packet_t *cmd);
+int CMD_FRAM_GetDeviceID(sat_packet_t *cmd);//X
 
-int CMD_UpdateSatTime(sat_packet_t *cmd);
+int CMD_FRAM_ReStart(sat_packet_t *cmd);//X
 
-int CMD_GetSatTime(sat_packet_t *cmd);
+int CMD_UpdateSatTime(sat_packet_t *cmd);//done
+
+int CMD_GetSatTime(sat_packet_t *cmd);//done
 
 int CMD_GetSatUptime(sat_packet_t *cmd);
 
@@ -44,13 +49,12 @@ int CMD_HardTRXVU_ComponenetReset(sat_packet_t *cmd);
 
 
 
-
 /*!
  * @brief 	starts a reset according to 'reset_type_t'
  * 			The function will raise the reset flag and send an ACK before starting the reset.
  * @return 	0 on success
  * 			Error code according to <hal/errors.h>
- */
-int CMD_ResetComponent(sat_packet_t *cmd);
+ */ 
+int CMD_ResetComponent(sat_packet_t *cmd);//not finished
 
 #endif /* MAINTANENCE_COMMANDS_H_ */

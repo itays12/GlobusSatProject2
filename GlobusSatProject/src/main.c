@@ -2,7 +2,6 @@
 #include <freertos/semphr.h>
 #include <freertos/task.h>
 
-#include "hal/errors.h"
 #include <hal/Drivers/I2C.h>
 #include <hal/Drivers/SPI.h>
 #include <hal/Timing/Time.h>
@@ -31,12 +30,13 @@
 #else
 
 void taskMain() {
+
+	WDT_startWatchdogKickTask(10 / portTICK_RATE_MS, FALSE);
   InitSubsystems();
 
   while (TRUE) {
-    logError(EPS_Conditioning(), "Error in TRX");
+    logError(EPS_Conditioning(), "Error in EPS");
     logError(TRX_Logic(), "Error in TRX");
-
     // logError(Maintenance(),"Error in Maintenance");
     // logError(Telementry(),"Error in Telementry";
   }

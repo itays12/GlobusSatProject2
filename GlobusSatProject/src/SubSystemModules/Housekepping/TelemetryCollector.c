@@ -5,6 +5,7 @@
 #include "utils.h"
 #include <string.h>
 #include <stdlib.h>
+
 #include "satellite-subsystems/imepsv2_piu.h"
 #include <hcc/api_fat.h>
 #include "GlobalStandards.h"
@@ -39,6 +40,8 @@ void TelemetrySaveEPS(){//done
 	if( error==0)
 	 WriteTelem(&response, sizeof(response),END_FILENAME_EPS_TLM);
 }
+
+unsigned int namesIndex = 0;
 
 void WriteTelem(void *data, int size, const char *ext) {
   Time time;
@@ -201,7 +204,6 @@ int GetCurrentWODTelemetry(WOD_Telemetry_t *wod) {//done
 
       char* fallenName = getFallenName();
       strcpy(wod->fallenName, fallenName);
-      free(fallenName);
       return 0;
 }
 
