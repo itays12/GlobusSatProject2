@@ -149,8 +149,6 @@ void TelemetrySaveTRXVU(){
 }
 
 int GetCurrentWODTelemetry(WOD_Telemetry_t *wod) {
-  char* fallenName = getFallenName();
-  strcpy(wod->fallenName, fallenName);
-  free(fallenName);
+
   return 0;
 }
