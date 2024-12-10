@@ -111,6 +111,8 @@ int InitTrxvu()
 	antsAdress.addressSideA = ANTS_I2C_SIDE_A_ADDR;
 	antsAdress.addressSideB = ANTS_I2C_SIDE_B_ADDR;
 	IsisAntS_initialize(&antsAdress, 1);
+	xIsTransmitting = xSemaphoreCreateMutex();
+
 
 
 	return rv;
@@ -124,14 +126,14 @@ int TransmitDataAsSPL_Packet(sat_packet_t *cmd, void* data, unsigned short lengt
 }
 
 int TransmitSplPacket(sat_packet_t *packet, unsigned char *avalFrames){
-
+	if (!checkTransmissionAllowed()){
+		return 0;
+	}
 	if (xSemaphoreTake(xIsTransmitting,SECONDS_TO_TICKS(1)) != pdTRUE)
 		return E_GET_SEMAPHORE_FAILED;
 
 
-	if (!checkTransmissionAllowed()){
-		return -1;
-	}
+
 	//the total size of the packet is 8 + the length of the SPL data
 	unsigned char length = 8 + packet->length;
 	int err = IsisTrxvu_tcSendAX25DefClSign(ISIS_TRXVU_I2C_BUS_INDEX, (unsigned char*)packet, length, avalFrames);
@@ -142,7 +144,6 @@ int TransmitSplPacket(sat_packet_t *packet, unsigned char *avalFrames){
 
 int sendBeacon(){
 	WOD_Telemetry_t wod;
-	PROPEGATE_ERROR(GetCurrentWODTelemetry(&wod), "GetCurrentWODTelemetry");
 	sat_packet_t cmd;
 	PROPEGATE_ERROR(AssembleCommand( &wod,  sizeof(WOD_Telemetry_t),  0,  0, 0, &cmd), "AssembleCommand");
   PROPEGATE_ERROR(TransmitSplPacket( &cmd, NULL), "TransmitSplPacket");
@@ -155,7 +156,6 @@ int BeaconLogic(){
 
 	time_unix beaconSendTime;
 	FRAM_READ_FIELD(&beaconSendTime, beaconSendTime);
-	printf("%d %d \n", beaconSendTime, curTime);
 	if(curTime > beaconSendTime){
     int err = sendBeacon();
     if (err != E_NO_SS_ERR){

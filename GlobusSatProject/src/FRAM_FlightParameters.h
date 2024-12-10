@@ -31,9 +31,8 @@ typedef struct FileSystemError{
 typedef struct FramFlightParams{
 	Boolean trxMute;
 	unsigned int trxMuteTime;
-
 	unsigned int telePeriod_trx;
-	unsigned int teleSaveTime_trx;
+
 
 	unsigned int beaconInterval;
 	unsigned int beaconSendTime;
@@ -41,6 +40,9 @@ typedef struct FramFlightParams{
 	unsigned int lastCommTime;
 	unsigned int WDTkicktime;
 
+	unsigned int telePeriod_eps;
+	unsigned int telePeriod_ant;
+	unsigned int telePeriod_wod;
 	EpsModeVolts epsModes;
   
   FileSystemError fsError;

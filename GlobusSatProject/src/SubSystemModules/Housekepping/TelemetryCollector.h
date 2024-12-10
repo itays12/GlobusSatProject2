@@ -28,7 +28,7 @@ typedef struct __attribute__ ((__packed__)) WOD_Telemetry_t
 	unsigned int corrupt_bytes;		///< number of currpted bytes in the memory	[bytes]
 	unsigned int number_of_resets;	///< counts the number of resets the satellite has gone through [#]
 	time_unix sat_uptime;			///< Sat uptime
-	unsigned int photo_diodes[5]; 			// photo diodes
+	unsigned int photo_diodes[5]; 			//todo photo diodes
 	unsigned int num_of_cmd_resets;///< counts the number of resets the satellite has gone through due to ground station command [#]
 	char fallenName[40];
 } WOD_Telemetry_t;
@@ -54,7 +54,7 @@ int CMD_GetTLMPeriodTimes(sat_packet_t *cmd);
 /*!
  * @brief saves all telemetries into the appropriate TLM files
  */
-void TelemetryCollectorLogic();
+void TelemetryCollectorLogic();////
 
 /*!
  *  @brief saves current EPS telemetry into file

@@ -7,11 +7,11 @@ int logError(int error ,char* msg)
 {
 	if(error != E_NO_SS_ERR)
 	{
+	    printf("error: %s with value: %d", msg, error);
     logData_t data;
-    strncpy(data.msg, msg, 20);
+    strncpy(data.msg, msg, 19);
     data.error = error;
     // only in testing
-    printf("error: %s with value: %d", msg, error);
 	}
 	return error;
 }
