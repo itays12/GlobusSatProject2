@@ -7,6 +7,7 @@
 #include "utils.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define MAX_FILE_NAME 32
 
@@ -227,6 +228,129 @@ cleanup:
   return err;
 }
 
-int readTLMFile(tlm_type_t tlm_type, Time date, int cmd_id, int data_size) {
-  return 0;
+int deleteOldestFile() {
+  FN_FIND find;
+  int res;
+
+  int oldest_year = 9999;
+  int oldest_month = 99;
+  int oldest_day = 99;
+  char oldest_ext[8] = {0}; // extension buffer
+  char oldest_filepath[MAX_FILE_NAME] = {0};
+
+  // Step 1: Find the earliest year
+  {
+    char search_path[] = "/log";
+    res = f_findfirst(search_path, &find);
+    if (res != F_NO_ERROR) {
+      return FS_NOT_EXIST;
+    }
+
+    do {
+      if ((find.attr & F_ATTR_DIR) && find.name[0] != '.') {
+        int year = atoi(find.name);
+        if (year > 0 && year < oldest_year) {
+          oldest_year = year;
+        }
+      }
+      res = f_findnext(&find);
+    } while (res == F_NO_ERROR);
+  }
+
+  if (oldest_year == 9999) {
+    return FS_NOT_EXIST;
+  }
+
+  // Step 2: Find earliest month in that year
+  {
+    char year_path[MAX_FILE_NAME];
+    snprintf(year_path, sizeof(year_path), "/log/%04d", oldest_year);
+
+    res = f_findfirst(year_path, &find);
+    if (res != F_NO_ERROR) {
+      return FS_NOT_EXIST;
+    }
+
+    do {
+      if ((find.attr & F_ATTR_DIR) && find.name[0] != '.') {
+        int month = atoi(find.name);
+        if (month > 0 && month < oldest_month) {
+          oldest_month = month;
+        }
+      }
+      res = f_findnext(&find);
+    } while (res == F_NO_ERROR);
+  }
+
+  if (oldest_month == 99) {
+    return FS_NOT_EXIST;
+  }
+
+  // Step 3: Find earliest day file in that month
+  {
+    char month_path[MAX_FILE_NAME];
+    snprintf(month_path, sizeof(month_path), "/log/%04d/%02d", oldest_year,
+             oldest_month);
+
+    res = f_findfirst(month_path, &find);
+    if (res != F_NO_ERROR) {
+      return FS_NOT_EXIST;
+    }
+
+    do {
+      if (!(find.attr & F_ATTR_DIR) && find.name[0] != '.') {
+        int day = atoi(find.name);
+        if (day > 0) {
+          if (day < oldest_day ||
+              (day == oldest_day && strcmp(find.ext, oldest_ext) < 0)) {
+            oldest_day = day;
+            strncpy(oldest_ext, find.ext, sizeof(oldest_ext));
+          }
+        }
+      }
+      res = f_findnext(&find);
+    } while (res == F_NO_ERROR);
+  }
+
+  if (oldest_day == 99) {
+    return FS_NOT_EXIST;
+  }
+
+  // Construct the full path of the oldest file and delete it
+  snprintf(oldest_filepath, sizeof(oldest_filepath), "/log/%04d/%02d/%02d.%s",
+           oldest_year, oldest_month, oldest_day, oldest_ext);
+
+  if (f_delete(oldest_filepath) != F_NO_ERROR) {
+    return FS_FAT_API_FAIL;
+  }
+
+  // Attempt to remove the month directory
+  {
+    char month_path[MAX_FILE_NAME];
+    snprintf(month_path, sizeof(month_path), "/log/%04d/%02d", oldest_year,
+             oldest_month);
+
+    int rmdir_res = f_rmdir(month_path);
+    if (rmdir_res != F_NO_ERROR) {
+      if (rmdir_res == F_ERR_NOTEMPTY) {
+        return FS_FAT_API_FAIL;
+      }
+    }
+  }
+
+  // Attempt to remove the year directory
+  {
+    char year_path[MAX_FILE_NAME];
+    snprintf(year_path, sizeof(year_path), "/log/%04d", oldest_year);
+
+    int rmdir_res = f_rmdir(year_path);
+    if (rmdir_res != F_NO_ERROR) {
+      if (rmdir_res == F_ERR_NOTEMPTY) {
+      } else {
+        return FS_FAT_API_FAIL;
+      }
+    }
+  }
+
+  return FS_SUCCESS;
 }

@@ -1,5 +1,8 @@
 #include "GlobalStandards.h"
 #include "InitSystem.h"
+#include "SubSystemModules/Communication/AckHandler.h"
+#include "SubSystemModules/Communication/SPL.h"
+#include "SubSystemModules/Communication/SatCommandHandler.h"
 #include "SubSystemModules/Communication/TRXVU.h"
 #include "SubSystemModules/PowerManagment/EPS.h"
 #include "utils.h"
@@ -46,6 +49,9 @@ int InitSubsystems() {
   
 
   WriteDefaultValuesToFRAM();
+
+  sat_packet_t cmd;
+  SendAckPacket(ACK_RESET_WAKEUP, &cmd, NULL,0); 
 
   return err;
 }
