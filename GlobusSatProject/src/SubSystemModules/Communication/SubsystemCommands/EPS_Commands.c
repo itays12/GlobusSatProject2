@@ -5,6 +5,7 @@
 #include "SubSystemModules/PowerManagment/EPS.h"
 #include "SubSystemModules/PowerManagment/EPSOperationModes.h"
 #include "satellite-subsystems/IsisSolarPanelv2.h"
+#include "satellite-subsystems/imepsv2_piu.h"
 #include "utils.h"
 
 int CMD_UpdateThresholdVoltages(sat_packet_t *cmd) {
@@ -32,23 +33,23 @@ int CMD_EnterSafeMode(sat_packet_t *cmd) { return EnterSafeMode(); }
 int CMD_GetCurrentMode(sat_packet_t *cmd) { return GetSystemState(); }
 
 int CMD_SetChannels3V3_On(sat_packet_t *cmd) {
-  return GomEpsSetSingleOutput(EPS_I2C_BUS_INDEX, gomeps_channel_3,
-                               gomeps_channel_on, 0);
+  imepsv2_piu__replyheader_t reply_header;
+  return imepsv2_piu__outputbuschannelon(0,imepsv2_piu__imeps_channel__channel_3v3_perm, &reply_header);
 }
 
 int CMD_SetChannels3V3_Off(sat_packet_t *cmd) {
-  return GomEpsSetSingleOutput(EPS_I2C_BUS_INDEX, gomeps_channel_3,
-                               gomeps_channel_off, 0);
+  imepsv2_piu__replyheader_t reply_header;
+  return imepsv2_piu__outputbuschanneloff(0,imepsv2_piu__imeps_channel__channel_3v3_perm, &reply_header);
 }
 
 int CMD_SetChannels5V_On(sat_packet_t *cmd) {
-  return GomEpsSetSingleOutput(EPS_I2C_BUS_INDEX, gomeps_channel_5,
-                               gomeps_channel_on, 0);
+  imepsv2_piu__replyheader_t reply_header;
+  return imepsv2_piu__outputbuschannelon(0,imepsv2_piu__imeps_channel__channel_5v_perm, &reply_header);
 }
 
 int CMD_SetChannels5V_Off(sat_packet_t *cmd) {
-  return GomEpsSetSingleOutput(EPS_I2C_BUS_INDEX, gomeps_channel_5,
-                               gomeps_channel_off, 0);
+  imepsv2_piu__replyheader_t reply_header;
+  return imepsv2_piu__outputbuschanneloff(0,imepsv2_piu__imeps_channel__channel_5v_perm, &reply_header);
 }
 // solar panel
 int CMD_SolarPanelWake(sat_packet_t *cmd) { return IsisSolarPanelv2_wakeup(); }

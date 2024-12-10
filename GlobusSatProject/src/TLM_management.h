@@ -63,6 +63,8 @@ int deleteTLMFiles(tlm_type_t tlm_type, Time date, int numOfDays);
  */
 int deleteTLMFile(tlm_type_t tlm_type, Time date);
 
+int deleteOldestFile();
+
 void calculateFileName(Time curr_date, char *file_name, char *ext);
 /*
  * Read telematry file and send it to ground station over RF

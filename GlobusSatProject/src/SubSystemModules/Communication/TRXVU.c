@@ -194,7 +194,7 @@ int TRX_Logic(){
 		sat_packet_t cmd;
 		PROPEGATE_ERROR(GetOnlineCommand(&cmd), "TRX_Logic");
 
-		SendAckPacket(ACK_RECEIVE_COMM, &cmd, NULL, 0);
+		SendAckPacket(ACK_RECEIVE_COMM, cmd.ID, NULL, 0);
 		ActUponCommand(&cmd);
 	}
 	 BeaconLogic();

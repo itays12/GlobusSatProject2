@@ -8,6 +8,7 @@
 #include "utils.h"
 #include <hal/boolean.h>
 #include <stdio.h>
+#include "TLM_management.h"
 
 
 int HardResetMCU(){
@@ -17,7 +18,7 @@ int HardResetMCU(){
 }
 
 void Maintenance() {
-  DeleteOldFiles(0);
+  DeleteOldFiles(0x1000);
   IsFS_Corrupted();
   if (IsGroundCommunicationWDTKick()) {
     ; // needs to reset
@@ -34,20 +35,6 @@ Boolean CheckExecutionTime(time_unix prev_time, time_unix period) {
     return TRUE;
   else
     return FALSE;
-}
-
-void deleteOldestFile() {
-  F_FIND find;
-  if (!f_findfirst("*.*", &find)) {
-    do {
-      printf("filename:%s", find.filename);
-      if (find.attr & F_ATTR_DIR) {
-        printf("directory\n");
-      } else {
-        printf("size %lu\n", find.filesize);
-      }
-    } while (!f_findnext(&find));
-  }
 }
 
 void DeleteOldFiles(unsigned long minFreeSpace) {
