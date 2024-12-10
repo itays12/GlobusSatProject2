@@ -37,16 +37,15 @@ int CMD_FRAM_GetDeviceID(sat_packet_t *cmd);//X
 
 int CMD_FRAM_ReStart(sat_packet_t *cmd);//X
 
-int CMD_UpdateSatTime(sat_packet_t *cmd);
+int CMD_UpdateSatTime(sat_packet_t *cmd);//done
 
-int CMD_GetSatTime(sat_packet_t *cmd);
+int CMD_GetSatTime(sat_packet_t *cmd);//done
 
-int CMD_GetSatUptime();//done
+int CMD_GetSatUptime(sat_packet_t *cmd);
 
 int CMD_SoftTRXVU_ComponenetReset(sat_packet_t *cmd);
 
 int CMD_HardTRXVU_ComponenetReset(sat_packet_t *cmd);
-
 
 
 
@@ -56,6 +55,6 @@ int CMD_HardTRXVU_ComponenetReset(sat_packet_t *cmd);
  * @return 	0 on success
  * 			Error code according to <hal/errors.h>
  */ 
-int CMD_ResetComponent(sat_packet_t *cmd);
+int CMD_ResetComponent(sat_packet_t *cmd);//not finished
 
 #endif /* MAINTANENCE_COMMANDS_H_ */

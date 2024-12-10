@@ -6,11 +6,14 @@
 #include "SubSystemModules/Communication/SatCommandHandler.h"
 #include "SubSystemModules/Housekepping/TelemetryCollector.h"
 #include "SysI2CAddr.h"
+#include "freertos/projdefs.h"
 #include "satellite-subsystems/IsisTRXVU.h"
 #include "utils.h"
 #include "FRAM_FlightParameters.h"
 #include "AckHandler.h"
 #include <string.h>
+
+static xSemaphoreHandle xIsTransmitting;
 
 void muteTransmission(time_unix mute_time){
 	time_unix unmuteTime;
@@ -46,12 +49,25 @@ int isMuted(Boolean* isMuted){
 	return FRAM_READ_FIELD(isMuted, trxMute);
 }
 
+Boolean IsTransmitting() {
+	if(pdTRUE == xSemaphoreTake(xIsTransmitting,0)){
+		xSemaphoreGive(xIsTransmitting);
+		return FALSE;
+	}
+	return TRUE;
+}
+
 Boolean checkTransmissionAllowed(){
+  if (IsTransmitting()){
+    logError(-1, "SempahoreLocked");
+    return FALSE;
+  }
 	Boolean mute;
 	logError(isMuted(&mute), "checkTransmissionAllowed");
 	if (mute){
 		return FALSE;
 	}
+
 	time_unix curTime;
 	time_unix muteTime;
 
@@ -95,25 +111,39 @@ int InitTrxvu()
 	antsAdress.addressSideA = ANTS_I2C_SIDE_A_ADDR;
 	antsAdress.addressSideB = ANTS_I2C_SIDE_B_ADDR;
 	IsisAntS_initialize(&antsAdress, 1);
+	xIsTransmitting = xSemaphoreCreateMutex();
+
 
 
 	return rv;
+}
+
+
+int TransmitDataAsSPL_Packet(sat_packet_t *cmd, void* data, unsigned short length){
+  memcpy(cmd->data, data, length);
+  cmd->length = length;
+  return TransmitSplPacket(cmd, NULL);
 }
 
 int TransmitSplPacket(sat_packet_t *packet, unsigned char *avalFrames){
 	if (!checkTransmissionAllowed()){
 		return 0;
 	}
+	if (xSemaphoreTake(xIsTransmitting,SECONDS_TO_TICKS(1)) != pdTRUE)
+		return E_GET_SEMAPHORE_FAILED;
+
+
+
 	//the total size of the packet is 8 + the length of the SPL data
 	unsigned char length = 8 + packet->length;
 	int err = IsisTrxvu_tcSendAX25DefClSign(ISIS_TRXVU_I2C_BUS_INDEX, (unsigned char*)packet, length, avalFrames);
+  xSemaphoreGive(xIsTransmitting);
 	logError(err, "TransmitSplPacket");
 	return err;
 }
 
 int sendBeacon(){
 	WOD_Telemetry_t wod;
-	PROPEGATE_ERROR(GetCurrentWODTelemetry(&wod), "GetCurrentWODTelemetry");
 	sat_packet_t cmd;
 	PROPEGATE_ERROR(AssembleCommand( &wod,  sizeof(WOD_Telemetry_t),  0,  0, 0, &cmd), "AssembleCommand");
   PROPEGATE_ERROR(TransmitSplPacket( &cmd, NULL), "TransmitSplPacket");
@@ -141,6 +171,7 @@ int BeaconLogic(){
 	}
 	return 0;
 }
+
 
 
 void changeBeaconTime(time_unix time){
@@ -172,7 +203,6 @@ int TRX_Logic(){
 
 int GetNumberOfFramesInBuffer(){
 	unsigned short frame_count = 0;
-	int error = IsisTrxvu_rcGetFrameCount(ISIS_TRXVU_I2C_BUS_INDEX, &frame_count);
-	logError(error , "GetNumberOfFramesInBuffer");
+	PROPEGATE_ERROR(IsisTrxvu_rcGetFrameCount(ISIS_TRXVU_I2C_BUS_INDEX, &frame_count) , "GetNumberOfFramesInBuffer");
 	return frame_count;
 }

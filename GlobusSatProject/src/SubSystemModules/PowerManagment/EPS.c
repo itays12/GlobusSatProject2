@@ -24,7 +24,7 @@ int EPS_Conditioning() {
 	int ret = 0;
 	voltage_t t;
 
-	ret = logError(GetBatteryVoltage(&t), "GetBatteryVoltage");
+	PROPEGATE_ERROR(GetBatteryVoltage(&t), "GetBatteryVoltage");
 	voltage_tend = getFilteredVolt(t);
 	last_voltage = t;
 
@@ -82,8 +82,8 @@ int RestoreDefaultThresholdVoltages(){
 
 int GetBatteryVoltage(voltage_t *vbat) {
 	imepsv2_piu__gethousekeepingeng__from_t response;
-	int err = imepsv2_piu__gethousekeepingeng(EPS_I2C_ADDR, &response);
-	if (err != E_NO_SS_ERR && err != E_IS_INITIALIZED) {
+	int err = imepsv2_piu__gethousekeepingeng(0, &response);
+	if (err != E_NO_SS_ERR) {
 		logError(err, "Failed to get battery voltage");
 		return err;
 	}
