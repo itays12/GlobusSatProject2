@@ -46,15 +46,15 @@ void InitSavePeriodTimes();
 /**
  * set a new periodTime
  */
-int CMD_SetTLMPeriodTimes(sat_packet_t *cmd);
+int CMD_SetTLMPeriodTimes(sat_packet_t *cmd);//
 
 
-int CMD_GetTLMPeriodTimes(sat_packet_t *cmd);
+int CMD_GetTLMPeriodTimes(sat_packet_t *cmd);//
 
 /*!
  * @brief saves all telemetries into the appropriate TLM files
  */
-void TelemetryCollectorLogic();////
+void TelemetryCollectorLogic();
 
 /*!
  *  @brief saves current EPS telemetry into file
