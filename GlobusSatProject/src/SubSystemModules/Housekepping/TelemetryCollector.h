@@ -30,7 +30,7 @@ typedef struct __attribute__ ((__packed__)) WOD_Telemetry_t
 	time_unix sat_uptime;			///< Sat uptime
 	unsigned int photo_diodes[5]; 			//todo photo diodes
 	unsigned int num_of_cmd_resets;///< counts the number of resets the satellite has gone through due to ground station command [#]
-	char fallenName[40];
+	char fallenName[40] = getFallenName();
 } WOD_Telemetry_t;
 
 char* getFallenName();
@@ -49,15 +49,15 @@ size_t getTlmDataSize(tlm_type_t tlm_type);
 /**
  * set a new periodTime
  */
-int CMD_SetTLMPeriodTimes(sat_packet_t *cmd);
+int CMD_SetTLMPeriodTimes(sat_packet_t *cmd);//
 
 
-int CMD_GetTLMPeriodTimes(sat_packet_t *cmd);
+int CMD_GetTLMPeriodTimes(sat_packet_t *cmd);//
 
 /*!
  * @brief saves all telemetries into the appropriate TLM files
  */
-void TelemetryCollectorLogic();////
+void TelemetryCollectorLogic();
 
 /*!
  *  @brief saves current EPS telemetry into file
