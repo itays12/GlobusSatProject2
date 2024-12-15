@@ -37,9 +37,12 @@ void taskMain() {
   while (TRUE) {
     logError(EPS_Conditioning(), "Error in EPS");
     logError(TRX_Logic(), "Error in TRX");
-    logError(Maintenance(),"Error in Maintenance");
-    logError(Telementry(),"Error in Telementry";
+    Maintenance();
+    TelemetryCollectorLogic();
+    
+    vTaskDelay(100 / portTICK_RATE_MS);
   }
+  vTaskDelete(NULL);
 }
 #endif
 

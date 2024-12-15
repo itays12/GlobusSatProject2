@@ -38,10 +38,13 @@ char* getFallenName();
 
 typedef struct solar_tlm { int32_t values[ISIS_SOLAR_PANEL_COUNT]; } solar_tlm_t;
 
+
 /**
  * get all tlm save time periods from FRAM
  */
 void InitSavePeriodTimes();
+
+size_t getTlmDataSize(tlm_type_t tlm_type);
 
 /**
  * set a new periodTime

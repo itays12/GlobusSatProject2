@@ -25,6 +25,7 @@
 #define FSFRAM 0x20000
 #endif
 
+
 typedef enum {
   FS_SUCCESS,
   FS_DUPLICATED,
@@ -46,6 +47,10 @@ typedef enum {
     }                                                                          \
   } while (0)
 
+
+void setAbortFlag();
+
+int getAbortFlag();
 FileSystemResult logFsErr(FileSystemResult err, char *msg);
 
 int CMD_getInfoImage(sat_packet_t *cmd);

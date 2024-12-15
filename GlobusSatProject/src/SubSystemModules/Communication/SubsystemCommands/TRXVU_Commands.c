@@ -1,5 +1,6 @@
 #include "TRXVU_Commands.h"
 #include "SubSystemModules/Communication/TRXVU.h"
+#include "SubSystemModules/Communication/dump.h"
 #include "SysI2CAddr.h"
 #include "satellite-subsystems/IsisTRXVU.h"
 
@@ -24,40 +25,18 @@ int CMD_TrasmitBeacon(sat_packet_t *cmd){
   return 0;
 }
 
-int CMD_GetBaudRate(sat_packet_t *cmd){
-  ISIStrxvuTransmitterState transmitterState;
-  IsisTrxvu_tcGetState(ISIS_TRXVU_I2C_BUS_INDEX, &transmitterState);
-  ISIStrxvuBitrateStatus baudRate = transmitterState.fields.transmitter_bitrate; 
-
-  sat_packet_t packet;
-  PROPEGATE_ERROR(AssembleCommand(&baudRate, sizeof(ISIStrxvuBitrate), eps_cmd_type,
-                                  GET_BAUD_RATE, 0, &packet),
-                  "AssembleCommand");
-  PROPEGATE_ERROR(TransmitSplPacket(&packet, NULL), "TransmitSplPacket");
+int CMD_StartDump(sat_packet_t *cmd){
+  dump_arguments_t* args = (dump_arguments_t* ) cmd->data;
+  startDump(args);
   return 0;
 }
 
-int CMD_SetBaudRate(sat_packet_t *cmd){
-  SetBaudRate_Params* params = (SetBaudRate_Params*)cmd->data;
-  ISIStrxvuBitrate bitrate;
-  switch(params->bitrate){
-    case trxvu_bitratestatus_1200:
-      bitrate = trxvu_bitrate_1200;
-      break;
+int CMD_SendDumpAbortRequest(sat_packet_t *cmd){
+  abortDump(); 
+  return 0;
+}
 
-    case trxvu_bitratestatus_2400:
-      bitrate = trxvu_bitrate_2400;
-      break;
-
-    case trxvu_bitratestatus_4800:
-      bitrate = trxvu_bitrate_4800;
-      break;
-
-    case trxvu_bitratestatus_9600:
-      bitrate = trxvu_bitrate_9600;
-      break;
-  }
-
-  PROPEGATE_ERROR(IsisTrxvu_tcSetAx25Bitrate(ISIS_TRXVU_I2C_BUS_INDEX, bitrate), "SetAx25Bitrate");
+int CMD_ForceDumpAbort(sat_packet_t *cmd){
+  forceAbortDump();
   return 0;
 }

@@ -1,3 +1,4 @@
+#include "SubSystemModules/Housekepping/TelemetryFiles.h"
 a#include "SubSystemModules/Maintenance/Maintenance.h"
 #include "TelemetryCollector.h"
 #include "hal/Storage/FRAM.h"
@@ -33,6 +34,7 @@ void TelemetryCollectorLogic() {
 
 
 }
+
 void TelemetrySaveEPS(){//done
 	imepsv2_piu__gethousekeepingeng__from_t response;
 	int error;
@@ -308,4 +310,23 @@ void TelemetrySaveANT(){//done
 }
 
 
-
+size_t getTlmDataSize(tlm_type_t tlm_type){
+  switch (tlm_type) {
+  case tlm_eps:
+    return sizeof(imepsv2_piu__gethousekeepingeng__from_t);
+  case tlm_tx:
+    return sizeof(ISIStrxvuTxTelemetry);
+  case tlm_antenna:
+    return sizeof(isis_ants2__get_all_telemetry__from_t);
+  case tlm_solar:
+    return sizeof(int32_t) * 8;
+  case tlm_wod:
+    return sizeof(WOD_Telemetry_t);
+  case tlm_rx:
+    return sizeof(ISIStrxvuRxTelemetry);
+  case tlm_log:
+    return sizeof(logData_t);
+  default:
+    return 0;
+  }
+}

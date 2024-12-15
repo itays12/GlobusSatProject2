@@ -5,9 +5,12 @@
 #include "SubSystemModules/Housekepping/TelemetryFiles.h"
 #include "hcc/api_fat.h"
 #include "utils.h"
+#include <stdatomic.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+
+volatile atomic_int abort_flag = 0;
 
 #define MAX_FILE_NAME 32
 
@@ -47,6 +50,8 @@ char *tlmTypeToExt(tlm_type_t type) {
 
   return "def";
 }
+
+void setAbortFlag() { abort_flag = 1; }
 
 FileSystemResult InitializeFS() {
   PROPEGATE_FS_ERROR(fs_init(), "fs_init");
@@ -156,7 +161,6 @@ void calculateFileName(Time curr_date, char *file_name, char *endFileName) {
 
 int readTLMFileTimeRange(tlm_type_t tlm_type, time_unix from_time,
                          time_unix to_time, int cmd_id, int data_size) {
-
   time_unix current_unix_time = from_time;
   Time current_time;
   PROPEGATE_FS_ERROR(Time_convertEpochToTime(current_unix_time, &current_time),
@@ -172,7 +176,8 @@ int readTLMFileTimeRange(tlm_type_t tlm_type, time_unix from_time,
   FILE *file = NULL;
 
   int err = 0;
-  while (1) {
+  while (!abort_flag) {
+
     calculateFileName(current_time, file_name, ext);
 
     FILE *file = fopen(file_name, "rb");
@@ -182,6 +187,10 @@ int readTLMFileTimeRange(tlm_type_t tlm_type, time_unix from_time,
 
     int buffer_offset = 0;
     while (!feof(file)) {
+
+      if (abort_flag) {
+        goto cleanup;
+      }
       time_unix file_timestamp;
 
       if (fread(&file_timestamp, sizeof(time_unix), 1, file) != 1) {
@@ -225,6 +234,8 @@ cleanup:
     fclose(file);
   }
 
+
+  abort_flag = 0;
   return err;
 }
 
@@ -353,4 +364,8 @@ int deleteOldestFile() {
   }
 
   return FS_SUCCESS;
+}
+
+int getAbortFlag(){
+  return abort_flag;
 }
