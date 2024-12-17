@@ -1,0 +1,1 @@
+{"settings":{"isDefaultLittleEndian":false},"telemetry":{"serviceTypes":[]},"telecommands":{"serviceTypes":[{"name":"TRXVU","id":0,"serviceSubTypes":[{"name":"Ping","id":0,"params":[]},{"name":"Beacon","id":1,"params":[]},{"name":"Mute","id":2,"params":[{"name":"MuteTime","type":"uint32","isLittleEndian":true,"unit":"Time"}]}]}]},"calibrations":[]}
