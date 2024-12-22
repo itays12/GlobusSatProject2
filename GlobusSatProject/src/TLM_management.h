@@ -49,8 +49,10 @@ typedef enum {
 
 
 void setAbortFlag();
+void clearAbortFlag();
 
 int getAbortFlag();
+
 FileSystemResult logFsErr(FileSystemResult err, char *msg);
 
 int CMD_getInfoImage(sat_packet_t *cmd);

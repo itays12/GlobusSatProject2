@@ -24,6 +24,7 @@ void WriteTelem(void *data, int size, const char *ext) {
 			time.date, ext);
 	printf("writing telem to file: %s", buffer);
 }
+
 int CMD_GetTLMPeriodTimes(sat_packet_t *cmd){}
 void TelemetryCollectorLogic() {//done
 	time_unix telem_time;
@@ -62,11 +63,7 @@ void TelemetryCollectorLogic() {//done
 
 }
 
-<<<<<<< HEAD
 void TelemetrySaveEPS(){//done
-=======
-void TelemetrySaveEPS() { //done
->>>>>>> refs/remotes/origin/main
 	imepsv2_piu__gethousekeepingeng__from_t response;
 	int error;
 	error = logError(imepsv2_piu__gethousekeepingeng(0, &response),
@@ -292,8 +289,6 @@ void TelemetrySaveANT() { //done
 
 }
 
-<<<<<<< HEAD
-
 size_t getTlmDataSize(tlm_type_t tlm_type){
   switch (tlm_type) {
   case tlm_eps:
@@ -314,5 +309,4 @@ size_t getTlmDataSize(tlm_type_t tlm_type){
     return 0;
   }
 }
-=======
->>>>>>> refs/remotes/origin/main
+

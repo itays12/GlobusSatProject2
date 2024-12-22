@@ -11,6 +11,9 @@ int trxvu_command_router(sat_packet_t *cmd){
     case UNMUTE_TRXVU: 
       CMD_UnMuteTRXVU(cmd);
       break;
+    case PING:
+    	CMD_Ping(cmd);
+    	break;
   }
 	return 0;
 }

@@ -4,6 +4,10 @@
 #include "SysI2CAddr.h"
 #include "satellite-subsystems/IsisTRXVU.h"
 
+int CMD_Ping(sat_packet_t* cmd){
+	return TransmitSplPacket(cmd, NULL);
+}
+
 int CMD_MuteTRXVU(sat_packet_t *cmd) {
   MuteTRXVU_Params *params = (MuteTRXVU_Params *)cmd->data;
   if (params->mute_time == 0) {
