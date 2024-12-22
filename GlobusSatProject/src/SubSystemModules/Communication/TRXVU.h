@@ -28,10 +28,11 @@
 
 typedef struct __attribute__ ((__packed__))
 {
-	unsigned int id;
+	sat_packet_t cmd;
 	tlm_type_t dump_type;
 	time_unix t_start;
-	time_unix t_end;
+	time_unix t_end; // if passed 0 we use the readTLMFiles function. Otherwise, we use the time range function
+	int resulotion;
 } dump_arguments_t;
 
 typedef enum __attribute__ ((__packed__)) _ISIStrxvuTransponderMode
@@ -111,6 +112,20 @@ Boolean CheckTransmitionAllowed();
  * @return    Error code according to <hal/errors.h>
  */
 int TransmitSplPacket(sat_packet_t *packet,unsigned char *avalFrames);
+
+/*!
+ * @brief sends an abort message via a freeRTOS queue.
+ */
+void SendDumpAbortRequest();
+
+/*!
+ * @brief Closes a dump task if one is executing, using vTaskDelete.
+ * @note Can be used to forcibly abort the task
+ */
+void AbortDump(sat_packet_t *cmd);
+
+void FinishDump(sat_packet_t *cmd,unsigned char *buffer, ack_subtype_t acktype,
+		unsigned char *err, unsigned int size) ;
 
 
 int sendBeacon();

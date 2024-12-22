@@ -25,7 +25,6 @@
 #define FSFRAM 0x20000
 #endif
 
-
 typedef enum {
   FS_SUCCESS,
   FS_DUPLICATED,
@@ -46,12 +45,6 @@ typedef enum {
       return err;                                                              \
     }                                                                          \
   } while (0)
-
-
-void setAbortFlag();
-void clearAbortFlag();
-
-int getAbortFlag();
 
 FileSystemResult logFsErr(FileSystemResult err, char *msg);
 
