@@ -4,10 +4,10 @@
 #include "hal/errors.h"
 #include "utils.h"
 
-int SendAckPacket(ack_subtype_t acksubtype, unsigned int cmd_id, unsigned char *data, unsigned short length){
+int SendAckPacket(ack_subtype_t acksubtype, sat_packet_t *cmd, unsigned char *data, unsigned short length){
 	sat_packet_t packet;
 
-	packet.ID = cmd_id;
+	packet.ID = cmd->ID;
 	packet.cmd_type = ack_type;
 	packet.cmd_subtype = acksubtype;
 	//TODO: add assert that length does not exceed MAX_COMMAND_DATA_LENGTH

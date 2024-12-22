@@ -6,11 +6,8 @@
 #include "hcc/api_fat.h"
 #include "utils.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-
-
-volatile int abort_flag;
+#include <stdlib.h>
 
 #define MAX_FILE_NAME 32
 
@@ -50,7 +47,6 @@ char *tlmTypeToExt(tlm_type_t type) {
 
   return "def";
 }
-
 
 FileSystemResult InitializeFS() {
   PROPEGATE_FS_ERROR(fs_init(), "fs_init");
@@ -160,6 +156,7 @@ void calculateFileName(Time curr_date, char *file_name, char *endFileName) {
 
 int readTLMFileTimeRange(tlm_type_t tlm_type, time_unix from_time,
                          time_unix to_time, int cmd_id, int data_size) {
+
   time_unix current_unix_time = from_time;
   Time current_time;
   PROPEGATE_FS_ERROR(Time_convertEpochToTime(current_unix_time, &current_time),
@@ -175,8 +172,7 @@ int readTLMFileTimeRange(tlm_type_t tlm_type, time_unix from_time,
   FILE *file = NULL;
 
   int err = 0;
-  while (!getAbortFlag()) {
-
+  while (1) {
     calculateFileName(current_time, file_name, ext);
 
     FILE *file = fopen(file_name, "rb");
@@ -186,10 +182,6 @@ int readTLMFileTimeRange(tlm_type_t tlm_type, time_unix from_time,
 
     int buffer_offset = 0;
     while (!feof(file)) {
-
-      if (getAbortFlag()) {
-        goto cleanup;
-      }
       time_unix file_timestamp;
 
       if (fread(&file_timestamp, sizeof(time_unix), 1, file) != 1) {
@@ -233,9 +225,7 @@ cleanup:
     fclose(file);
   }
 
-
-clearAbortFlag();
-return err;
+  return err;
 }
 
 int deleteOldestFile() {
@@ -364,13 +354,3 @@ int deleteOldestFile() {
 
   return FS_SUCCESS;
 }
-
-int getAbortFlag(){
-	int flag = 1;
-	__atomic_load(&abort_flag, &flag,__ATOMIC_SEQ_CST);
-	return flag;
-}
-
-void setAbortFlag() { int flag = 1;__atomic_store(&abort_flag, &flag,__ATOMIC_SEQ_CST); }
-
-void clearAbortFlag() { int flag = 0;__atomic_store(&abort_flag, &flag,__ATOMIC_SEQ_CST); }
