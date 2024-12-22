@@ -34,6 +34,10 @@ int CMD_SetTransponder(sat_packet_t *cmd);
 int CMD_SetRSSITransponder(sat_packet_t *cmd);
 
 int CMD_UnMuteTRXVU(sat_packet_t *cmd);
+typedef struct SetBeaconInterval_Params{
+  time_unix beacon_time;
+}SetBeaconInterval_Params;
+int CMD_SetBeaconInterval(sat_packet_t *cmd);
 
 int CMD_GetBaudRate(sat_packet_t *cmd);
 

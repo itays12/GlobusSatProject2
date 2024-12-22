@@ -23,14 +23,11 @@ int CMD_GetThresholdVoltages(sat_packet_t *cmd) {
   PROPEGATE_ERROR(TransmitSplPacket(&packet, NULL), "TransmitSplPacket");
   return 0;
 }
-// eps modes
-int CMD_EnterFullMode(sat_packet_t *cmd) { return EnterFullMode(); }
 
-int CMD_EnterCriticalMode(sat_packet_t *cmd) { return EnterCriticalMode(); }
-
-int CMD_EnterSafeMode(sat_packet_t *cmd) { return EnterSafeMode(); }
-
-int CMD_GetCurrentMode(sat_packet_t *cmd) { return GetSystemState(); }
+int CMD_GetCurrentMode(sat_packet_t *cmd) { 
+  int state = GetSystemState();
+  return TransmitDataAsSPL_Packet(cmd, &state, sizeof(state));
+}
 
 int CMD_SetChannels3V3_On(sat_packet_t *cmd) {
   imepsv2_piu__replyheader_t reply_header;

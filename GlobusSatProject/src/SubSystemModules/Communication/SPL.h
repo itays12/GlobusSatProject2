@@ -8,8 +8,9 @@ typedef enum __attribute__((__packed__)) spl_command_type_t {
   telemetry_cmd_type, // 2
   filesystem_cmd_type,
   managment_cmd_type,
-  ack_type, // 5
+  ack_type, 
   dump_type,
+  payload_cmd_type,
 } spl_command_type;
 
 typedef enum __attribute__((__packed__)) ack_subtype_t {
@@ -44,7 +45,7 @@ typedef enum __attribute__((__packed__)) ack_subtype_t {
   ACK_DELETE_TLM = 28,
   ACK_PING = 29,
   ACK_UNKNOWN_SUBTYPE = 30,
-  ACK_ERROR_MSG = 31
+  ACK_ERR = 31
 } ack_subtype_t;
 
 typedef enum __attribute__((__packed__)) trxvu_subtypes_t {

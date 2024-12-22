@@ -3,6 +3,7 @@
 #include "SPL.h"
 #include <string.h>
 #include <stddef.h>
+#include "SubSystemModules/Communication/AckHandler.h"
 #include "utils.h"
 
 
@@ -24,14 +25,9 @@ int ActUponCommand(sat_packet_t *cmd){
 		case managment_cmd_type:
 			err = managment_command_router(cmd);
 			break;
-		case ack_type:
-			//TODO: handle ack packets
-			break;
-		case dump_type:
-			//TODO: handle dump packets
-			break;
 	}
 	if (logError(err, "ActUponCommand") != E_NO_SS_ERR){
+    SendAckPacket(ACK_ERR, cmd->ID, &err, sizeof(err));
 		return err;
 	}
 	return 0;

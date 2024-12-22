@@ -4,7 +4,7 @@
 #include "hal/errors.h"
 #include "utils.h"
 
-int SendAckPacket(ack_subtype_t acksubtype, unsigned int cmd_id, unsigned char *data, unsigned short length){
+int SendAckPacket(ack_subtype_t acksubtype, unsigned int cmd_id, void *data, unsigned short length){
 	sat_packet_t packet;
 
 	packet.ID = cmd_id;

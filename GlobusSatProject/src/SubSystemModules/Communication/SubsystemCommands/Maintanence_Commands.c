@@ -34,34 +34,3 @@ int CMD_SoftTRXVU_ComponenetReset(sat_packet_t *cmd) {
 int CMD_HardTRXVU_ComponenetReset(sat_packet_t *cmd) {
   return IsisTrxvu_hardReset(ISIS_TRXVU_I2C_BUS_INDEX);
 }
-
-int CMD_ResetComponent(sat_packet_t *cmd) {
-  char reset_ = cmd->data[0];
-  imepsv2_piu__replyheader_t reply_header;
-  switch (reset_) {
-  case reset_software:
-
-    break;
-  case reset_hardware:
-
-    break;
-  case reset_eps:
-    imepsv2_piu__reset(0, &reply_header);
-    break;
-  case reset_trxvu_hard:
-
-    break;
-  case reset_trxvu_soft:
-
-    break;
-  case reset_ant_SideA:
-
-    break;
-  case reset_ant_SideB:
-
-    break;
-  case reset_filesystem:
-
-    break;
-  }
-}

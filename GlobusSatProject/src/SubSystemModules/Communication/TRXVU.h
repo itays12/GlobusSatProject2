@@ -73,7 +73,7 @@ int InitTrxvu();
 
 void checkTransponderFinish();
 
-int CMD_SetBeaconInterval(sat_packet_t *cmd);
+
 
 /*!
  * @brief The TRXVU logic according to the sub-system flowchart

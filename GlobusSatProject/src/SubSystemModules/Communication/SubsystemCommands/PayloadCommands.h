@@ -8,8 +8,8 @@
 #ifndef PAYLOADCOMMANDS_H_
 #define PAYLOADCOMMANDS_H_
 
-#include "updated_payload_drivers.h"
-#include "updated_payload_drivers.c"
+#include "SubSystemModules/Communication/SatCommandHandler.h"
+#include "payload/updated_payload_drivers.h"
 
 #include "hal/Drivers/I2C.h"
 #include <string.h>
@@ -22,10 +22,8 @@
 #endif /* PAYLOADCOMMANDS_H_ */
 
 
-void softReset();
+int CMD_PayloadSoftReset(sat_packet_t* cmd);
 
+int CMD_PayloadTurnOff(sat_packet_t* cmd);
 
-
-
-
-
+int CMD_PayloadTurnOn(sat_packet_t* cmd);

@@ -175,7 +175,7 @@ int BeaconLogic(){
 
 
 void changeBeaconTime(time_unix time){
-	FRAM_READ_FIELD(&time, beaconInterval);
+	FRAM_WRITE_FIELD(&time, beaconInterval);
 }
 
 
