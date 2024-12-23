@@ -24,6 +24,8 @@
 #endif
 
 
+#define SAT_ID 15
+
 
 #define TELEMETRY_SAVE_TIME_PERIOD	(10)						///< save telemetry every 10 secondss
 

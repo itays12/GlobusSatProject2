@@ -1,5 +1,6 @@
 #include "TRXVU_Commands.h"
 #include "SubSystemModules/Communication/TRXVU.h"
+#include "SubSystemModules/Communication/dump.h"
 #include "SysI2CAddr.h"
 #include "satellite-subsystems/IsisTRXVU.h"
 
@@ -27,7 +28,6 @@ int CMD_TrasmitBeacon(sat_packet_t *cmd) {
   return 0;
 }
 
-<<<<<<< HEAD
 int CMD_StartDump(sat_packet_t *cmd) {
   dump_arguments_t *args = (dump_arguments_t *)cmd->data;
   startDump(args);

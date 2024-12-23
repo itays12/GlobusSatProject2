@@ -30,15 +30,17 @@
 #else
 
 void taskMain() {
-
-	WDT_startWatchdogKickTask(10 / portTICK_RATE_MS, FALSE);
   InitSubsystems();
+
+
 
   while (TRUE) {
     logError(EPS_Conditioning(), "Error in EPS");
     logError(TRX_Logic(), "Error in TRX");
-    logError(Maintenance(),"Error in Maintenance");
-    logError(Telementry(),"Error in Telementry";
+    Maintenance();
+    TelemetryCollectorLogic();
+
+    sleep(100);
   }
 }
 #endif
@@ -58,6 +60,8 @@ int main() {
   WDT_start();
 
 // create the main operation task of the satellite
+
+	WDT_startWatchdogKickTask(10 / portTICK_RATE_MS, TRUE);
 #ifdef TESTING
   xTaskGenericCreate(taskTesting, (const signed char *)"taskTesting", 4096,
                      NULL, configMAX_PRIORITIES - 2, &taskMainHandle, NULL,

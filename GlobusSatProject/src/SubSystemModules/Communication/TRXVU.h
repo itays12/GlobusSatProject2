@@ -5,7 +5,7 @@
 #include <freertos/semphr.h>
 #include <freertos/task.h>
 
-#include <satellite-subsystems/IsisTRXVU.h>
+#include <satellite-subsystems/isis_vu_e.h>
 #include "GlobalStandards.h"
 #include "AckHandler.h"
 #include "SatCommandHandler.h"
@@ -28,11 +28,10 @@
 
 typedef struct __attribute__ ((__packed__))
 {
-	sat_packet_t cmd;
+	unsigned int id;
 	tlm_type_t dump_type;
 	time_unix t_start;
-	time_unix t_end; // if passed 0 we use the readTLMFiles function. Otherwise, we use the time range function
-	int resulotion;
+	time_unix t_end;
 } dump_arguments_t;
 
 typedef enum __attribute__ ((__packed__)) _ISIStrxvuTransponderMode
@@ -74,7 +73,7 @@ int InitTrxvu();
 
 void checkTransponderFinish();
 
-
+int CMD_SetBeaconInterval(sat_packet_t *cmd);
 
 /*!
  * @brief The TRXVU logic according to the sub-system flowchart
@@ -112,20 +111,6 @@ Boolean CheckTransmitionAllowed();
  * @return    Error code according to <hal/errors.h>
  */
 int TransmitSplPacket(sat_packet_t *packet,unsigned char *avalFrames);
-
-/*!
- * @brief sends an abort message via a freeRTOS queue.
- */
-void SendDumpAbortRequest();
-
-/*!
- * @brief Closes a dump task if one is executing, using vTaskDelete.
- * @note Can be used to forcibly abort the task
- */
-void AbortDump(sat_packet_t *cmd);
-
-void FinishDump(sat_packet_t *cmd,unsigned char *buffer, ack_subtype_t acktype,
-		unsigned char *err, unsigned int size) ;
 
 
 int sendBeacon();

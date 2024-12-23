@@ -5,7 +5,6 @@
 #include "SubSystemModules/Communication/TRXVU.h"
 #include "SubSystemModules/Communication/AckHandler.h"
 #include "SubSystemModules/Communication/SatCommandHandler.h"
-#include "satellite-subsystems/IsisTRXVU.h"
 
 // wait time for taking semaphores
 #define WAIT_TIME_SEM_DUMP	3
@@ -14,8 +13,8 @@
 
 
 #define ANTENNA_DEPLOYMENT_TIMEOUT 10 //<! in seconds
-
-int CMD_StartDump(sat_packet_t *cmd);
+int CMD_Ping(sat_packet_t* cmd);//Done
+int CMD_StartDump(sat_packet_t *cmd);//Done
 
 int CMD_SendDumpAbortRequest(sat_packet_t *cmd);
 
@@ -27,41 +26,26 @@ typedef struct MuteTRXVU_Params{
 
 int CMD_MuteTRXVU(sat_packet_t *cmd);
 
+//TODO
 int CMD_SetIdleState(sat_packet_t *cmd);
-
+//TODO
 int CMD_SetTransponder(sat_packet_t *cmd);
-
+//TODO
 int CMD_SetRSSITransponder(sat_packet_t *cmd);
-
+//DOne
 int CMD_UnMuteTRXVU(sat_packet_t *cmd);
 typedef struct SetBeaconInterval_Params{
   time_unix beacon_time;
 }SetBeaconInterval_Params;
+//Done
 int CMD_SetBeaconInterval(sat_packet_t *cmd);
-
-int CMD_GetBaudRate(sat_packet_t *cmd);
-
-typedef struct SetBaudRate_Params{
-  ISIStrxvuBitrateStatus bitrate;
-}SetBaudRate_Params;
-
-int CMD_SetBaudRate(sat_packet_t *cmd);
 
 int CMD_GetBeaconInterval(sat_packet_t *cmd);
 
-int CMD_TrasmitBeacon(sat_packet_t *cmd);
-
+//Unimportent
 int CMD_GetTxUptime(sat_packet_t *cmd);
 
 int CMD_GetRxUptime(sat_packet_t *cmd);
-
-int CMD_GetNumOfDelayedCommands(sat_packet_t *cmd);
-
-int CMD_GetNumOfOnlineCommands(sat_packet_t *cmd);
-
-int CMD_DeleteDelyedCmdByID(sat_packet_t *cmd);
-
-int CMD_DeleteAllDelyedBuffer(sat_packet_t *cmd);
 
 int CMD_AntSetArmStatus(sat_packet_t *cmd);
 
@@ -72,7 +56,6 @@ int CMD_AntGetUptime(sat_packet_t *cmd);
 int CMD_AntCancelDeployment(sat_packet_t *cmd);
 
 int CMD_AntennaDeploy(sat_packet_t *cmd);
-
 
 int CMD_StopReDeployment(sat_packet_t *cmd);
 

@@ -1,6 +1,8 @@
 #include "EPSOperationModes.h"
 #include "GlobalStandards.h"
 #include "SubSystemModules/Communication/TRXVU.h"
+#include "satellite-subsystems/isismepsv2_ivid7_piu.h"
+#include "satellite-subsystems/isismepsv2_ivid7_piu_types.h"
 #include "utils.h"
 #include <satellite-subsystems/imepsv2_piu.h>
 
@@ -58,11 +60,11 @@ EpsState GetSystemState() { return epsState; }
 static channel_t channelStates;
 
 int turnOnEpsChannel(int channel) {
-  imepsv2_piu__replyheader_t header;
-  imepsv2_piu__outputbuschanneloff(EPS_I2C_ADDR, channel, &header);
+  isismepsv2_ivid7_piu__replyheader_t header;
+  isismepsv2_ivid7_piu__outputbuschanneloff(EPS_I2C_ADDR, channel, &header);
 }
 
 int turnOffEpsChannel(int channel) {
-  imepsv2_piu__replyheader_t header;
-  imepsv2_piu__outputbuschannelon(EPS_I2C_ADDR, channel, &header);
+  isismepsv2_ivid7_piu__replyheader_t header;
+  isismepsv2_ivid7_piu__outputbuschannelon(EPS_I2C_ADDR, channel, &header);
 }

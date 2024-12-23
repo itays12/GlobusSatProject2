@@ -1,4 +1,3 @@
-a
 #include "SubSystemModules/Maintenance/Maintenance.h"
 #include "TelemetryCollector.h"
 #include "hal/Storage/FRAM.h"
@@ -62,7 +61,7 @@ int CMD_SetTLMPeriodTimes(sat_packet_t *cmd) {//done
 		err = -4; //defind
 	}
 	if(err==0){
-	SendAckPacket( ACK_COMD_EXEC,  cmd, NULL,0);/////
+	SendAckPacket( ACK_COMD_EXEC,  cmd->ID, NULL,0);/////
 
 	}
 	return err;
@@ -291,27 +290,7 @@ void TelemetrySaveWOD() { //done
 
 }
 
-void InitSavePeriodTimes() { //done
-	/*unsigned int SavePeriodTime_eps = 5;
-	 unsigned int SavePeriodTime_ant = 5;
-	 unsigned int SavePeriodTime_wod = 5;
-	 unsigned int SavePeriodTime_trxvu = 5;
-	 int error;
-
-	 error = FRAM_WRITE_FIELD(&SavePeriodTime_eps, telePeriod_eps);
-	 if (error != 0)
-	 return;
-	 error = FRAM_WRITE_FIELD(&SavePeriodTime_ant, telePeriod_ant);
-	 if (error != 0)
-	 return;
-
-	 error = FRAM_WRITE_FIELD(&SavePeriodTime_wod, telePeriod_wod);
-	 if (error != 0)
-	 return;
-	 error = FRAM_WRITE_FIELD(&SavePeriodTime_wod, telePeriod_trx);
-	 if (error != 0)
-	 return;*/
-
+void InitSavePeriodTimes() {
 	FRAM_READ_FIELD(&save_time[tlm_eps], telePeriod_eps);
 	FRAM_READ_FIELD(&save_time[tlm_antenna], telePeriod_ant);
 	FRAM_READ_FIELD(&save_time[tlm_wod], telePeriod_wod);
@@ -326,6 +305,26 @@ void TelemetrySaveANT() { //done
 			"TelemetrySaveANT");
 	if (error == 0)
 		WriteTelem(&response, sizeof(response), END_FILE_NAME_ANTENNA);
+}
 
+size_t getTlmDataSize(tlm_type_t tlm_type){
+  switch (tlm_type) {
+  case tlm_eps:
+    return sizeof(imepsv2_piu__gethousekeepingeng__from_t);
+  case tlm_tx:
+    return sizeof(ISIStrxvuTxTelemetry);
+  case tlm_antenna:
+    return sizeof(isis_ants2__get_all_telemetry__from_t);
+  case tlm_solar:
+    return sizeof(int32_t) * 8;
+  case tlm_wod:
+    return sizeof(WOD_Telemetry_t);
+  case tlm_rx:
+    return sizeof(ISIStrxvuRxTelemetry);
+  case tlm_log:
+    return sizeof(logData_t);
+  default:
+    return 0;
+  }
 }
 

@@ -10,6 +10,9 @@
 #define NUM_OF_SUBSYSTEMS_SAVE_FUNCTIONS 5
 
 
+size_t getTlmDataSize(tlm_type_t tlm_type);
+
+
 typedef struct __attribute__ ((__packed__)) WOD_Telemetry_t
 {
 	voltage_t vbat;					///< the current voltage on the battery [mV]
@@ -30,7 +33,7 @@ typedef struct __attribute__ ((__packed__)) WOD_Telemetry_t
 	time_unix sat_uptime;			///< Sat uptime
 	unsigned int photo_diodes[5]; 			//todo photo diodes
 	unsigned int num_of_cmd_resets;///< counts the number of resets the satellite has gone through due to ground station command [#]
-	char fallenName[40] = getFallenName();
+	char fallenName[40];
 } WOD_Telemetry_t;
 
 char* getFallenName();

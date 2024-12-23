@@ -1,5 +1,5 @@
 #include "EPS.h"
-#include <satellite-subsystems/imepsv2_piu.h>
+#include "satellite-subsystems/isismepsv2_ivid7_piu.h"
 #include "utils.h"
 #include "GlobalStandards.h"
 #include "EPSOperationModes.h"
@@ -10,8 +10,8 @@ int voltage_tend;
 int EPS_Init(void) {
 	int err;
   
-  IMEPSV2_PIU_t imepsv2_piu = {EPS_I2C_ADDR};
-	err = IMEPSV2_PIU_Init(&imepsv2_piu, 1);
+  ISISMEPSV2_IVID7_PIU_t imepsv2_piu = {EPS_I2C_ADDR};
+	err = ISISMEPSV2_IVID7_PIU_Init(&imepsv2_piu, 1);
 	if (err != E_NO_SS_ERR && err != E_IS_INITIALIZED) {
 		logError(err, "IMEPSV2_PIU_Init");
 		return -1;
@@ -81,8 +81,8 @@ int RestoreDefaultThresholdVoltages(){
 }
 
 int GetBatteryVoltage(voltage_t *vbat) {
-	imepsv2_piu__gethousekeepingeng__from_t response;
-	int err = imepsv2_piu__gethousekeepingeng(0, &response);
+	isismepsv2_ivid7_piu__gethousekeepingeng__from_t response;
+	int err = isismepsv2_ivid7_piu__gethousekeepingeng(0, &response);
 	if (err != E_NO_SS_ERR) {
 		logError(err, "Failed to get battery voltage");
 		return err;

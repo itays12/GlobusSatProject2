@@ -27,7 +27,7 @@ int ActUponCommand(sat_packet_t *cmd){
 			break;
 	}
 	if (logError(err, "ActUponCommand") != E_NO_SS_ERR){
-    SendAckPacket(ACK_ERR, cmd->ID, &err, sizeof(err));
+    SendAckPacket(ACK_ERROR_MSG, cmd->ID, &err, sizeof(err));
 		return err;
 	}
 	return 0;

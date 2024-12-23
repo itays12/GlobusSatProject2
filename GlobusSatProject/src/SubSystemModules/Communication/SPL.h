@@ -5,12 +5,11 @@
 typedef enum __attribute__((__packed__)) spl_command_type_t {
   trxvu_cmd_type,
   eps_cmd_type,
-  telemetry_cmd_type, // 2
+  telemetry_cmd_type, 
   filesystem_cmd_type,
   managment_cmd_type,
   ack_type, 
   dump_type,
-  payload_cmd_type,
 } spl_command_type;
 
 typedef enum __attribute__((__packed__)) ack_subtype_t {
@@ -45,79 +44,85 @@ typedef enum __attribute__((__packed__)) ack_subtype_t {
   ACK_DELETE_TLM = 28,
   ACK_PING = 29,
   ACK_UNKNOWN_SUBTYPE = 30,
-  ACK_ERR = 31
-
+  ACK_ERROR_MSG = 31
 } ack_subtype_t;
 
 typedef enum __attribute__((__packed__)) trxvu_subtypes_t {
-  BEACON_SUBTYPE = 0x01,      // 0b00000001 =
-  MUTE_TRXVU = 0x11,          // 0b00010001 *
-  UNMUTE_TRXVU = 0x88,        // 0b10001000 *
-  TRXVU_IDLE = 0x87,          // *
-  DUMP_DAYS = 0x69,           // 0b01101001 +
-  DUMP_TIME_RANGE = 0x70,     // +
-  ABORT_DUMP_SUBTYPE = 0x22,  // 0b00100010 *
-  GET_BAUD_RATE = 0x13,       // 0b00010011 =
-  GET_BEACON_INTERVAL = 0x23, // 0b00100011 =
-  SET_BEACON_INTERVAL = 0x24, // 0b00100100 *
-  TRANSMIT_BEACON = 0x25,
-  SET_BAUD_RATE = 0x15,         // 0b00010101 *
-  SET_BEACON_CYCLE_TIME = 0x25, // 0b00100101 //its not in the cmd dictionary
-  GET_TX_UPTIME = 0x66,         // 0b01100110 = //long int
-  GET_RX_UPTIME = 0x68, // 0b01101000 = same func as the TX uptime //long int
-  GET_NUM_OF_ONLINE_CMD = 0xA7, // 0b10100111 =
-  SET_RSSI_TRANSPONDER = 0xA5,  // 0b10100101
-  SET_TRANSPONDER = 0xA6,       // 0b10100110
-  ANT_SET_ARM_STATUS = 0xB0,    // 0b10110000 *
-  ANT_GET_ARM_STATUS = 0xB2,    // 0b10110010 =
-  ANT_GET_UPTIME = 0xB3,        // 0b10110011 = //long int
-  ANT_CANCEL_DEPLOY = 0xB7,     // 0b10110111 *
-  ANT_DEPLOY = 0xB9,            // 0b10110111 *
-  ANT_STOP_REDEPLOY = 0xC0,
-  PING = 0xC2,
-  FORCE_ABORT_DUMP_SUBTYPE = 0x33, // 0b00110011 *
-  DELETE_DUMP_TASK = 0x44          // 0b00100010 //its not in the cmd dictionary
-
+  PING = 0,
+  BEACON_SUBTYPE = 1,
+  MUTE_TRXVU = 2,
+  UNMUTE_TRXVU = 3,
+  TRXVU_IDLE = 4,
+  DUMP_DAYS = 5,
+  DUMP_TIME_RANGE = 6,
+  ABORT_DUMP_SUBTYPE = 7,
+  GET_BAUD_RATE = 8,
+  GET_BEACON_INTERVAL = 9,
+  SET_BEACON_INTERVAL = 10,
+  TRANSMIT_BEACON = 11,
+  SET_BAUD_RATE = 12,
+  SET_BEACON_CYCLE_TIME = 13,
+  GET_TX_UPTIME = 14,
+  GET_RX_UPTIME = 15,
+  GET_NUM_OF_ONLINE_CMD = 16,
+  SET_RSSI_TRANSPONDER = 17,
+  SET_TRANSPONDER = 18,
+  ANT_SET_ARM_STATUS = 19,
+  ANT_GET_ARM_STATUS = 20,
+  ANT_GET_UPTIME = 21,
+  ANT_CANCEL_DEPLOY = 22,
+  ANT_DEPLOY = 23,
+  ANT_STOP_REDEPLOY = 24,
+  FORCE_ABORT_DUMP_SUBTYPE = 25,
+  DELETE_DUMP_TASK = 26
 } trxvu_subtypes_t;
 
 typedef enum __attribute__((__packed__)) eps_subtypes_t {
-  UPDATE_ALPHA = 0x01,
-  GET_HEATER_VALUES = 0x02,
-  SET_HEATER_VALUES = 0x03,
-  RESET_EPS_WDT = 0x04,
-  GET_THRESHOLD_VOLTAGES = 0x05,
-  UPDATE_THRESHOLD_VOLTAGES = 0x06,
-  GET_SOLAR_PANEL_STATE = 0x07,
-  SOLAR_PANEL_SLEEP = 0x08,
-  SOLAR_PANEL_WAKE = 0x09,
+  UPDATE_ALPHA = 1,
+  GET_HEATER_VALUES = 2,
+  SET_HEATER_VALUES = 3,
+  RESET_EPS_WDT = 4,
+  GET_THRESHOLD_VOLTAGES = 5,
+  UPDATE_THRESHOLD_VOLTAGES = 6,
+  GET_SOLAR_PANEL_STATE = 7,
+  SOLAR_PANEL_SLEEP = 8,
+  SOLAR_PANEL_WAKE = 9,
+
+  ENTER_FULL_MODE = 10,
+  ENTER_CRITICAL_MODE = 11,
+  ENTER_SAFE_MODE = 12,
+  GET_CURRENT_MODE = 13,
+
+  SET_3V3_CHANNELS_ON = 14,
+  SET_3V3_CHANNELS_OFF = 15,
+  SET_5V_CHANNELS_ON = 16,
+  SET_5V_CHANNELS_OFF = 17
 } eps_subtypes_t;
 
 typedef enum __attribute__((__packed__)) telemetry_subtypes_t {
-  DELETE_FILE = 0xAA,      // 0b10101010
-  DELETE_ALL_FILES = 0xAB, // 0b10101010
-  GET_LAST_FS_ERROR = 0xBB,
-  SET_TLM_PERIOD = 0xCC,
-  GET_TLM_PERIOD = 0xCD,
-  GET_IMAGE_INFO = 0xE1,
-  GET_IMAGE_DATA = 0xE2
-
+  DELETE_FILE = 1,
+  DELETE_ALL_FILES = 2,
+  GET_LAST_FS_ERROR = 3,
+  SET_TLM_PERIOD = 4,
+  GET_TLM_PERIOD = 5,
+  GET_IMAGE_INFO = 6,
+  GET_IMAGE_DATA = 7
 } telemetry_subtypes_t;
 
 typedef enum __attribute__((__packed__)) management_subtypes_t {
-  SOFT_RESET_SUBTYPE = 0xAA,       // 0b10101010
-  HARD_RESET_SUBTYPE = 0x99,       // 0b10101010
-  TRXVU_SOFT_RESET_SUBTYPE = 0xC3, // 0b11000011
-  TRXVU_HARD_RESET_SUBTYPE = 0x3C, // 0b00111100
-  EPS_RESET_SUBTYPE = 0xBB,        // 0b10111011
-  FS_RESET_SUBTYPE = 0xCC,         // 0b11001100
-  UPDATE_SAT_TIME = 0xDD,          // 0b‭11011101‬
-  GENERIC_I2C_CMD = 0xDF,          // 0b‭11011111‬
-  RESET_COMPONENT = 0xDE,          // 0b‭11011110
-  FRAM_WRITE_AND_TRANSMIT = 0xE0,  // 0b11100000
-  FRAM_READ_AND_TRANSMIT = 0xE1,
-  FRAM_RESTART = 0xE2,
-  GET_SAT_UPTIME = 0xE3
+  SOFT_RESET_SUBTYPE = 0,
+  ARD_RESET_SUBTYPE = 1,
+  TRXVU_SOFT_RESET_SUBTYPE = 2,
+  TRXVU_HARD_RESET_SUBTYPE = 3,
+  EPS_RESET_SUBTYPE = 4,
+  FS_RESET_SUBTYPE = 5,
+  UPDATE_SAT_TIME = 6,
+  GENERIC_I2C_CMD = 7,
+  RESET_COMPONENT = 8,
+  FRAM_WRITE_AND_TRANSMIT = 9,
+  FRAM_READ_AND_TRANSMIT = 10,
+  FRAM_RESTART = 11,
+  GET_SAT_UPTIME = 12
 } management_subtypes_t;
-//-----------------
 
 #endif /* SPL_H_ */

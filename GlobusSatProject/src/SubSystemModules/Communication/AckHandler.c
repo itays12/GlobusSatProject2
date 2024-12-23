@@ -7,7 +7,7 @@
 int SendAckPacket(ack_subtype_t acksubtype, unsigned int cmd_id, void *data, unsigned short length){
 	sat_packet_t packet;
 
-	packet.ID = cmd->ID;
+	packet.ID = cmd_id;
 	packet.cmd_type = ack_type;
 	packet.cmd_subtype = acksubtype;
 	//TODO: add assert that length does not exceed MAX_COMMAND_DATA_LENGTH

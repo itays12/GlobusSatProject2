@@ -2,9 +2,6 @@
 #ifndef EPS_COMMANDS_H_
 #define EPS_COMMANDS_H_
 
-#include "satellite-subsystems/IsisSolarPanelv2.h"
-#include "satellite-subsystems/GomEPS.h"
-#include "SubSystemModules/PowerManagment/EPS.h"
 #include "SubSystemModules/Communication/SatCommandHandler.h"
 
 typedef struct UpdateThresholdVoltages_Params{
@@ -15,25 +12,9 @@ int CMD_UpdateThresholdVoltages(sat_packet_t *cmd);
 
 int CMD_GetThresholdVoltages(sat_packet_t *cmd);
 
-int CMD_UpdateSmoothingFactor(sat_packet_t *cmd);
-
-int CMD_RestoreDefaultAlpha(sat_packet_t *cmd);
-
 int CMD_RestoreDefaultThresholdVoltages(sat_packet_t *cmd);
 
-int CMD_GetSmoothingFactor(sat_packet_t *cmd);
-
-int CMD_EnterCruiseMode(sat_packet_t *cmd);
-
-int CMD_EnterFullMode(sat_packet_t *cmd);
-
-int CMD_EnterCriticalMode(sat_packet_t *cmd);
-
-int CMD_EnterSafeMode(sat_packet_t *cmd);
-
 int CMD_GetCurrentMode(sat_packet_t *cmd);
-
-int CMD_EPS_NOP(sat_packet_t *cmd);
 
 int CMD_EPS_ResetWDT(sat_packet_t *cmd);
 
