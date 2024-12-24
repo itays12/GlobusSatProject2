@@ -8,19 +8,21 @@
 #ifndef FRAM_FLIGHTPARAMETERS_H_
 #define FRAM_FLIGHTPARAMETERS_H_
 
+#include "GlobalStandards.h"
 #include "hal/boolean.h"
 #include <hal/Storage/FRAM.h>
 #include <stddef.h>
+#include <stdint.h>
 
-typedef struct EpsModeVolts {
-    float full_mode_down_tend;
-    float full_mode_up_tend;
+typedef struct __attribute__ ((__packed__)) EpsModeVolts {
+    short full_mode_down_tend;
+    short full_mode_up_tend;
 
-    float safe_mode_down_tend;
-    float safe_mode_up_tend;
+    short safe_mode_down_tend;
+    short safe_mode_up_tend;
 
-    float critical_mode_up_tend;
-    float critical_mode_down_tend;
+    short critical_mode_up_tend;
+    short critical_mode_down_tend;
 }EpsModeVolts;
 
 typedef struct FileSystemError{
@@ -30,6 +32,8 @@ typedef struct FileSystemError{
 
 typedef struct FramFlightParams{
 	Boolean trxMute;
+  uint16_t RSSI;
+
 	unsigned int trxMuteTime;
 
 	unsigned int beaconInterval;

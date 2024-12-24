@@ -10,8 +10,6 @@
 #define NUM_OF_SUBSYSTEMS_SAVE_FUNCTIONS 5
 
 
-size_t getTlmDataSize(tlm_type_t tlm_type);
-
 
 typedef struct __attribute__ ((__packed__)) WOD_Telemetry_t
 {
@@ -36,8 +34,9 @@ typedef struct __attribute__ ((__packed__)) WOD_Telemetry_t
 	char fallenName[40];
 } WOD_Telemetry_t;
 
-char* getFallenName();
+void getFallenName(char buffer[40]);
 
+size_t getTlmDataSize(tlm_type_t tlm_type);
 
 typedef struct solar_tlm { int32_t values[ISIS_SOLAR_PANEL_COUNT]; } solar_tlm_t;
 

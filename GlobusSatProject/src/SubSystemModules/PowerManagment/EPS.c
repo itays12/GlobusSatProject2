@@ -3,6 +3,7 @@
 #include "utils.h"
 #include "GlobalStandards.h"
 #include "EPSOperationModes.h"
+#include <stdio.h>
 
 voltage_t last_voltage;
 int voltage_tend;
@@ -89,6 +90,7 @@ int GetBatteryVoltage(voltage_t *vbat) {
 	}
 
 	*vbat = response.fields.volt_brdsup;
+  printf("voltage: %hi", *vbat);
 	return 0;
 }
 

@@ -68,19 +68,19 @@ int DeploySystem(){
 
 int WriteDefaultValuesToFRAM() {
 	PROPEGATE_ERROR(RestoreDefaultThresholdVoltages(), "WriteDefaultValues");
-	time_unix currentTime;
-	PROPEGATE_ERROR(Time_getUnixEpoch(&currentTime), "Time_getUnixEpoch");
+	time_unix currentTime = 0;
 	PROPEGATE_ERROR(FRAM_WRITE_FIELD(&currentTime, WDTkicktime), "WriteWDTkicktime");
 
 
   time_unix beaconInterval = 10;
-  currentTime += beaconInterval;
 	PROPEGATE_ERROR(FRAM_WRITE_FIELD(&beaconInterval, beaconInterval), "WriteBeaconInterval");
 	PROPEGATE_ERROR(FRAM_WRITE_FIELD(&currentTime, beaconSendTime), "WriteBeaconInterval");
 
-	currentTime = 0;
-  // Pretend trxvu just got unmuted
 	PROPEGATE_ERROR(FRAM_WRITE_FIELD(&currentTime, trxMuteTime), "WriteTRXmuteTime");
+
+  int RSSI = 40;
+  
+  PROPEGATE_ERROR(FRAM_WRITE_FIELD(&RSSI, RSSI), "WriteRSSI");
 
   return 0;
 }

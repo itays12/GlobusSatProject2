@@ -8,6 +8,7 @@
 #include "utils.h"
 #include <hal/boolean.h>
 #include <hal/errors.h>
+#include <stdint.h>
 #include <string.h>
 
 #include <satellite-subsystems/isis_ants.h>
@@ -85,24 +86,22 @@ int InitTrxvu() {
   TRXVUAddress.txAddr = I2C_TRXVU_TC_ADDR;
   TRXVUAddress.maxSendBufferLength = SIZE_TXFRAME;
   TRXVUAddress.maxReceiveBufferLength = SIZE_RXFRAME;
-  int rv;
 
-  rv = ISIS_VU_E_Init(&TRXVUAddress, 1);
-  if (rv != E_NO_SS_ERR && rv != E_IS_INITIALIZED) {
-    // we have a problem. Indicate the error. But we'll gracefully exit to the
-    // higher menu instead of hanging the code
-    logError(rv, "IsisTrxvu_initialize");
-    return rv;
-  }
+  PROPEGATE_ERROR(ISIS_VU_E_Init(&TRXVUAddress, 1), "ISISTrxInit");
 
-  isis_vu_e__set_bitrate(0, isis_vu_e__bitrate__9600bps);
+  PROPEGATE_ERROR(isis_vu_e__set_bitrate(0, isis_vu_e__bitrate__9600bps),
+                  "setBitRate");
 
   ISIS_ANTS_t antsAdress[] = {{.i2cAddr = ANTS_I2C_SIDE_A_ADDR},
                               {.i2cAddr = ANTS_I2C_SIDE_B_ADDR}};
   ISIS_ANTS_Init(antsAdress, 2);
   xIsTransmitting = xSemaphoreCreateMutex();
 
-  return rv;
+  uint16_t rssi;
+  PROPEGATE_ERROR(FRAM_READ_FIELD(&rssi, RSSI), "FramReadField");
+  PROPEGATE_ERROR(isis_vu_e__set_tx_thr_rssi(0, rssi), "setRssi");
+
+  return 0;
 }
 
 int TransmitDataAsSPL_Packet(sat_packet_t *cmd, void *data,
@@ -121,8 +120,8 @@ int TransmitSplPacket(sat_packet_t *packet, unsigned char *avalFrames) {
 
   // the total size of the packet is 8 + the length of the SPL data
   size_t length = 8 + packet->length;
-  int err = isis_vu_e__send_frame(
-      ISIS_TRXVU_I2C_BUS_INDEX, (unsigned char *)packet, length, avalFrames);
+  int err = isis_vu_e__send_frame(ISIS_TRXVU_I2C_BUS_INDEX,
+                                  (unsigned char *)packet, length, avalFrames);
   xSemaphoreGive(xIsTransmitting);
   logError(err, "TransmitSplPacket");
   return err;

@@ -4,7 +4,7 @@
 
 #include "SubSystemModules/Communication/SatCommandHandler.h"
 
-typedef struct UpdateThresholdVoltages_Params{
+typedef struct __attribute__ ((__packed__)) UpdateThresholdVoltages_Params{
   EpsModeVolts volts;
 }UpdateThresholdVoltages_Params;
 
