@@ -50,8 +50,7 @@ int InitSubsystems() {
 
   WriteDefaultValuesToFRAM();
 
-  sat_packet_t cmd;
-  SendAckPacket(ACK_RESET_WAKEUP, &cmd, NULL,0); 
+  SendAckPacket(ACK_RESET_WAKEUP, 0, NULL,0); 
 
   return err;
 }

@@ -34,13 +34,14 @@ void taskMain() {
 
 
 
+ const portTickType taskDelay = 30 / portTICK_RATE_MS;
   while (TRUE) {
     logError(EPS_Conditioning(), "Error in EPS");
     logError(TRX_Logic(), "Error in TRX");
     Maintenance();
     TelemetryCollectorLogic();
 
-    sleep(100);
+    vTaskDelay(taskDelay);
   }
 }
 #endif

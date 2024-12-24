@@ -5,8 +5,8 @@
 #include "SubSystemModules/PowerManagment/EPS.h"
 #include "SubSystemModules/PowerManagment/EPSOperationModes.h"
 #include "satellite-subsystems/IsisSolarPanelv2.h"
-#include "satellite-subsystems/imepsv2_piu.h"
 #include "utils.h"
+#include <satellite-subsystems/isismepsv2_ivid7_piu.h>
 
 int CMD_UpdateThresholdVoltages(sat_packet_t *cmd) {
   UpdateThresholdVoltages_Params* params = (UpdateThresholdVoltages_Params*)cmd->data;
@@ -30,23 +30,23 @@ int CMD_GetCurrentMode(sat_packet_t *cmd) {
 }
 
 int CMD_SetChannels3V3_On(sat_packet_t *cmd) {
-  imepsv2_piu__replyheader_t reply_header;
-  return imepsv2_piu__outputbuschannelon(0,imepsv2_piu__imeps_channel__channel_3v3_perm, &reply_header);
+  isismepsv2_ivid7_piu__replyheader_t reply_header;
+  return isismepsv2_ivid7_piu__outputbuschannelon(0,isismepsv2_ivid7_piu__imeps_channel__channel_3v3_perm, &reply_header);
 }
 
 int CMD_SetChannels3V3_Off(sat_packet_t *cmd) {
-  imepsv2_piu__replyheader_t reply_header;
-  return imepsv2_piu__outputbuschanneloff(0,imepsv2_piu__imeps_channel__channel_3v3_perm, &reply_header);
+  isismepsv2_ivid7_piu__replyheader_t reply_header;
+  return isismepsv2_ivid7_piu__outputbuschanneloff(0,isismepsv2_ivid7_piu__imeps_channel__channel_3v3_perm, &reply_header);
 }
 
 int CMD_SetChannels5V_On(sat_packet_t *cmd) {
-  imepsv2_piu__replyheader_t reply_header;
-  return imepsv2_piu__outputbuschannelon(0,imepsv2_piu__imeps_channel__channel_5v_perm, &reply_header);
+  isismepsv2_ivid7_piu__replyheader_t reply_header;
+  return isismepsv2_ivid7_piu__outputbuschannelon(0,isismepsv2_ivid7_piu__imeps_channel__channel_5v_perm, &reply_header);
 }
 
 int CMD_SetChannels5V_Off(sat_packet_t *cmd) {
-  imepsv2_piu__replyheader_t reply_header;
-  return imepsv2_piu__outputbuschanneloff(0,imepsv2_piu__imeps_channel__channel_5v_perm, &reply_header);
+  isismepsv2_ivid7_piu__replyheader_t reply_header;
+  return isismepsv2_ivid7_piu__outputbuschanneloff(0,isismepsv2_ivid7_piu__imeps_channel__channel_5v_perm, &reply_header);
 }
 // solar panel
 int CMD_SolarPanelWake(sat_packet_t *cmd) { return IsisSolarPanelv2_wakeup(); }

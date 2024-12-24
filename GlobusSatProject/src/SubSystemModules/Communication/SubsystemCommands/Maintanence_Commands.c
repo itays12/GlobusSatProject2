@@ -2,7 +2,6 @@
 #include "SubSystemModules/Communication/TRXVU.h"
 #include "SysI2CAddr.h"
 #include "hal/Drivers/I2C.h"
-#include "satellite-subsystems/imepsv2_piu.h"
 #include "utils.h"
 
 int CMD_GenericI2C(sat_packet_t *cmd) {
@@ -28,9 +27,9 @@ int CMD_GetSatTime(sat_packet_t *cmd) {
 }
 
 int CMD_SoftTRXVU_ComponenetReset(sat_packet_t *cmd) {
-  return IsisTrxvu_softReset(ISIS_TRXVU_I2C_BUS_INDEX);
+  return isis_vu_e__reset_hw_rx(ISIS_TRXVU_I2C_BUS_INDEX);
 }
 
 int CMD_HardTRXVU_ComponenetReset(sat_packet_t *cmd) {
-  return IsisTrxvu_hardReset(ISIS_TRXVU_I2C_BUS_INDEX);
+  return isis_vu_e__reset_hw_rx(ISIS_TRXVU_I2C_BUS_INDEX);
 }

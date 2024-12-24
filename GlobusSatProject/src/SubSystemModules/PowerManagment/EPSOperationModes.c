@@ -4,7 +4,6 @@
 #include "satellite-subsystems/isismepsv2_ivid7_piu.h"
 #include "satellite-subsystems/isismepsv2_ivid7_piu_types.h"
 #include "utils.h"
-#include <satellite-subsystems/imepsv2_piu.h>
 
 EpsState epsState;
 
@@ -57,14 +56,12 @@ int EnterCriticalMode() {
 
 EpsState GetSystemState() { return epsState; }
 
-static channel_t channelStates;
-
 int turnOnEpsChannel(int channel) {
   isismepsv2_ivid7_piu__replyheader_t header;
-  isismepsv2_ivid7_piu__outputbuschanneloff(EPS_I2C_ADDR, channel, &header);
+  return isismepsv2_ivid7_piu__outputbuschanneloff(EPS_I2C_ADDR, channel, &header);
 }
 
 int turnOffEpsChannel(int channel) {
   isismepsv2_ivid7_piu__replyheader_t header;
-  isismepsv2_ivid7_piu__outputbuschannelon(EPS_I2C_ADDR, channel, &header);
+  return isismepsv2_ivid7_piu__outputbuschannelon(EPS_I2C_ADDR, channel, &header);
 }

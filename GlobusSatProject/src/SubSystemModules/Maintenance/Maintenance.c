@@ -3,8 +3,7 @@
 #include "SysI2CAddr.h"
 #include "hal/Timing/Time.h"
 #include "hcc/api_fat.h"
-#include "satellite-subsystems/imepsv2_piu.h"
-#include "satellite-subsystems/imepsv2_piu_types.h"
+#include "satellite-subsystems/isismepsv2_ivid7_piu.h"
 #include "utils.h"
 #include <hal/boolean.h>
 #include <stdio.h>
@@ -12,8 +11,8 @@
 
 
 int HardResetMCU(){
-  imepsv2_piu__replyheader_t replay;
-  PROPEGATE_ERROR(imepsv2_piu__reset(EPS_I2C_ADDR, &replay), "RestartMcu");
+  isismepsv2_ivid7_piu__replyheader_t replay;
+  PROPEGATE_ERROR(isismepsv2_ivid7_piu__reset(EPS_I2C_ADDR, &replay), "RestartMcu");
   return 0;
 }
 

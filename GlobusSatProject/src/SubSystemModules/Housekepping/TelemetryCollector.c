@@ -1,17 +1,17 @@
 #include "SubSystemModules/Maintenance/Maintenance.h"
 #include "TelemetryCollector.h"
 #include "hal/Storage/FRAM.h"
-#include "satellite-subsystems/IsisTRXVU.h"
+#include "satellite-subsystems/isis_ants.h"
+#include "satellite-subsystems/isis_vu_e.h"
+#include "satellite-subsystems/isismepsv2_ivid7_piu.h"
 #include "utils.h"
 #include <string.h>
 #include <stdlib.h>
 #include"SubSystemModules/Communication/SPL.h"
 #include "SubSystemModules/Communication/TRXVU.h"
 #include"SubSystemModules/Communication/AckHandler.h"
-#include "satellite-subsystems/imepsv2_piu.h"
 #include <hcc/api_fat.h>
 #include "GlobalStandards.h"
-#include "satellite-subsystems/isis_ants2.h"
 int namesIndex = 0;
 time_unix save_time[NUM_OF_SUBSYSTEMS_SAVE_FUNCTIONS];
 time_unix last_tlem_save[NUM_OF_SUBSYSTEMS_SAVE_FUNCTIONS];
@@ -106,9 +106,9 @@ void TelemetryCollectorLogic() { //done
 }
 
 void TelemetrySaveEPS() { //done
-	imepsv2_piu__gethousekeepingeng__from_t response;
+	isismepsv2_ivid7_piu__gethousekeepingeng__from_t response;
 	int error;
-	error = logError(imepsv2_piu__gethousekeepingeng(0, &response),
+	error = logError(isismepsv2_ivid7_piu__gethousekeepingeng(0, &response),
 			"TelemetrySaveEPS");
 	if (error == 0)
 		WriteTelem(&response, sizeof(response), END_FILENAME_EPS_TLM);
@@ -147,9 +147,9 @@ char* getFallenName() {
 }
 
 int GetCurrentWODTelemetry(WOD_Telemetry_t *wod) { //done
-	imepsv2_piu__gethousekeepingeng__from_t response;
+	isismepsv2_ivid7_piu__gethousekeepingeng__from_t response;
 	int error;
-	error = logError(imepsv2_piu__gethousekeepingeng(0, &response),
+	error = logError(isismepsv2_ivid7_piu__gethousekeepingeng(0, &response),
 			"GetCurrentWODTelemetry");
 	wod->vbat = response.fields.batt_input.fields.volt;
 	wod->volt_5V = response.fields.vip_obc01.fields.volt;
@@ -263,18 +263,18 @@ void TelemetrySaveSolarPanels() { //done
 }
 void TelemetrySaveTRXVU() { //done
 	unsigned char index = 0;
-	ISIStrxvuTxTelemetry telemetry_tc;
+	isis_vu_e__get_tx_telemetry__from_t telemetry_tc;
 	int error;
-	error = logError(IsisTrxvu_tcGetTelemetryAll(index, &telemetry_tc),
+	error = logError(isis_vu_e__get_tx_telemetry(index, &telemetry_tc),
 			"TelemetrySaveTRXVU1");
 	if (error == 0) {
 		WriteTelem(&telemetry_tc, sizeof(telemetry_tc), END_FILE_NAME_TX);
 	}
 
 	index = 0;
-	ISIStrxvuRxTelemetry telemetry_rc;
+	isis_vu_e__get_rx_telemetry__from_t telemetry_rc;
 	int error1;
-	error1 = logError(IsisTrxvu_rcGetTelemetryAll(index, &telemetry_rc),
+	error1 = logError(isis_vu_e__get_rx_telemetry(index, &telemetry_rc),
 			"TelemetrySaveTRXVU2");
 	if (error1 == 0) {
 		WriteTelem(&telemetry_rc, sizeof(telemetry_rc), END_FILE_NAME_RX);
@@ -300,27 +300,29 @@ void InitSavePeriodTimes() {
 }
 void TelemetrySaveANT() { //done
 	int error;
-	isis_ants2__get_all_telemetry__from_t response;
-	error = logError(isis_ants2__get_all_telemetry(0, &response),
+	isis_ants__get_all_telemetry__from_t response[2];
+	error = logError(isis_ants__get_all_telemetry(0, &response[0]),
+			"TelemetrySaveANT");
+	error = logError(isis_ants__get_all_telemetry(1, &response[1]),
 			"TelemetrySaveANT");
 	if (error == 0)
-		WriteTelem(&response, sizeof(response), END_FILE_NAME_ANTENNA);
+		WriteTelem(response, sizeof(response), END_FILE_NAME_ANTENNA);
 }
 
 size_t getTlmDataSize(tlm_type_t tlm_type){
   switch (tlm_type) {
   case tlm_eps:
-    return sizeof(imepsv2_piu__gethousekeepingeng__from_t);
+    return sizeof(isismepsv2_ivid7_piu__gethousekeepingeng__from_t);
   case tlm_tx:
-    return sizeof(ISIStrxvuTxTelemetry);
+    return sizeof(isis_vu_e__get_tx_telemetry__from_t);
   case tlm_antenna:
-    return sizeof(isis_ants2__get_all_telemetry__from_t);
+    return sizeof(isis_ants__get_all_telemetry__from_t) * 2;
   case tlm_solar:
     return sizeof(int32_t) * 8;
   case tlm_wod:
     return sizeof(WOD_Telemetry_t);
   case tlm_rx:
-    return sizeof(ISIStrxvuRxTelemetry);
+    return sizeof(isis_vu_e__get_rx_telemetry__from_t);
   case tlm_log:
     return sizeof(logData_t);
   default:
