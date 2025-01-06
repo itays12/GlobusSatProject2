@@ -19,15 +19,12 @@ int ActUponCommand(sat_packet_t *cmd){
 		case telemetry_cmd_type:
 			err = telemetry_command_router(cmd);
 			break;
-		case filesystem_cmd_type:
-			err = filesystem_command_router(cmd);
-			break;
 		case managment_cmd_type:
 			err = managment_command_router(cmd);
 			break;
 	}
 	if (logError(err, "ActUponCommand") != E_NO_SS_ERR){
-    SendAckPacket(ACK_ERROR_MSG, cmd->ID, &err, sizeof(err));
+		SendAckPacket(ACK_ERROR_MSG, cmd->ID, &err, sizeof(err));
 		return err;
 	}
 	return 0;
@@ -38,8 +35,8 @@ int AssembleCommand(void *data, unsigned short data_length, char type, char subt
 	cmd->length = data_length ;
 	cmd->cmd_type = type ;
 	cmd->cmd_subtype = subtype ;
-	cmd->ID = id;
-	memcpy(cmd->data, data, data_length);
+	cmd->ID = (id & ~(0xffff << 24)) | 15 << 24;
+	memcpy(cmd->data, data, data_length < MAX_COMMAND_DATA_LENGTH ? data_length: MAX_COMMAND_DATA_LENGTH );
 
 	if(data==NULL){
 		return null_pointer_error;
@@ -55,12 +52,11 @@ int ParseDataToCommand(unsigned char *data, sat_packet_t *cmd){
     return null_pointer_error;
   }
 
-  unsigned int id = *(data + offsetof(sat_packet_t, ID));
-  char cmd_type = *(data + offsetof(sat_packet_t, cmd_type));
-  char cmd_subtype = *(data + offsetof(sat_packet_t, cmd_subtype));
-  unsigned short len = *(data + offsetof(sat_packet_t, length));
+  unsigned int id = *(unsigned int*)(data + offsetof(sat_packet_t, ID));
+  char cmd_type = *(char *)(data + offsetof(sat_packet_t, cmd_type));
+  char cmd_subtype = *(char *)(data + offsetof(sat_packet_t, cmd_subtype));
+  unsigned short len = *(unsigned short *)(data + offsetof(sat_packet_t, length));
   
-  AssembleCommand(data + offsetof(sat_packet_t, data), len, cmd_type, cmd_subtype, id, cmd);
+  return AssembleCommand(data + offsetof(sat_packet_t, data), len, cmd_type, cmd_subtype, id, cmd);
   
-  return command_succsess;
 }

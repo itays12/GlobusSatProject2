@@ -24,6 +24,7 @@
 #include "SubSystemModules/PowerManagment/EPS.h"
 #include "main.h"
 #include <stdlib.h>
+#include <hcc/api_fat.h>
 
 #ifdef TESTING
 #include "TestingDemos/MainTest.h"
@@ -32,13 +33,13 @@
 void taskMain() {
   InitSubsystems();
 
-
-
+  f_format(f_getdrive(), 0);
  const portTickType taskDelay = 30 / portTICK_RATE_MS;
   while (TRUE) {
     logError(EPS_Conditioning(), "Error in EPS");
     logError(TRX_Logic(), "Error in TRX");
     Maintenance();
+
     TelemetryCollectorLogic();
 
     vTaskDelay(taskDelay);
@@ -51,7 +52,7 @@ int main() {
 
   xTaskHandle taskMainHandle;
 
-  TRACE_CONFIGURE_ISP(DBGU_STANDARD, 2000000, BOARD_MCK);
+  TRACE_CONFIGURE_ISP(DBGU_STANDARD, 115200, BOARD_MCK);
   // Enable the Instruction cache of the ARM9 core. Keep the MMU and Data Cache
   // disabled.
   CP15_Enable_I_Cache();

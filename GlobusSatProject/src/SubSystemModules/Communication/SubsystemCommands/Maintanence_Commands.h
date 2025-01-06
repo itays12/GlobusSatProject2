@@ -35,6 +35,10 @@ int CMD_FRAM_GetDeviceID(sat_packet_t *cmd); // X
 
 int CMD_FRAM_ReStart(sat_packet_t *cmd); // X
 
+typedef __attribute__((__packed__))struct UpdateSatTime_Params{
+	time_unix time;
+}UpdateSatTime_Params;
+
 int CMD_UpdateSatTime(sat_packet_t *cmd); // done
 
 int CMD_GetSatTime(sat_packet_t *cmd); // done

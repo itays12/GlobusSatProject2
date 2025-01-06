@@ -1,4 +1,3 @@
-
 #ifndef GLOBALSTANDARDS_H_
 #define GLOBALSTANDARDS_H_
 

@@ -13,6 +13,7 @@
 #include <hal/Storage/FRAM.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <hal/Timing/Time.h>
 
 typedef struct __attribute__ ((__packed__)) EpsModeVolts {
     short full_mode_down_tend;
@@ -25,15 +26,17 @@ typedef struct __attribute__ ((__packed__)) EpsModeVolts {
     short critical_mode_down_tend;
 }EpsModeVolts;
 
-typedef struct FileSystemError{
+typedef struct __attribute__((__packed__)) FileSystemError{
   int code;
   char msg[20];
 }FileSystemError;
 
-typedef struct FramFlightParams{
+typedef struct __attribute__((__packed__)) FramFlightParams{
 	Boolean trxMute;
-  uint16_t RSSI;
+	uint16_t RSSI;
+	unsigned int startupCount;
 
+	Time mustUpdatedTime;
 	unsigned int trxMuteTime;
 
 	unsigned int beaconInterval;

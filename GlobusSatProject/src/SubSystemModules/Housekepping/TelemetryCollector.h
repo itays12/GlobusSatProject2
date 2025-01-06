@@ -31,10 +31,10 @@ typedef struct __attribute__ ((__packed__)) WOD_Telemetry_t
 	time_unix sat_uptime;			///< Sat uptime
 	unsigned int photo_diodes[5]; 			//todo photo diodes
 	unsigned int num_of_cmd_resets;///< counts the number of resets the satellite has gone through due to ground station command [#]
-	char fallenName[40];
+	unsigned char fallenName[30];
 } WOD_Telemetry_t;
 
-void getFallenName(char buffer[40]);
+void getFallenName(char buffer[]);
 
 size_t getTlmDataSize(tlm_type_t tlm_type);
 

@@ -24,6 +24,7 @@
 #define CHANGE_ENDIAN(x)                                                       \
   ((x) = ((x) >> 24 & 0xff) | ((x) << 8 & 0xff0000) | ((x) >> 8 & 0xff00) |    \
          ((x) << 24 & 0xff000000))
+Boolean payloadOff = FALSE;
 
 SoreqResult payloadInit() { return payloadTurnOn(); }
 
@@ -88,11 +89,14 @@ SoreqResult payloadReadEnvironment(PayloadEnvironmentData *environment_data) {
 }
 
 void payloadLogic() {
+	if(payloadOff){
+		return;
+	}
   unsigned int tempLastSaveTime;
   FRAM_READ_FIELD(&tempLastSaveTime, lastSavePayLoadTime15min);
   unsigned int cur_time = 0;
   int err = Time_getUnixEpoch(&cur_time);
-  logError(err, "error in CheckExecutionTime Time_g");
+  logError(err, "Time_getUnixEpoch");
   if (tempLastSaveTime == 0 ||
       tempLastSaveTime <
           cur_time -
@@ -138,6 +142,7 @@ SoreqResult payloadSoftReset() {
 }
 
 SoreqResult payloadTurnOff() {
+	payloadOff = TRUE;
   isismepsv2_ivid7_piu__replyheader_t response;
   return isismepsv2_ivid7_piu__outputbuschanneloff(EPS_INDEX, PAYLOAD_BUS_CHANNEL,
                                           &response)
@@ -146,6 +151,7 @@ SoreqResult payloadTurnOff() {
 }
 
 SoreqResult payloadTurnOn() {
+	payloadOff = FALSE;
   isismepsv2_ivid7_piu__replyheader_t response;
   return isismepsv2_ivid7_piu__outputbuschannelon(EPS_INDEX, PAYLOAD_BUS_CHANNEL,
                                          &response)

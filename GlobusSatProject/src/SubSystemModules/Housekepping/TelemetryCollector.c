@@ -14,6 +14,8 @@
 #include <hcc/api_fat.h>
 #include <stdlib.h>
 #include <string.h>
+#include "fallenNames.h"
+
 unsigned int namesIndex = 0;
 time_unix save_time[NUM_OF_SUBSYSTEMS_SAVE_FUNCTIONS];
 time_unix last_tlem_save[NUM_OF_SUBSYSTEMS_SAVE_FUNCTIONS];
@@ -75,12 +77,12 @@ void TelemetryCollectorLogic() { // done
       last_tlem_save[tlm_tx] = telem_time;
     }
   }
-  if (CheckExecutionTime(last_tlem_save[tlm_solar], save_time[tlm_solar])) {
+/*  if (CheckExecutionTime(last_tlem_save[tlm_solar], save_time[tlm_solar])) {
     TelemetrySaveSolarPanels();
     if (Time_getUnixEpoch(&telem_time) == 0) {
       last_tlem_save[tlm_solar] = telem_time;
     }
-  }
+  }*/
   if (CheckExecutionTime(last_tlem_save[tlm_wod], save_time[tlm_wod])) {
     TelemetrySaveWOD();
     if (Time_getUnixEpoch(&telem_time) == 0) {
@@ -88,12 +90,12 @@ void TelemetryCollectorLogic() { // done
     }
   }
 
-  if (CheckExecutionTime(last_tlem_save[tlm_antenna], save_time[tlm_antenna])) {
+  /*if (CheckExecutionTime(last_tlem_save[tlm_antenna], save_time[tlm_antenna])) {
     TelemetrySaveANT();
     if (Time_getUnixEpoch(&telem_time) == 0) {
       last_tlem_save[tlm_antenna] = telem_time;
     }
-  }
+  }*/
 }
 
 void TelemetrySaveEPS() { // done
@@ -105,8 +107,8 @@ void TelemetrySaveEPS() { // done
     writeToFile(&response, sizeof(response), tlm_eps);
 }
 
-void getFallenName(char buffer[40]) {
-  char *names[] = {"Davidovich Shlomi",
+void getFallenName(char buffer[]) {
+/*  char *names[] = {"Davidovich Shlomi",
                    "Hajabi Ziv",
                    "Elikim Noam",
                    "Barosh Shoshana",
@@ -186,10 +188,10 @@ void getFallenName(char buffer[40]) {
                    "Salam Peleg",
                    "Glazki Yevgeny",
                    "Naim Amir",
-                   "Shapira Ziv Pape"};
+                   "Shapira Ziv Pape"};*/
+
   namesIndex %= sizeof(names) / sizeof(names[0]);
-  strcpy(buffer, "In memory of ");
-  strcat(buffer, names[namesIndex++]);
+  strcpy(buffer, names[namesIndex++]);
 }
 
 int GetCurrentWODTelemetry(WOD_Telemetry_t *wod) {
@@ -210,27 +212,25 @@ int GetCurrentWODTelemetry(WOD_Telemetry_t *wod) {
   wod->mcu_temp = ((double)response.fields.temp) * 0.01;
   wod->bat_temp = ((double)response.fields.temp2) * 0.01;
 
-  uint8_t status;
-
-  error = logError(IsisSolarPanelv2_getTemperature(
+/*  error = logError(IsisSolarPanelv2_getTemperature(
                        ISIS_SOLAR_PANEL_0, &wod->solar_panels[0], &status),
-                   "TelemetrySaveSolarPanels");
+                   "TelemetryGetSolarPanels0");
   error = logError(IsisSolarPanelv2_getTemperature(
                        ISIS_SOLAR_PANEL_1, &wod->solar_panels[1], &status),
-                   "TelemetrySaveSolarPanels");
+                   "TelemetryGetSolarPanels1");
   error = logError(IsisSolarPanelv2_getTemperature(
                        ISIS_SOLAR_PANEL_2, &wod->solar_panels[2], &status),
-                   "TelemetrySaveSolarPanels");
+                   "TelemetryGetSolarPanels2");
   error = logError(IsisSolarPanelv2_getTemperature(
                        ISIS_SOLAR_PANEL_3, &wod->solar_panels[3], &status),
-                   "TelemetrySaveSolarPanels");
+                   "TelemetryGetSolarPanels3");
   error = logError(IsisSolarPanelv2_getTemperature(
                        ISIS_SOLAR_PANEL_4, &wod->solar_panels[4], &status),
-                   "TelemetrySaveSolarPanels");
+                   "TelemetryGetSolarPanels4");
 
   error = logError(IsisSolarPanelv2_getTemperature(
                        ISIS_SOLAR_PANEL_5, &wod->solar_panels[5], &status),
-                   "TelemetrySaveSolarPanels");
+                   "TelemetryGetSolarPanels5");*/
 
   unsigned int epochTime;
 
@@ -243,7 +243,9 @@ int GetCurrentWODTelemetry(WOD_Telemetry_t *wod) {
   /* get free space on current drive */
   f_getfreespace(f_getdrive(), &space);
   wod->free_memory = space.free;
-  wod->free_memory = space.bad;
+  wod->corrupt_bytes = space.bad;
+
+  FRAM_READ_FIELD(&wod->number_of_resets, startupCount);
 
   getFallenName(wod->fallenName);
   return error;
@@ -256,41 +258,41 @@ void TelemetrySaveSolarPanels() { // done
 
   error = logError(IsisSolarPanelv2_getTemperature(
                        ISIS_SOLAR_PANEL_0, &array_paneltemp[0], &status),
-                   "TelemetrySaveSolarPanels");
+                   "TelemetrySaveSolarPanels0");
   if (error != 0) {
     return;
   }
 
   error = logError(IsisSolarPanelv2_getTemperature(
                        ISIS_SOLAR_PANEL_1, &array_paneltemp[1], &status),
-                   "TelemetrySaveSolarPanels");
+                   "TelemetrySaveSolarPanels1");
   if (error != 0) {
     return;
   }
 
   error = logError(IsisSolarPanelv2_getTemperature(
                        ISIS_SOLAR_PANEL_2, &array_paneltemp[2], &status),
-                   "TelemetrySaveSolarPanels");
+                   "TelemetrySaveSolarPanels2");
   if (error != 0) {
     return;
   }
 
   error = logError(IsisSolarPanelv2_getTemperature(
                        ISIS_SOLAR_PANEL_3, &array_paneltemp[3], &status),
-                   "TelemetrySaveSolarPanels");
+                   "TelemetrySaveSolarPanels3");
   if (error != 0) {
     return;
   }
   error = logError(IsisSolarPanelv2_getTemperature(
                        ISIS_SOLAR_PANEL_4, &array_paneltemp[4], &status),
-                   "TelemetrySaveSolarPanels");
+                   "TelemetrySaveSolarPanels4");
   if (error != 0) {
     return;
   }
 
   error = logError(IsisSolarPanelv2_getTemperature(
                        ISIS_SOLAR_PANEL_5, &array_paneltemp[5], &status),
-                   "TelemetrySaveSolarPanels");
+                   "TelemetrySaveSolarPanels5");
   if (error != 0) {
     return;
   }

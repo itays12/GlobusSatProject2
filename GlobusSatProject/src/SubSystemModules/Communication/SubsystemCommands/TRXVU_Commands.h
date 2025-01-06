@@ -14,6 +14,12 @@
 
 #define ANTENNA_DEPLOYMENT_TIMEOUT 10 //<! in seconds
 int CMD_Ping(sat_packet_t* cmd);//Done
+typedef struct __attribute__((__packed__)) StartDump_Params{
+	time_unix t_start;
+	time_unix t_end;
+	tlm_type_t dump_type;
+}StartDump_Params;
+
 int CMD_StartDump(sat_packet_t *cmd);//Done
 
 int CMD_SendDumpAbortRequest(sat_packet_t *cmd);

@@ -89,8 +89,7 @@ int GetBatteryVoltage(voltage_t *vbat) {
 		return err;
 	}
 
-	*vbat = response.fields.volt_brdsup;
-  printf("voltage: %hi", *vbat);
+	*vbat = response.fields.batt_input.fields.volt;
 	return 0;
 }
 

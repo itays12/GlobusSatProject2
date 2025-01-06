@@ -74,7 +74,9 @@ typedef enum __attribute__((__packed__)) trxvu_subtypes_t {
   ANT_DEPLOY = 23,
   ANT_STOP_REDEPLOY = 24,
   FORCE_ABORT_DUMP_SUBTYPE = 25,
-  DELETE_DUMP_TASK = 26
+  DELETE_DUMP_TASK = 26,
+
+  BEACON = 27,
 } trxvu_subtypes_t;
 
 typedef enum __attribute__((__packed__)) eps_subtypes_t {
@@ -105,24 +107,21 @@ typedef enum __attribute__((__packed__)) telemetry_subtypes_t {
   GET_LAST_FS_ERROR = 3,
   SET_TLM_PERIOD = 4,
   GET_TLM_PERIOD = 5,
-  GET_IMAGE_INFO = 6,
-  GET_IMAGE_DATA = 7
+  GET_FREE_SPACE = 6,
 } telemetry_subtypes_t;
 
 typedef enum __attribute__((__packed__)) management_subtypes_t {
   SOFT_RESET_SUBTYPE = 0,
-  ARD_RESET_SUBTYPE = 1,
+  HARD_RESET_SUBTYPE = 1,
   TRXVU_SOFT_RESET_SUBTYPE = 2,
   TRXVU_HARD_RESET_SUBTYPE = 3,
   EPS_RESET_SUBTYPE = 4,
   FS_RESET_SUBTYPE = 5,
-  UPDATE_SAT_TIME = 6,
-  GENERIC_I2C_CMD = 7,
-  RESET_COMPONENT = 8,
-  FRAM_WRITE_AND_TRANSMIT = 9,
-  FRAM_READ_AND_TRANSMIT = 10,
-  FRAM_RESTART = 11,
-  GET_SAT_UPTIME = 12
+  GET_SAT_TIME = 6,
+  UPDATE_SAT_TIME = 7,
+  GET_SAT_UPTIME = 8,
+  RESET_COMPONENT = 9,
+  FRAM_RESTART = 10,
 } management_subtypes_t;
 
 #endif /* SPL_H_ */

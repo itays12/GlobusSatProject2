@@ -17,7 +17,7 @@ int EnterFullMode() {
 
   if (epsState != FullMode) {
     unmuteTRXVU(); // unmute TRXVU if its muted
-    turnOnEpsChannel(SYSTEM_PAYLOAD);
+    payloadTurnOn();
   }
   epsState = FullMode;
   return 0;
@@ -32,7 +32,7 @@ int EnterFullMode() {
 int EnterSafeMode() {
   if (epsState != SafeMode) {
     unmuteTRXVU();
-    turnOffEpsChannel(SYSTEM_PAYLOAD);
+    payloadTurnOff();
   }
   epsState = SafeMode;
   return 0;
@@ -47,7 +47,7 @@ int EnterSafeMode() {
 int EnterCriticalMode() {
   if (epsState != CriticalMode) {
     muteTRXVU();
-    turnOffEpsChannel(SYSTEM_PAYLOAD);
+    payloadTurnOff();
   }
 
   epsState = CriticalMode;

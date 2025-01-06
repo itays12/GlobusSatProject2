@@ -53,7 +53,7 @@ void clearAbortFlag();
 
 int getAbortFlag();
 
-FileSystemResult logFsErr(FileSystemResult err, char *msg);
+FileSystemResult logFsErr(int err, char *msg);
 
 int CMD_getInfoImage(sat_packet_t *cmd);
 
